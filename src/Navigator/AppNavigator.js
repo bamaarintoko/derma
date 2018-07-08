@@ -2,34 +2,39 @@ import React, { Component } from 'react';
 import {
     BackHandler, View, StatusBar
 } from 'react-native';
-import { createStackNavigator,createBottomTabNavigator } from "react-navigation";
+import { createStackNavigator, createBottomTabNavigator, DrawerNavigator } from "react-navigation";
 import { initializeListeners } from 'react-navigation-redux-helpers'
 import { navigationPropConstructor } from '../Utils/Redux'
 import ScreenHome from '../Screen/Home/screen-home'
 import ScreenReserve from '../Screen/Reserve/screen-reserve'
 import ScreenNews from '../Screen/News/screen-news'
 import ScreenEvent from '../Screen/Event/screen-event'
-
+import { DrawerContent } from '../Components/Drawer'
 import { connect } from "react-redux";
 import { addListener } from '../Utils/Redux';
 
+export const Drawer = DrawerNavigator({
+    Home: { screen: ScreenHome }
+},{
+    contentComponent:DrawerContent
+})
 export const Home = createBottomTabNavigator({
-    Home : ScreenHome,
-    Reserve : ScreenReserve,
-    News : ScreenNews,
-    Event : ScreenEvent,
+    Home: ScreenHome,
+    Reserve: ScreenReserve,
+    News: ScreenNews,
+    Event: ScreenEvent,
 })
 
 export const AppNavigator = createStackNavigator({
-    Menu: { screen: Home },
+    Menu: { screen: Drawer },
 
 }, {
-    headerMode: 'none',
+        headerMode: 'none',
 
-    navigationOptions: {
-        gesturesEnabled: true
-    }
-});
+        navigationOptions: {
+            gesturesEnabled: true
+        }
+    });
 
 class AppWithNavigationState extends Component {
     constructor(props) {

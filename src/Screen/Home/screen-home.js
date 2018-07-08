@@ -10,6 +10,7 @@ import { withNavigation } from "react-navigation"
 import { Container, Content, Item, Input, Button } from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper'
+import {Donate} from '../../Components/Donate'
 const { width } = Dimensions.get('window')
 function mapStateToProps(state) {
     return {
@@ -82,8 +83,7 @@ class ScreenHome extends Component {
     }
     onBarClick = () => {
         return () => {
-
-            console.log("aaa")
+            this.props.navigation.openDrawer()
         }
     }
     render() {
@@ -112,21 +112,12 @@ class ScreenHome extends Component {
 
                     </View>
                 </View>
-                <Content>
+                <Content>     
+                    <Donate/>               
+                    <Donate/>               
+                    <Donate/>               
+                    <Donate/>               
                     
-                    <View style={{marginTop: 10}}>
-                        <View style={{ height: 120}}>
-                            <View style={{ borderRadius:5,
-                                height: 90, 
-                                backgroundColor: '#FFECB3', marginRight: 5, marginLeft: 15, marginTop: 10 }}>
-                                <Text>aaaa</Text>
-
-                            </View>
-                            <View style={{ overflow: 'hidden',left: 5, width: 70, height: 70, borderWidth: 2, borderStyle: 'solid', borderColor: '#FFB300', backgroundColor: '#FFF', borderRadius: 5, position: 'absolute' }}>
-                            </View>
-                        </View>
-                        
-                    </View>
                 </Content>
             </Container>
         );
