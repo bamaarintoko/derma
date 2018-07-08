@@ -90,23 +90,44 @@ class ScreenHome extends Component {
         let firstQuery = ""
         return (
             <Container style={{ backgroundColor: this.state.color }}>
-                <View style={{ height: 140 }}>
-                    <Swiper autoplayTimeout={4} autoplay={true} loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={true}>
-                        {
-                            this.state.imgList.map((item, i) => <Slide
-                                loadHandle={this.loadHandle}
-                                loaded={!!this.state.loadQueue[i]}
-                                uri={item}
-                                i={i}
-                                key={i} />)
-                        }
-                    </Swiper>
+                <View>
+                    <View style={{ height: 100 }}>
+                        <Swiper activeDotColor={"#FFB300"} autoplayTimeout={4} autoplay={true} loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={true}>
+                            {
+                                this.state.imgList.map((item, i) => <Slide
+                                    loadHandle={this.loadHandle}
+                                    loaded={!!this.state.loadQueue[i]}
+                                    uri={item}
+                                    i={i}
+                                    key={i} />)
+                            }
+                        </Swiper>
+                    </View>
+                    <View style={{ height: 50, position: 'absolute', justifyContent: 'center', width: width }}>
+                        <Button transparent light style={{ padding: 15 }} onPress={this.onBarClick()}>
+                            <Icon name="bars" size={20} color="#FFB300" />
+                        </Button>
+                    </View>
+                    <View style={{height:70, backgroundColor:'#FF9800', margin:5, borderRadius:5}}>
+
+                    </View>
                 </View>
-                <View style={{ height: 50, position: 'absolute', justifyContent: 'center', width: width }}>
-                    <Button transparent light style={{ padding: 15 }} onPress={this.onBarClick()}>
-                        <Icon name="bars" size={20} color="#FF6F00" />
-                    </Button>
-                </View>
+                <Content>
+                    
+                    <View style={{marginTop: 10}}>
+                        <View style={{ height: 120}}>
+                            <View style={{ borderRadius:5,
+                                height: 90, 
+                                backgroundColor: '#FFECB3', marginRight: 5, marginLeft: 15, marginTop: 10 }}>
+                                <Text>aaaa</Text>
+
+                            </View>
+                            <View style={{ overflow: 'hidden',left: 5, width: 70, height: 70, borderWidth: 2, borderStyle: 'solid', borderColor: '#FFB300', backgroundColor: '#FFF', borderRadius: 5, position: 'absolute' }}>
+                            </View>
+                        </View>
+                        
+                    </View>
+                </Content>
             </Container>
         );
     }
