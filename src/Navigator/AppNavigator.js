@@ -2,19 +2,26 @@ import React, { Component } from 'react';
 import {
     BackHandler, View, StatusBar
 } from 'react-native';
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator,createBottomTabNavigator } from "react-navigation";
 import { initializeListeners } from 'react-navigation-redux-helpers'
 import { navigationPropConstructor } from '../Utils/Redux'
 import ScreenHome from '../Screen/Home/screen-home'
-import ScreenSetting from '../Screen/Setting/screen-setting'
+import ScreenReserve from '../Screen/Reserve/screen-reserve'
+import ScreenNews from '../Screen/News/screen-news'
+import ScreenEvent from '../Screen/Event/screen-event'
 
 import { connect } from "react-redux";
 import { addListener } from '../Utils/Redux';
 
+export const Home = createBottomTabNavigator({
+    Home : ScreenHome,
+    Reserve : ScreenReserve,
+    News : ScreenNews,
+    Event : ScreenEvent,
+})
 
 export const AppNavigator = createStackNavigator({
-    Menu: { screen: ScreenHome },
-    Setting: { screen: ScreenSetting },
+    Menu: { screen: Home },
 
 }, {
     headerMode: 'none',
