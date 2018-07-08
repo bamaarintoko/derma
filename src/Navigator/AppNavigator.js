@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     BackHandler, View, StatusBar
 } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator, DrawerNavigator } from "react-navigation";
+import { createStackNavigator, createBottomTabNavigator, createDrawerNavigator } from "react-navigation";
 import { initializeListeners } from 'react-navigation-redux-helpers'
 import { navigationPropConstructor } from '../Utils/Redux'
 import ScreenHome from '../Screen/Home/screen-home'
@@ -13,7 +13,7 @@ import { DrawerContent } from '../Components/Drawer'
 import { connect } from "react-redux";
 import { addListener } from '../Utils/Redux';
 
-export const Drawer = DrawerNavigator({
+export const Drawer = createDrawerNavigator({
     Home: { screen: ScreenHome }
 },{
     contentComponent:DrawerContent
