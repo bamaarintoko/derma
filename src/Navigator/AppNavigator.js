@@ -6,27 +6,22 @@ import { createStackNavigator, createBottomTabNavigator, createDrawerNavigator }
 import { initializeListeners } from 'react-navigation-redux-helpers'
 import { navigationPropConstructor } from '../Utils/Redux'
 import ScreenHome from '../Screen/Home/screen-home'
+import ScreenProfile from '../Screen/Profile/screen-profile'
 import ScreenReserve from '../Screen/Reserve/screen-reserve'
 import ScreenNews from '../Screen/News/screen-news'
 import ScreenEvent from '../Screen/Event/screen-event'
-import { DrawerContent } from '../Components/Drawer'
 import { connect } from "react-redux";
 import { addListener } from '../Utils/Redux';
 
-export const Drawer = createDrawerNavigator({
-    Home: { screen: ScreenHome }
-},{
-    contentComponent:DrawerContent
-})
 export const Home = createBottomTabNavigator({
-    Home: ScreenHome,
-    Reserve: ScreenReserve,
-    News: ScreenNews,
-    Event: ScreenEvent,
+    Home: { screen: ScreenHome },
+    News: { screen: ScreenNews },
+    Event: { screen: ScreenEvent },
+    Reserve: { screen: ScreenProfile },
 })
 
 export const AppNavigator = createStackNavigator({
-    Menu: { screen: Drawer },
+    Menu: { screen: Home },
 
 }, {
         headerMode: 'none',

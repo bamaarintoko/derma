@@ -6,7 +6,7 @@ import {
     Text,
     View, FlatList, StatusBar, Dimensions, Image
 } from 'react-native';
-export const Donate = ({ }) => {
+export const Donate = () => {
     return (
         <View style={{ height: 100, marginTop: 5 }}>
             <View style={{

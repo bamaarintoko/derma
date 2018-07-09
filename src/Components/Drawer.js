@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     dd: {
 
         width: '100%',
-        height: 100,
+        height: 120,
         backgroundColor: '#FB8C00'
     }
 })

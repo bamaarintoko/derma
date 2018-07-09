@@ -90,8 +90,9 @@ class ScreenHome extends Component {
         let firstQuery = ""
         return (
             <Container style={{ backgroundColor: this.state.color }}>
+                <StatusBar backgroundColor="#FFA726" />
                 <View>
-                    <View style={{ height: 100 }}>
+                    <View style={{ height: 120 }}>
                         <Swiper activeDotColor={"#FFB300"} autoplayTimeout={4} autoplay={true} loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={true}>
                             {
                                 this.state.imgList.map((item, i) => <Slide
@@ -102,11 +103,6 @@ class ScreenHome extends Component {
                                     key={i} />)
                             }
                         </Swiper>
-                    </View>
-                    <View style={{ height: 50, position: 'absolute', justifyContent: 'center', width: width }}>
-                        <Button transparent light style={{ padding: 15 }} onPress={this.onBarClick()}>
-                            <Icon name="bars" size={20} color="#FFB300" />
-                        </Button>
                     </View>
                     <View style={{height:70, backgroundColor:'#FF9800', margin:5, borderRadius:5}}>
 

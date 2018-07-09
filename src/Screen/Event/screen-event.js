@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Image } from 'react-native'
+import { Image,StatusBar } from 'react-native'
 import { View, Text, Container, Content } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Ticket } from '../../Components/Ticket'
@@ -14,8 +14,19 @@ class ScreenEvent extends Component {
     render() {
         return (
             <Container>
-                <View style={{ height: 50 }}>
+                <StatusBar backgroundColor="#FFA726" />
+                <View style={{flexDirection:'row',height:50, backgroundColor:'#FFF',borderBottomColor:'#BDBDBD', borderBottomWidth:1}}>
+                    <View style={{flex:1,}}>
 
+                    </View>
+                    <View style={{flex:4, justifyContent:'center',alignItems:'center'}}>
+                        <Text>
+                            Event
+                        </Text>
+                    </View>
+                    <View style={{flex:1,}}>
+
+                    </View>
                 </View>
                 <Content style={{ backgroundColor: '#FFF' }}>
                     <Ticket
