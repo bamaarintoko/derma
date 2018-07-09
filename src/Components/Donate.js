@@ -17,7 +17,7 @@ export const Donate = () => {
                 <Text>aaaa</Text>
 
             </View>
-            <View style={{ overflow: 'hidden', left: 5, width: 70, height: 70, borderWidth: 2, borderStyle: 'solid', borderColor: '#FFB300', backgroundColor: '#FFF', borderRadius: 5, position: 'absolute' }}>
+            <View style={{ overflow: 'hidden', left: 5, width: 70, height: 70, borderWidth: 2, borderStyle: 'solid', borderColor: '#FFB300', backgroundColor: '#FFF', borderRadius: 50, position: 'absolute' }}>
             </View>
         </View>
     )
