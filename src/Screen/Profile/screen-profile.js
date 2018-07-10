@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Thumbnail, Text, Container, Content } from 'native-base';
 import { StatusBar, StyleSheet } from 'react-native';
-import { DrawerContent } from '../../Components/Drawer'
+import Icon from 'react-native-vector-icons/FontAwesome';
 function mapStateToProps(state) {
     return {
 
@@ -44,6 +44,12 @@ const styles = StyleSheet.create({
 })
 
 class ScreenProfile extends Component {
+    static navigationOptions = {
+        header: null,
+        tabBarIcon: ({ tintColor }) => {
+            return <Icon name="book" size={20} color={tintColor} />;
+        }
+    }
     render() {
         return (
             <Container style={{ backgroundColor: '#FFF' }}>

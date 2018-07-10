@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-    Platform,
-    StyleSheet,
-    Text,
-    View, FlatList, StatusBar, Dimensions, Image
+    View, StatusBar, Dimensions, Image
 } from 'react-native';
 import { withNavigation } from "react-navigation"
-import { Container, Content, Item, Input, Button } from "native-base"
+import { Container, Content } from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper'
 import {Donate} from '../../Components/Donate'
@@ -59,6 +56,12 @@ const Slide = props => {
     </View>)
 }
 class ScreenHome extends Component {
+    static navigationOptions = {
+        header: null,
+        tabBarIcon: ({ tintColor }) => {
+            return <Icon name="home" size={20} color={tintColor} />;
+        }
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -108,7 +111,7 @@ class ScreenHome extends Component {
 
                     </View>
                 </View>
-                <Content>     
+                <Content style={{marginBottom:10}}>
                     <Donate/>               
                     <Donate/>               
                     <Donate/>               

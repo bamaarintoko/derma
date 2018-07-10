@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {StatusBar, FlatList, Dimensions, Image} from 'react-native';
-import {View, Container, Text, Content} from 'native-base';
-
+import {View, Container, Text, Content, Button} from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
 function mapStateToProps(state) {
     return {};
 }
@@ -49,6 +49,12 @@ const news = [
     }
 ]
 class ScreenNews extends Component {
+    static navigationOptions = {
+        header: null,
+        tabBarIcon: ({ tintColor }) => {
+            return <Icon name="newspaper-o" size={20} color={tintColor} />;
+        }
+    }
     render() {
         console.log(width)
         return (
@@ -69,12 +75,16 @@ class ScreenNews extends Component {
                             News
                         </Text>
                     </View>
-                    <View style={{flex: 1,}}>
-
+                    <View style={{flex: 1, justifyContent:'center',alignItems:'center'}}>
+                        <Button full transparent light>
+                            <Icon color={'#000000'} size={20}
+                                  name="search"/>
+                        </Button>
                     </View>
                 </View>
                 <View style={{height: 70, backgroundColor: '#FFE082'}}>
                     <FlatList
+                        showsHorizontalScrollIndicator={false}
                         horizontal={true}
                         data={kategori}
                         keyExtractor={(item, index) => '' + index}
@@ -97,6 +107,7 @@ class ScreenNews extends Component {
                 </View>
                 <Content>
                     <FlatList
+
                         data={news}
                         numColumns={2}
                         keyExtractor={(item, index) => '' + index}
