@@ -7,9 +7,10 @@ import { initializeListeners } from 'react-navigation-redux-helpers'
 import { navigationPropConstructor } from '../Utils/Redux'
 import ScreenHome from '../Screen/Home/screen-home'
 import ScreenProfile from '../Screen/Profile/screen-profile'
-import ScreenReserve from '../Screen/Reserve/screen-reserve'
 import ScreenNews from '../Screen/News/screen-news'
 import ScreenEvent from '../Screen/Event/screen-event'
+import ScreenAuth from '../Screen/Auth/screen-auth'
+import ScreenRegister from '../Screen/Auth/screen-register'
 import { connect } from "react-redux";
 import { addListener } from '../Utils/Redux';
 
@@ -22,6 +23,8 @@ export const Home = createBottomTabNavigator({
 
 export const AppNavigator = createStackNavigator({
     Menu: { screen: Home },
+    Auth: { screen: ScreenAuth },
+    Register: { screen: ScreenRegister },
 
 }, {
         headerMode: 'none',
