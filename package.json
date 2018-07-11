@@ -15,6 +15,7 @@
 		"react": "16.3.1",
 		"react-native": "0.55.4",
 		"react-native-facebook-login": "^1.6.0",
+		"react-native-modalbox": "^1.6.0",
 		"react-native-swiper": "^1.5.13",
 		"react-native-vector-icons": "^4.6.0",
 		"react-navigation": "2.2.0",
