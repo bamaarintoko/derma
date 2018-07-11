@@ -11,6 +11,7 @@ import ScreenNews from '../Screen/News/screen-news'
 import ScreenEvent from '../Screen/Event/screen-event'
 import ScreenAuth from '../Screen/Auth/screen-auth'
 import ScreenRegister from '../Screen/Auth/screen-register'
+import ScreenCreateReserve from '../Screen/CreateReserve/screen-create-reserve'
 import { connect } from "react-redux";
 import { addListener } from '../Utils/Redux';
 
@@ -25,6 +26,7 @@ export const AppNavigator = createStackNavigator({
     Menu: { screen: Home },
     Auth: { screen: ScreenAuth },
     Register: { screen: ScreenRegister },
+    CreateReserve: { screen: ScreenCreateReserve },
 
 }, {
         headerMode: 'none',

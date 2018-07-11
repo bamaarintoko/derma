@@ -11,7 +11,7 @@ import {Donate} from '../../Components/Donate'
 const { width } = Dimensions.get('window')
 function mapStateToProps(state) {
     return {
-
+        redAuth:state.redAuth
     };
 }
 const styles = {
@@ -62,6 +62,11 @@ class ScreenHome extends Component {
             return <Icon name="home" size={20} color={tintColor} />;
         }
     }
+
+    componentDidMount() {
+        // console.log(JSON.parse(this.props.redAuth.data).picture)
+    }
+
     constructor(props) {
         super(props);
         this.state = {

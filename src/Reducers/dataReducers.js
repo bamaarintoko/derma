@@ -1,6 +1,6 @@
-import { NavigationActions } from 'react-navigation';
+import {NavigationActions,StackActions} from 'react-navigation';
 
-import { AppNavigator } from '../Navigator/AppNavigator';
+import {AppNavigator} from '../Navigator/AppNavigator';
 
 const firstAction = AppNavigator.router.getActionForPathAndParams('Menu');
 
@@ -13,72 +13,37 @@ export function nav(state = initialNavState, action) {
     switch (action.type) {
         case 'HOME':
             nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.reset({
-                    index:0,
-                    actions : [
-                        NavigationActions.navigate({routeName: 'Menu',params: { foo: 'bar' }})
-                    ]}),
+                StackActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({routeName: 'Menu', params: {foo: 'bar'}})
+                    ]
+                }),
                 state
             );
             break;
-        case 'Login':
-
+        case 'LOGIN_':
             nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.reset({
-                    index:0,
-                    actions : [
-                        NavigationActions.navigate({routeName: 'Login'})
-                    ]}),
+                StackActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({routeName: 'Menu'})
+                    ]
+                }),
                 state
             );
             break;
         case 'LOG_OUT_SUCCESS':
             nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.reset({
-                    index:0,
-                    actions : [
+                StackActions.reset({
+                    index: 0,
+                    actions: [
                         NavigationActions.navigate({routeName: 'Splash'})
-                    ]}),
+                    ]
+                }),
                 state
             );
             break;
-        case 'EDIT_WAREHOUSE':
-
-            nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.navigate({ routeName: 'EditWarehouse' }),
-                state
-            );
-            break;
-        case 'NAV_DETAIL_PROD':
-
-            nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.navigate({ routeName: 'screenOne' }),
-                state
-            );
-            break;
-        case 'NAV_FILTER_RESPONSES':
-
-            nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.navigate({ routeName: 'screenFilterResponses' }),
-                state
-            );
-            break;
-        case 'three':
-
-            nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.navigate({ routeName: 'screenThree' }),
-                state
-            );
-            break;
-        case 'four':
-
-            nextState = AppNavigator.router.getStateForAction(
-                NavigationActions.navigate({ routeName: 'screenFour' }),
-                state
-            );
-            break;
-
-
         default:
             nextState = AppNavigator.router.getStateForAction(action, state);
             break;

@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {View, TouchableWithoutFeedback} from "react-native";
+import {View, TouchableWithoutFeedback, StyleSheet} from "react-native";
 import {Button, Container, Content, Input, Item, Text} from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
 
 class ScreenAuth extends Component {
 
@@ -12,6 +13,37 @@ class ScreenAuth extends Component {
         }
     }
 
+    onLoginFacebookClick = () => {
+        return () => {
+            FBLoginManager.loginWithPermissions(["email"], (error, data) => {
+                if (!error) {
+                    console.log(data)
+                    // return dispatch=>{
+                    this.props.dispatch({
+                        type: 'LOGIN',
+                        status_get: true,
+                        data: data.profile,
+                        message: "login facebook sukses"
+                    })
+                    this.props.dispatch({type: 'HOME'})
+                    // this.props.dispatch({
+                    //     type: 'HOME'
+                    // })
+                    // }
+                } else {
+                    // this.setState({
+                    //     isLoading: false
+                    // })
+                    console.log("Error: ", data);
+                }
+            })
+        }
+    }
+    onLogin = ()=>{
+        return ()=>{
+
+        }
+    }
     render() {
         return (
             <Container style={{backgroundColor: '#FFA726'}}>
@@ -51,21 +83,37 @@ class ScreenAuth extends Component {
                                 </Item>
                             </View>
                             <View style={{width: '20%'}}>
-                                <Button transparent full>
+                                <Button transparent full onPress={this.onLogin()}>
                                     <Icon active name='sign-in' size={40} color={'#FFF'}/>
                                 </Button>
                             </View>
                         </View>
+                        <View style={styles.separatorContainer}>
+                            <View style={styles.separatorLine}/>
+                            <Text style={styles.separatorOr}>Or Login With</Text>
+                            <View style={styles.separatorLine}/>
+                        </View>
+                        <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center', width: '100%'}}>
+                            <Button full info style={{width: '100%', backgroundColor: '#3B5998'}} onPress={this.onLoginFacebookClick()}>
+                                <Icon name="facebook" size={20} color={'#FFF'}/>
+                            </Button>
+                        </View>
                         <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-                            <View style={{flexDirection: 'row',flex: 1, justifyContent:'center', alignItems: 'center'}}>
+                            <View
+                                style={{flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                 <Text style={{color: '#FFF', fontSize: 12}}>First time here?</Text>
                                 <TouchableWithoutFeedback onPress={this.onRegisterClick()}>
                                     <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 14}}> Sign up</Text>
                                 </TouchableWithoutFeedback>
                             </View>
-                            <View style={{flex:1}}>
+                            <View style={{flex: 1}}>
                                 <TouchableWithoutFeedback onPress={this.onRegisterClick()}>
-                                    <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 14,alignSelf: 'flex-end'}}> Forgot password</Text>
+                                    <Text style={{
+                                        color: '#FFF',
+                                        fontWeight: 'bold',
+                                        fontSize: 14,
+                                        alignSelf: 'flex-end'
+                                    }}> Forgot password</Text>
                                 </TouchableWithoutFeedback>
                             </View>
                         </View>
@@ -75,6 +123,26 @@ class ScreenAuth extends Component {
         );
     }
 }
+
+let styles = {
+    wrapper: {},
+    separatorContainer: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginVertical: 8
+    },
+    separatorLine: {
+        flex: 1,
+        borderWidth: StyleSheet.hairlineWidth,
+        height: StyleSheet.hairlineWidth,
+        borderColor: '#FFFFFF'
+    },
+    separatorOr: {
+        color: '#FFFFFF',
+        marginHorizontal: 8,
+        fontSize: 12
+    },
+};
 
 function mapStateToProps(state) {
     return {};

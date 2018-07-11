@@ -5,7 +5,9 @@ import {StatusBar, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        redAuth: state.redAuth
+    };
 }
 
 const styles = StyleSheet.create({
@@ -51,29 +53,90 @@ class ScreenProfile extends Component {
         }
     }
 
-    onLoginClick =()=>{
-        return ()=>{
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLogin: false,
+            name: '',
+            image: ''
+        }
+    }
+
+    onLoginClick = () => {
+        return () => {
             console.log("aaa")
             this.props.navigation.navigate('Auth')
         }
     }
+    onLogOutClick = () => {
+        return () => {
+            this.props.dispatch({type: 'LOGOUT'})
+            this.props.dispatch({type: 'HOME'})
+        }
+    }
+    onCreareReserveClick = () => {
+        return () => {
+            this.props.navigation.navigate('CreateReserve')
+
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.redAuth.status_get) {
+            console.log(JSON.parse(this.props.redAuth.data).picture.data.url)
+            this.setState({
+                isLogin: true,
+                name: JSON.parse(this.props.redAuth.data).name,
+                image: JSON.parse(this.props.redAuth.data).picture.data.url
+            })
+        } else {
+            this.setState({
+                isLogin: false
+            })
+        }
+    }
+
     render() {
         return (
             <Container style={{backgroundColor: '#FFF'}}>
                 <StatusBar backgroundColor="#FFA726"/>
+
                 <View style={styles.MainContainer}>
 
                     <View style={styles.dd}/>
                     <View style={styles.TrapezoidStyle}/>
                     <View style={styles.TrapezoidStyle_}/>
+                    {
+                        this.state.isLogin
+                        &&
+                        <View style={{
+                            height: 50,
+                            position: 'absolute',
+                            width: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Button transparent light style={{width: 50, justifyContent: 'center'}}
+                                    onPress={this.onLogOutClick()}>
+                                <Icon name="sign-out" size={20} color={'#FFF'}/>
+                            </Button>
+                        </View>
+                    }
+
                     <View style={{position: 'absolute', top: 40, right: 10}}>
-                        <Thumbnail large
-                                   source={{uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_vja0DlupN1SvfONjHucwohNYvoNqKS-KewxhW2BfD4nkcB_XXA'}}/>
+                        {
+                            this.state.isLogin
+                            &&
+                            <Thumbnail large
+                                       source={{uri: this.state.image}}/>
+                        }
                     </View>
                     <View style={{position: 'absolute', top: 120, right: 10}}>
-                        <Text style={{color: '#FFF'}}>Maybelle Cardenas</Text>
+                        <Text style={{color: '#FFF'}}>{this.state.name}</Text>
                     </View>
+
                 </View>
+
                 <Content style={{marginTop: 10}}>
 
                     {/*<View style={{padding:10}}>*/}
@@ -82,12 +145,25 @@ class ScreenProfile extends Component {
                     {/*<View style={{padding:10}}>*/}
                     {/*<Text>Log Out</Text>*/}
                     {/*</View>*/}
-                    <View style={{justifyContent:'center',alignItems:'center', marginTop:200, marginRight:20,marginLeft:20}}>
-                        <Button full bordered warning onPress={this.onLoginClick()}>
-                            <Text>Login</Text>
-                        </Button>
-                    </View>
+
+
                 </Content>
+                {
+                    !this.state.isLogin
+                        ?
+                        <View style={{
+                            margin: 10
+                        }}>
+                            <Button full bordered warning onPress={this.onLoginClick()}>
+                                <Text>Login</Text>
+                            </Button>
+                        </View>
+                        :
+                        <Button full bordered warning style={{margin: 10}} onPress={this.onCreareReserveClick()}>
+                            <Text>Create Reserve</Text>
+                        </Button>
+                }
+
             </Container>
         );
     }
