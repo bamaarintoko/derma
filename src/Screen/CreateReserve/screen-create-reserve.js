@@ -93,8 +93,10 @@ class ScreenCreateReserve extends Component {
                     borderBottomWidth: 1
                 }}>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <Button full transparent light onPress={() => this.props.navigation.goBack()}>
                         <Icon color={'#000000'} size={20}
                               name="arrow-left"/>
+                        </Button>
                     </View>
                     <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
                         <Text>
