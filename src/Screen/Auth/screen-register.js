@@ -1,8 +1,16 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button, Container, Content, Input, Item, Text, View} from "native-base";
+import DeviceInfo from 'react-native-device-info'
+// const deviceName = DeviceInfo.getDeviceName();
 import Icon from 'react-native-vector-icons/FontAwesome';
 class ScreenRegister extends Component {
+
+    componentDidMount() {
+        const deviceName = DeviceInfo.getDeviceName();
+        console.log(deviceName)
+    }
+
     render() {
         return (
             <Container style={{backgroundColor: '#FFA726'}}>

@@ -4,9 +4,10 @@ import {
     View, TouchableWithoutFeedback
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-export const Category = ({book_name}) => {
+export const Category = ({book_name,onCheck,isCheck}) => {
+    console.log(isCheck)
     return (
-        <TouchableWithoutFeedback onPress={() => console.log("adasd")}>
+        <TouchableWithoutFeedback onPress={onCheck}>
             <View style={{
                 paddingTop: 10,
                 height: 40,
@@ -15,7 +16,7 @@ export const Category = ({book_name}) => {
                 alignItems: 'center'
             }}>
                 <View style={{width: '90%'}}>
-                    <Text>{book_name}</Text>
+                    <Text>{book_name} {isCheck ? 'check bro' : 'ora check'}</Text>
                 </View>
                 <View>
                     <Icon color={'#E0E0E0'} size={20}
