@@ -4,6 +4,7 @@ import {View, TouchableWithoutFeedback, StyleSheet} from "react-native";
 import {Button, Container, Content, Input, Item, Text} from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
+import {actLoginFacebook} from "./action";
 
 class ScreenAuth extends Component {
 
@@ -17,33 +18,28 @@ class ScreenAuth extends Component {
         return () => {
             FBLoginManager.loginWithPermissions(["email"], (error, data) => {
                 if (!error) {
-                    console.log(data)
-                    // return dispatch=>{
-                    this.props.dispatch({
-                        type: 'LOGIN',
-                        status_get: true,
-                        data: data.profile,
-                        message: "login facebook sukses"
-                    })
-                    this.props.dispatch({type: 'HOME'})
-                    // this.props.dispatch({
-                    //     type: 'HOME'
-                    // })
-                    // }
+                    let profil = JSON.parse(data.profile)
+                    // console.log(profil)
+                    let params = {
+                        par_user_email: profil.email,
+                        par_user_name: profil.name,
+                        par_user_id: profil.id,
+                        par_user_photo: profil.picture.data.url
+                    }
+                    this.props.dispatch(actLoginFacebook(params, data.profile));
+
                 } else {
-                    // this.setState({
-                    //     isLoading: false
-                    // })
                     console.log("Error: ", data);
                 }
             })
         }
     }
-    onLogin = ()=>{
-        return ()=>{
+    onLogin = () => {
+        return () => {
 
         }
     }
+
     render() {
         return (
             <Container style={{backgroundColor: '#FFA726'}}>
@@ -94,7 +90,8 @@ class ScreenAuth extends Component {
                             <View style={styles.separatorLine}/>
                         </View>
                         <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center', width: '100%'}}>
-                            <Button full info style={{width: '100%', backgroundColor: '#3B5998'}} onPress={this.onLoginFacebookClick()}>
+                            <Button full info style={{width: '100%', backgroundColor: '#3B5998'}}
+                                    onPress={this.onLoginFacebookClick()}>
                                 <Icon name="facebook" size={20} color={'#FFF'}/>
                             </Button>
                         </View>
