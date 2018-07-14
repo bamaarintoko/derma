@@ -3,7 +3,7 @@ import qs from 'qs'
 
 // const host      = "http://192.168.100.4/erp/public/api/";
 // const host      = "http://erp.mlskoding.com/api/";
-const host      = "http://debu.mlskoding.com/api/";
+export const host      = "http://debu.mlskoding.com/api/";
 
 
 export default class Api {

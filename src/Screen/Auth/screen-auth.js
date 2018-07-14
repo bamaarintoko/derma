@@ -42,7 +42,7 @@ class ScreenAuth extends Component {
 
     render() {
         return (
-            <Container style={{backgroundColor: '#FFA726'}}>
+            <Container style={{backgroundColor: '#013976'}}>
                 <View style={{height: 50, paddingLeft: 20, justifyContent: 'center'}}>
                     <Button transparent light style={{width: 50}} onPress={() => this.props.navigation.goBack()}>
                         <Icon name="arrow-left" size={20} color={'#FFF'}/>
@@ -56,7 +56,7 @@ class ScreenAuth extends Component {
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{width: '80%'}}>
                                 <Item style={{
-                                    backgroundColor: '#FFA726',
+                                    backgroundColor: '#013976',
                                     borderColor: '#FFF',
                                     borderWidth: 2,
                                     height: 40
@@ -67,8 +67,8 @@ class ScreenAuth extends Component {
                                     <Input placeholder='email'/>
                                 </Item>
                                 <Item style={{
-                                    backgroundColor: '#FFA726',
-                                    borderColor: '#FFA726',
+                                    backgroundColor: '#013976',
+                                    borderColor: '#013976',
                                     borderWidth: 2,
                                     height: 40
                                 }}>

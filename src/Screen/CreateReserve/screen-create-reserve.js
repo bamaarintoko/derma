@@ -1,101 +1,58 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {StyleSheet, FlatList, TouchableWithoutFeedback, TouchableHighlight} from "react-native"
+import {
+    Dimensions,
+    StyleSheet,
+    FlatList,
+    TouchableWithoutFeedback,
+    TouchableHighlight,
+    ImageStore,
+    Image, TouchableOpacity
+} from "react-native"
 import {Button, Container, Content, Input, Item, Text, Textarea, View} from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from 'react-native-modalbox';
 import CheckBox from 'react-native-check-box'
 import Api from "../../Utils/Api";
-import {InputText, InputSelect} from "../../Components/Input";
+import {InputText, InputSelect, InputDate, InputTextArea} from "../../Components/Input";
+import ImagePicker from "react-native-image-picker";
+import ImageResizer from 'react-native-image-resizer'
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import {jsDateToSqlD} from "../../Utils/func";
+import moment from 'moment';
+import "moment/locale/en-au";
+import {actAddReserve} from "./action";
 
+const errors = {}
+const width = (Dimensions.get('window').width - 50);
 const val = [];
-const kategori = [
-    {
-        value: 'Science fiction',
-        key: 'science_fiction',
-        check: false
-    },
-    {
-        value: 'Satire',
-        key: 'satire',
-        check: false
-    },
-    {
-        value: 'Drama',
-        key: 'drama',
-        check: false
-    },
-    {
-        value: 'Action and Adventure',
-        key: 'action_and_adventure',
-        check: false
-    },
-    {
-        value: 'Romance',
-        key: 'romance',
-        check: false
-    },
-    {
-        value: 'Mystery',
-        key: 'mystery',
-        check: false
-    },
-    {
-        value: 'Horror',
-        key: 'horror',
-        check: false
-    },
-    {
-        value: 'Self help',
-        key: 'self_help',
-        check: false
-    },
-    {
-        value: 'Health',
-        key: 'health',
-        check: false
-    },
-    {
-        value: 'Travel',
-        key: 'travel',
-        check: false
-    },
-    {
-        value: 'Children\'s',
-        key: 'children\'s',
-        check: false
-    },
-    {
-        value: 'Religion, Spirituality & New Age',
-        key: 'religian_spirituality_age',
-        check: false
-    },
-    {
-        value: 'Science',
-        key: 'science',
-        check: false
-    },
-    {
-        value: 'History',
-        key: 'history',
-        check: false
-    },
-    {
-        value: 'Math',
-        key: 'math',
-        check: false
-    },
-    {
-        value: 'Anthology',
-        key: 'anthology',
-        check: false
+const img = [];
+let options = {
+    title: 'Select Image',
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
     }
-]
+};
+let tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 7)
 
 class ScreenCreateReserve extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            imgPreview0: '',
+            imgPreview1: '',
+            imgPreview2: '',
+            imgPreview3: '',
+            imgPreview4: '',
+            imgPreview5: '',
+            imgValue0: '',
+            imgValue1: '',
+            imgValue2: '',
+            imgValue3: '',
+            imgValue4: '',
+            imgValue5: '',
             isOpen: false,
             isProvinceOpen: false,
             isDistrictModalOpen: false,
@@ -111,7 +68,18 @@ class ScreenCreateReserve extends Component {
             province_value: '',
             district_value: '',
             sub_district_value: '',
-            keyword: ''
+            keyword: '',
+            data_image: [],
+            isDateTimePickerVisible: false,
+            endDatePreview: '',
+            endDateSave: '',
+            value_title: '',
+            value_reserve_name: '',
+            value_description: '',
+            value_note: '',
+            value_reserve_cp: '',
+            value_address: '',
+            input_error: []
         }
     }
 
@@ -132,6 +100,19 @@ class ScreenCreateReserve extends Component {
         })
     }
 
+    _showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
+
+    _hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
+
+    _handleDatePicked = (date) => {
+        this.setState({
+            endDatePreview: moment(date).format('LL'),
+            endDateSave: jsDateToSqlD(date.toISOString())
+        })
+        // console.log('A date has been picked: --->', jsDateToSqlD(date.toISOString()));
+        // console.log('A date has been picked: --->', moment(date).format('LL'));
+        this._hideDateTimePicker();
+    };
     onOpenClick = () => {
         return () => {
             this.setState({
@@ -150,10 +131,29 @@ class ScreenCreateReserve extends Component {
     }
     onCheck = (key, idx) => {
         return () => {
-            kategori[idx].check = kategori[idx].check === false
+            this.state.data[idx].check = this.state.data[idx].check === false
             this.setState({
-                data: kategori
+                data: this.state.data
             })
+        }
+    }
+    onUp = (key, idx) => {
+        return () => {
+            this.state.data[idx].count = this.state.data[idx].count + 1
+            this.setState({
+                data: this.state.data
+            })
+        }
+    }
+    onDown = (key, idx) => {
+        return () => {
+            if (this.state.data[idx].count > 0) {
+
+                this.state.data[idx].count = this.state.data[idx].count - 1
+                this.setState({
+                    data: this.state.data
+                })
+            }
         }
     }
     onProvinceClick = () => {
@@ -204,6 +204,14 @@ class ScreenCreateReserve extends Component {
             })
         }
     }
+    onChangeText = (key) => {
+        return (e) => {
+            let state = {}
+            state[key] = e
+            this.setState(state);
+            // console.log(e)
+        }
+    }
     onSelectChangeText = (key) => {
         return (e) => {
             this.setState({
@@ -229,6 +237,73 @@ class ScreenCreateReserve extends Component {
                 isDistrictModalOpen: false,
                 isSubDistrictModalOpen: false,
             })
+        }
+    }
+    onPickImage = (key, val) => {
+        return () => {
+            ImagePicker.showImagePicker(options, (response) => {
+                // console.log('Response = ', response);
+
+                if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                }
+                else if (response.error) {
+                    console.log('ImagePicker Error: ', response.error);
+                }
+                else if (response.customButton) {
+                    console.log('User tapped custom button: ', response.customButton);
+                }
+                else {
+                    // console.log('data:image/png;base64,' + response.data)
+                    ImageResizer.createResizedImage('data:image/png;base64,' + response.data, 200, 200, 'JPEG', 80)
+                        .then(({uri}) => {
+                            ImageStore.getBase64ForTag(uri, (data) => {
+                                let source = 'data:image/png;base64,' + data;
+                                let state = {};
+                                state[key] = source;
+                                state[val] = response.data;
+                                this.setState(state)
+                            }, (e) => {
+                                console.log('getBase64ForTag-error', e);
+                            });
+                        }).catch((err) => {
+                    });
+                }
+            });
+        }
+    }
+    onValidate = (key) => {
+        return (e) => {
+            if (this.state[key].length < 1) {
+                errors[key] = {error: true, error_message: 'required'}
+            } else {
+                errors[key] = false
+            }
+            this.setState({input_error: errors})
+            // console.log('----->e', this.state[key].length)
+        }
+    }
+    onCreate = () => {
+        return () => {
+            let words = this.state.data;
+            const result = words.filter(word => word.check);
+            // console.log(JSON.stringify(words))
+            let params = {
+                par_title: this.state.value_title,
+                par_kategory: JSON.stringify(result),
+                par_description : this.state.value_description,
+                par_note : this.state.value_note,
+                par_reserve_name : this.state.value_reserve_name,
+                par_reserve_cp : this.state.value_reserve_cp,
+                par_address : this.state.value_address,
+                par_province : this.state.province_value,
+                par_district : this.state.district_value,
+                par_sub_district : this.state.sub_district_value,
+                par_end_date : this.state.endDateSave,
+                par_create_by : this.props.redAuth.data.profile.user_id
+            }
+            this.props.dispatch(actAddReserve(params));
+            console.log("create", params)
         }
     }
 
@@ -397,8 +472,12 @@ class ScreenCreateReserve extends Component {
                 <Content style={{backgroundColor: '#FFF'}}>
 
                     <View style={{margin: 10}}>
-                        <InputText label={"Title"}/>
-                        <InputText label={"Receive"}/>
+                        <InputText
+                            onBlur={this.onValidate('value_title')}
+                            isError={this.state.input_error.value_title}
+                            label={"Title"}
+                            value={this.state.value_title}
+                            onChangeText={this.onChangeText('value_title')}/>
                         <View>
                             <Text style={{fontSize: 12}}>Kind of book (Click plus button to add book)</Text>
                             {
@@ -407,18 +486,45 @@ class ScreenCreateReserve extends Component {
                                     return (
                                         v.check
                                         &&
-                                        <TouchableWithoutFeedback key={k} onPress={this.onCheck(v.value, k)}>
-                                            <View key={k} style={{marginBottom: 5, flexDirection: 'row'}}>
-                                                <View style={{width: '90%'}}>
-
-                                                    <Text>{v.value}</Text>
+                                        <View key={k} style={{
+                                            marginBottom: 5,
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}>
+                                            <View style={{width: '30%', flexDirection: 'row'}}>
+                                                <View style={{width: '30%'}}>
+                                                    <Button full info style={{height: 30}}
+                                                            onPress={this.onUp(v.key, k)}>
+                                                        <Icon color={'#FFF'} size={12}
+                                                              name="chevron-up"/>
+                                                    </Button>
                                                 </View>
-                                                <View style={{width: '20%'}}>
-                                                    <Icon color={'red'} size={20}
-                                                          name="minus-circle"/>
+                                                <View style={{width: '40%'}}>
+                                                    <Item regular style={{height: 30, borderColor: '#FFF'}}>
+                                                        <Input keyboardType="numeric" style={{fontSize: 12}} value={v.count.toString()}/>
+                                                    </Item>
+                                                </View>
+                                                <View style={{width: '30%'}}>
+                                                    <Button full info style={{height: 30}} onPress={this.onDown(v.key, k)}>
+                                                        <Icon color={'#FFF'} size={12}
+                                                              name="chevron-down"/>
+                                                    </Button>
                                                 </View>
                                             </View>
-                                        </TouchableWithoutFeedback>
+                                            <TouchableWithoutFeedback key={k} onPress={this.onCheck(v.value, k)}>
+                                                <View style={{width: '70%', flexDirection: 'row', paddingLeft: 5}}>
+                                                    <View style={{width: '90%'}}>
+
+                                                        <Text style={{fontSize: 12}}>{v.value}</Text>
+                                                    </View>
+                                                    <View style={{width: '10%'}}>
+                                                        <Icon color={'red'} size={20}
+                                                              name="minus-circle"/>
+                                                    </View>
+                                                </View>
+                                            </TouchableWithoutFeedback>
+                                        </View>
                                     )
                                 })
                             }
@@ -427,29 +533,214 @@ class ScreenCreateReserve extends Component {
                                       name="plus"/>
                             </Button>
                         </View>
-                        <View style={{marginTop: 5}}>
-                            <Text style={{fontSize: 12}}>Description</Text>
-                            <Textarea rowSpan={5} bordered/>
-                        </View>
+                        <InputTextArea
+                            onBlur={this.onValidate('value_description')}
+                            value={this.state.value_description}
+                            onChangeText={this.onChangeText('value_description')}
+                            isError={this.state.input_error.value_description}
+                            label={'Description'}
+                        />
+                        <InputText
+                            value={this.state.value_note}
+                            onChangeText={this.onChangeText('value_note')}
+                            label={"Note"}/>
+                        <InputText
+                            onBlur={this.onValidate('value_reserve_name')}
+                            isError={this.state.input_error.value_reserve_name}
+                            value={this.state.value_reserve_name}
+                            onChangeText={this.onChangeText('value_reserve_name')}
+                            label={"Reserve name"}/>
+                        <InputText
+                            onBlur={this.onValidate('value_reserve_cp')}
+                            isError={this.state.input_error.value_reserve_cp}
+                            value={this.state.value_reserve_cp}
+                            onChangeText={this.onChangeText('value_reserve_cp')}
+                            label={"Reserve Contact Person"}/>
                         <View style={{marginTop: 5, marginBottom: 5}}>
-                            <Text style={{fontSize: 12, marginBottom: 5}}>Image (Click plus button to add image
-                                location)</Text>
-                            <Button block info style={{justifyContent: 'center', width: 50}}
-                                    onPress={this.onPickClick()}>
-                                <Icon color={'#FFF'} size={20}
-                                      name="picture-o"/>
-                            </Button>
+                            <Text style={{fontSize: 12, marginBottom: 5}}>Image (Click plus button to add image)</Text>
+                            <View style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                            }}>
+                                <TouchableWithoutFeedback onPress={this.onPickImage('imgPreview0', 'imgValue0')}>
+                                    <View style={{
+                                        height: width / 3,
+                                        overflow: 'hidden',
+                                        borderRadius: 5,
+                                        width: width / 3,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#E3F2FD'
+                                    }}>
+                                        {
+                                            this.state.imgPreview0.length > 0
+                                                ?
+                                                <Image
+
+                                                    style={{width: width / 3, height: width / 3}}
+                                                    source={{isStatic: true, uri: this.state.imgPreview0}}/>
+                                                :
+                                                <Icon color={'#FFF'} size={20}
+                                                      name="picture-o"/>
+                                        }
+
+
+                                    </View>
+                                </TouchableWithoutFeedback>
+                                <TouchableWithoutFeedback onPress={this.onPickImage('imgPreview1', 'imgValue1')}>
+                                    <View style={{
+                                        height: width / 3,
+                                        overflow: 'hidden',
+                                        borderRadius: 5,
+                                        width: width / 3,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#E3F2FD'
+                                    }}>
+                                        {
+                                            this.state.imgPreview1.length > 0
+                                                ?
+                                                <Image
+
+                                                    style={{width: width / 3, height: width / 3}}
+                                                    source={{isStatic: true, uri: this.state.imgPreview1}}/>
+                                                :
+                                                <Icon color={'#FFF'} size={20}
+                                                      name="picture-o"/>
+                                        }
+                                    </View>
+                                </TouchableWithoutFeedback>
+                                <TouchableWithoutFeedback onPress={this.onPickImage('imgPreview2', 'imgValue2')}>
+                                    <View style={{
+                                        height: width / 3,
+                                        overflow: 'hidden',
+                                        borderRadius: 5,
+                                        width: width / 3,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#E3F2FD'
+                                    }}>
+                                        {
+                                            this.state.imgPreview2.length > 0
+                                                ?
+                                                <Image
+
+                                                    style={{width: width / 3, height: width / 3}}
+                                                    source={{isStatic: true, uri: this.state.imgPreview2}}/>
+                                                :
+                                                <Icon color={'#FFF'} size={20}
+                                                      name="picture-o"/>
+                                        }
+                                    </View>
+                                </TouchableWithoutFeedback>
+
+                            </View>
+                            <View style={{
+                                marginTop: 10,
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                            }}>
+                                <TouchableWithoutFeedback onPress={this.onPickImage('imgPreview3', 'imgValue3')}>
+                                    <View style={{
+                                        height: width / 3,
+                                        overflow: 'hidden',
+                                        borderRadius: 5,
+                                        width: width / 3,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#E3F2FD'
+                                    }}>
+                                        {
+                                            this.state.imgPreview3.length > 0
+                                                ?
+                                                <Image
+
+                                                    style={{width: width / 3, height: width / 3}}
+                                                    source={{isStatic: true, uri: this.state.imgPreview3}}/>
+                                                :
+                                                <Icon color={'#FFF'} size={20}
+                                                      name="picture-o"/>
+                                        }
+                                    </View>
+                                </TouchableWithoutFeedback>
+                                <TouchableWithoutFeedback onPress={this.onPickImage('imgPreview4', 'imgValue4')}>
+                                    <View style={{
+                                        height: width / 3,
+                                        overflow: 'hidden',
+                                        borderRadius: 5,
+                                        width: width / 3,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#E3F2FD'
+                                    }}>
+                                        {
+                                            this.state.imgPreview4.length > 0
+                                                ?
+                                                <Image
+
+                                                    style={{width: width / 3, height: width / 3}}
+                                                    source={{isStatic: true, uri: this.state.imgPreview4}}/>
+                                                :
+                                                <Icon color={'#FFF'} size={20}
+                                                      name="picture-o"/>
+                                        }
+                                    </View>
+                                </TouchableWithoutFeedback>
+                                <TouchableWithoutFeedback onPress={this.onPickImage('imgPreview5', 'imgValue5')}>
+                                    <View style={{
+                                        height: width / 3,
+                                        overflow: 'hidden',
+                                        borderRadius: 5,
+                                        width: width / 3,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backgroundColor: '#E3F2FD'
+                                    }}>
+                                        {
+                                            this.state.imgPreview5.length > 0
+                                                ?
+                                                <Image
+
+                                                    style={{width: width / 3, height: width / 3}}
+                                                    source={{isStatic: true, uri: this.state.imgPreview5}}/>
+                                                :
+                                                <Icon color={'#FFF'} size={20}
+                                                      name="picture-o"/>
+                                        }
+                                    </View>
+                                </TouchableWithoutFeedback>
+
+                            </View>
+
                         </View>
-                        <InputText label={"Address"}/>
+                        <InputTextArea
+                            onBlur={this.onValidate('value_address')}
+                            value={this.state.value_address}
+                            onChangeText={this.onChangeText('value_address')}
+                            isError={this.state.input_error.value_address}
+                            label={'Address'}
+                        />
                         <InputSelect label={"Province"} onClick={this.onProvinceClick()}
                                      value={this.state.province_value}/>
                         <InputSelect label={"District"} value={this.state.district_value}
                                      onClick={this.state.province_value.length !== 0 ? this.onDistrictClick() : () => console.log("lala")}/>
                         <InputSelect label={"Sub District"} value={this.state.sub_district_value}
                                      onClick={this.state.province_value.length !== 0 && this.state.district_value.length !== 0 ? this.onSubDistrictClick() : () => console.log("lala")}/>
-                        <InputText label={"Location"}/>
+                        {/*<InputText label={"Location"}/>*/}
+                        <InputDate label={"Donation end date"} onClick={this._showDateTimePicker}
+                                   value={this.state.endDatePreview}/>
+                        <View style={{flex: 1}}>
+                            <DateTimePicker
+                                minimumDate={tomorrow}
+                                isVisible={this.state.isDateTimePickerVisible}
+                                onConfirm={this._handleDatePicked}
+                                onCancel={this._hideDateTimePicker}
+                            />
+                        </View>
                     </View>
-                    <Button block info>
+                    <Button block info onPress={this.onCreate()}>
                         <Text>Create</Text>
                     </Button>
                 </Content>
@@ -507,7 +798,9 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        redAuth: state.redAuth
+    };
 }
 
 export default connect(

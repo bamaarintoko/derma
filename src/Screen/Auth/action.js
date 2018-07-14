@@ -9,7 +9,7 @@ export function actLoginFacebook(params,data) {
                     dispatch({
                         type: 'LOGIN',
                         status_get: true,
-                        data: data,
+                        data: {data:data,profile:response.data.result},
                         message: "login facebook sukses"
                     })
                     dispatch({type: 'HOME'})

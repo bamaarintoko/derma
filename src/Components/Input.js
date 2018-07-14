@@ -1,29 +1,73 @@
 import {View, TouchableWithoutFeedback} from "react-native";
-import {Input, Item, Text} from "native-base";
+import {Input, Item, Text, Textarea} from "native-base";
 import React from 'react';
 
-export const InputText = ({label}) => {
+export const InputText = ({label, onBlur, value, onChangeText, isError}) => {
     return (
         <View style={{marginBottom: 10}}>
             <Text style={{fontSize: 12}}>{label}</Text>
-            <Item regular style={{width: '100%', height: 40}}>
-                <Input/>
+            <Item regular style={{width: '100%', height: 40}}
+                  error={typeof isError === 'undefined' ? false : !!isError.error}>
+                <Input onBlur={onBlur} style={{fontSize: 14}} value={value} onChangeText={onChangeText}/>
             </Item>
         </View>
     )
 
 }
-
-export const InputSelect = ({label, onClick,value}) => {
+export const InputTextArea = ({label, onBlur, value, onChangeText, isError}) => {
+    let error = typeof isError === 'undefined' ? false : !!isError.error
+    // console.log("InputTextArea", error)
+    return (
+        <View style={{marginTop: 5}}>
+            <Text style={{fontSize: 12}}>{label}</Text>
+            <Textarea
+                style={{borderColor: error ? 'red' : '#E0E0E0'}}
+                onBlur={onBlur}
+                value={value}
+                onChangeText={onChangeText}
+                rowSpan={5} bordered/>
+        </View>
+    )
+}
+export const InputSelect = ({label, onClick, value}) => {
     return (
         <TouchableWithoutFeedback onPress={onClick}>
             <View style={{marginBottom: 10}}>
                 <Text style={{fontSize: 12}}>{label}</Text>
-                <View style={{width: '100%', height: 40, borderColor:'#E0E0E0',borderWidth:1,borderStyle:'solid', justifyContent:'center',paddingLeft:5}}>
-                    <Text>{value}</Text>
+                <View style={{
+                    width: '100%',
+                    height: 40,
+                    borderColor: '#E0E0E0',
+                    borderWidth: 1,
+                    borderStyle: 'solid',
+                    justifyContent: 'center',
+                    paddingLeft: 5
+                }}>
+                    <Text style={{fontSize: 14}}>{value}</Text>
                 </View>
             </View>
         </TouchableWithoutFeedback>
     )
 
+}
+
+export const InputDate = ({label, onClick, value}) => {
+    return (
+        <TouchableWithoutFeedback onPress={onClick}>
+            <View style={{marginBottom: 10}}>
+                <Text style={{fontSize: 12}}>{label}</Text>
+                <View style={{
+                    width: '100%',
+                    height: 40,
+                    borderColor: '#E0E0E0',
+                    borderWidth: 1,
+                    borderStyle: 'solid',
+                    justifyContent: 'center',
+                    paddingLeft: 5
+                }}>
+                    <Text style={{fontSize: 14}}>{value}</Text>
+                </View>
+            </View>
+        </TouchableWithoutFeedback>
+    )
 }

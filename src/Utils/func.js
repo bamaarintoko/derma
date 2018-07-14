@@ -30,3 +30,52 @@ export function throttle() {
 export function secure(key){
     return md5(md5(key).toString()).toString()
 }
+export function jsDateToSqlDT(value) {
+    let tomorrow = value
+    if (tomorrow === null || tomorrow === "") {
+        tomorrow = new Date()
+    } else {
+        tomorrow = new Date(value);
+        tomorrow.setDate(tomorrow.getDate() + 1)
+    }
+    //returned from mysql timestamp/datetime field
+    // let a = value.split(" ");
+    // let d = a[0].split("-");
+    // let t = a[1].split(":");
+    // let formatedDate = new Date(d[0], (d[1] - 1), d[2], t[0], t[1], t[2]);
+
+    return tomorrow.toISOString().substring(0, 19).replace('T', ' ');
+}
+export function jsDateToSqlDTPlusOne(value) {
+    let tomorrow = value
+    if (tomorrow === null || tomorrow === "") {
+        tomorrow = new Date()
+    } else {
+        tomorrow = new Date(value);
+    }
+    //returned from mysql timestamp/datetime field
+    // let a = value.split(" ");
+    // let d = a[0].split("-");
+    // let t = a[1].split(":");
+    // let formatedDate = new Date(d[0], (d[1] - 1), d[2], t[0], t[1], t[2]);
+
+    return tomorrow.toISOString().substring(0, 19).replace('T', ' ');
+}
+
+export function jsDateToSqlD(value) {
+    // console.log(value)
+    let tomorrow = value
+    if (tomorrow === null || tomorrow === "") {
+        tomorrow = new Date()
+    } else {
+        tomorrow = new Date(value);
+        tomorrow.setDate(tomorrow.getDate())
+    }
+    //returned from mysql timestamp/datetime field
+    // let a = value.split(" ");
+    // let d = a[0].split("-");
+    // let t = a[1].split(":");
+    // let formatedDate = new Date(d[0], (d[1] - 1), d[2], t[0], t[1], t[2]);
+
+    return tomorrow.toISOString().substring(0, 10);
+}

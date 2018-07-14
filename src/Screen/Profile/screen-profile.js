@@ -83,11 +83,11 @@ class ScreenProfile extends Component {
 
     componentDidMount() {
         if (this.props.redAuth.status_get) {
-            console.log(JSON.parse(this.props.redAuth.data).picture.data.url)
+            console.log(this.props.redAuth)
             this.setState({
                 isLogin: true,
-                name: JSON.parse(this.props.redAuth.data).name,
-                image: JSON.parse(this.props.redAuth.data).picture.data.url
+                name: JSON.parse(this.props.redAuth.data.data).name,
+                image: JSON.parse(this.props.redAuth.data.data).picture.data.url
             })
         } else {
             this.setState({
@@ -148,14 +148,17 @@ class ScreenProfile extends Component {
 
 
                 </Content>
+                {/*<Button full bordered info style={{margin: 10}} onPress={this.onCreareReserveClick()}>*/}
+                    {/*<Text>Create Reserve</Text>*/}
+                {/*</Button>*/}
                 {
                     !this.state.isLogin
                         ?
                         <View style={{
                             margin: 10
                         }}>
-                            <Button full bordered warning onPress={this.onLoginClick()}>
-                                <Text>Login</Text>
+                            <Button style={{borderColor:'#013976'}} full bordered onPress={this.onLoginClick()}>
+                                <Text style={{color:'#013976'}}>Login</Text>
                             </Button>
                         </View>
                         :
