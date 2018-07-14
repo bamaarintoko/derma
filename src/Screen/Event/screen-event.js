@@ -32,7 +32,7 @@ class ScreenEvent extends Component {
     render() {
         return (
             <Container>
-                <StatusBar backgroundColor="#FFA726"/>
+                <StatusBar backgroundColor="#013976"/>
                 <View style={{
                     flexDirection: 'row',
                     height: 50,

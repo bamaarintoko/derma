@@ -59,7 +59,7 @@ class ScreenNews extends Component {
         console.log(width)
         return (
             <Container style={{backgroundColor: '#FFFFFF'}}>
-                <StatusBar backgroundColor="#FFA726"/>
+                <StatusBar backgroundColor="#013976"/>
                 <View style={{
                     flexDirection: 'row',
                     height: 50,

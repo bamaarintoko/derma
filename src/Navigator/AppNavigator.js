@@ -10,6 +10,7 @@ import ScreenProfile from '../Screen/Profile/screen-profile'
 import ScreenNews from '../Screen/News/screen-news'
 import ScreenEvent from '../Screen/Event/screen-event'
 import ScreenAuth from '../Screen/Auth/screen-auth'
+import SplashScreen from '../Screen/Splash/screen-splash'
 import ScreenRegister from '../Screen/Auth/screen-register'
 import ScreenCreateReserve from '../Screen/CreateReserve/screen-create-reserve'
 import { connect } from "react-redux";
@@ -25,6 +26,7 @@ export const Home = createBottomTabNavigator({
 export const AppNavigator = createStackNavigator({
     Menu: { screen: Home },
     Auth: { screen: ScreenAuth },
+    Splash: { screen: SplashScreen },
     Register: { screen: ScreenRegister },
     CreateReserve: { screen: ScreenCreateReserve },
 

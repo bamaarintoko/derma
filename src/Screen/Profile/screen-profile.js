@@ -16,9 +16,9 @@ const styles = StyleSheet.create({
 
         width: '100%',
         height: 0,
-        borderBottomColor: "#FB8C00",
+        borderBottomColor: "#1565C0",
         borderTopWidth: 50,
-        borderTopColor: '#FB8C00',
+        borderTopColor: '#1565C0',
         borderLeftWidth: 400,
         borderRightWidth: 0,
         borderRightColor: 'transparent',
@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
 
         width: '100%',
         height: 0,
-        borderBottomColor: "#FFA726",
+        borderBottomColor: "#013976",
         borderTopWidth: 50,
-        borderTopColor: '#FFA726',
+        borderTopColor: '#013976',
         borderLeftWidth: 0,
         position: 'absolute',
         borderRightWidth: 400,
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 
         width: '100%',
         height: 120,
-        backgroundColor: '#FB8C00'
+        backgroundColor: '#1565C0'
     }
 })
 
@@ -99,7 +99,7 @@ class ScreenProfile extends Component {
     render() {
         return (
             <Container style={{backgroundColor: '#FFF'}}>
-                <StatusBar backgroundColor="#FFA726"/>
+                <StatusBar backgroundColor="#013976"/>
 
                 <View style={styles.MainContainer}>
 
@@ -159,7 +159,7 @@ class ScreenProfile extends Component {
                             </Button>
                         </View>
                         :
-                        <Button full bordered warning style={{margin: 10}} onPress={this.onCreareReserveClick()}>
+                        <Button full bordered info style={{margin: 10}} onPress={this.onCreareReserveClick()}>
                             <Text>Create Reserve</Text>
                         </Button>
                 }

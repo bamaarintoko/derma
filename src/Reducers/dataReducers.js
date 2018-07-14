@@ -2,7 +2,7 @@ import {NavigationActions,StackActions} from 'react-navigation';
 
 import {AppNavigator} from '../Navigator/AppNavigator';
 
-const firstAction = AppNavigator.router.getActionForPathAndParams('Menu');
+const firstAction = AppNavigator.router.getActionForPathAndParams('Splash');
 
 const initialNavState = AppNavigator.router.getStateForAction(
     firstAction,
