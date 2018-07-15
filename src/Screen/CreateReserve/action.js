@@ -1,9 +1,21 @@
 import axios from "axios";
 import {host} from "../../Utils/Api";
 
-export function actAddReserve(params) {
+export function actAddReserve(params,img) {
     return dispatch => {
+        const config = {
+            headers: { 'content-type': 'multipart/form-data' }
+        };
         const data = new FormData();
+        data.append('par_image_count',img.length)
+        console.log(img)
+        img.map((v,k)=>{
+            data.append('par_image_'+k, {
+                uri: v.uri,
+                type: v.type !== null ? v.type : 'image/jpeg', // or photo.type
+                name: v.fileName
+            });
+        })
         data.append('par_title', params.par_title)
         data.append('par_kategory', params.par_kategory)
         data.append('par_description', params.par_description)
@@ -17,7 +29,7 @@ export function actAddReserve(params) {
         data.append('par_end_date', params.par_end_date)
         data.append('par_create_by', params.par_create_by)
 
-        axios.post(host + 'reserve/add_reserve', data)
+        axios.post(host + 'reserve/add_reserve', data, config)
             .then((response) => {
                 console.log(response)
             }).catch(error => {

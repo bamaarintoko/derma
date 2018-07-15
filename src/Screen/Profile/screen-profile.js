@@ -148,9 +148,9 @@ class ScreenProfile extends Component {
 
 
                 </Content>
-                {/*<Button full bordered info style={{margin: 10}} onPress={this.onCreareReserveClick()}>*/}
-                    {/*<Text>Create Reserve</Text>*/}
-                {/*</Button>*/}
+                <Button full bordered info style={{margin: 10}} onPress={this.onCreareReserveClick()}>
+                    <Text>Create Reserve</Text>
+                </Button>
                 {
                     !this.state.isLogin
                         ?

@@ -29,7 +29,7 @@ export const InputTextArea = ({label, onBlur, value, onChangeText, isError}) => 
         </View>
     )
 }
-export const InputSelect = ({label, onClick, value}) => {
+export const InputSelect = ({label, onClick, value,isError}) => {
     return (
         <TouchableWithoutFeedback onPress={onClick}>
             <View style={{marginBottom: 10}}>
@@ -37,7 +37,7 @@ export const InputSelect = ({label, onClick, value}) => {
                 <View style={{
                     width: '100%',
                     height: 40,
-                    borderColor: '#E0E0E0',
+                    borderColor: isError ? 'red' :'#E0E0E0',
                     borderWidth: 1,
                     borderStyle: 'solid',
                     justifyContent: 'center',
@@ -51,7 +51,7 @@ export const InputSelect = ({label, onClick, value}) => {
 
 }
 
-export const InputDate = ({label, onClick, value}) => {
+export const InputDate = ({label, onClick, value,isError}) => {
     return (
         <TouchableWithoutFeedback onPress={onClick}>
             <View style={{marginBottom: 10}}>
@@ -59,7 +59,7 @@ export const InputDate = ({label, onClick, value}) => {
                 <View style={{
                     width: '100%',
                     height: 40,
-                    borderColor: '#E0E0E0',
+                    borderColor: isError ? 'red' :'#E0E0E0',
                     borderWidth: 1,
                     borderStyle: 'solid',
                     justifyContent: 'center',
