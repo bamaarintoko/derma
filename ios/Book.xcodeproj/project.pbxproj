@@ -58,6 +58,8 @@
 		D6CE348402AE433DB559C72C /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7DC4557C7041FC88CEC28F /* libRCTImageResizer.a */; };
 		DDADC73128A347E08B0BF221 /* libRCTFBLogin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4D974FB69F84022B52DF42A /* libRCTFBLogin.a */; };
 		C9ACB9C6B2F043AAB39D5E29 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F244ECE275E42B990AD46F6 /* libRNImagePicker.a */; };
+		99DFE040E9E54A27A0373201 /* libRNSnackbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F30D33B7A749DD973FFC02 /* libRNSnackbar.a */; };
+		E942D5F7DF7F4087B92AA872 /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCA177CC0804CFC98E08BAE /* libRNSpinkit.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -390,6 +392,10 @@
 		D4D974FB69F84022B52DF42A /* libRCTFBLogin.a */ = {isa = PBXFileReference; name = "libRCTFBLogin.a"; path = "libRCTFBLogin.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		A6B3EE15F374419F8AC4D8BE /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		1F244ECE275E42B990AD46F6 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		74947A31F9744679A89A668C /* RNSnackbar.xcodeproj */ = {isa = PBXFileReference; name = "RNSnackbar.xcodeproj"; path = "../node_modules/react-native-snackbar/ios/RNSnackbar.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D4F30D33B7A749DD973FFC02 /* libRNSnackbar.a */ = {isa = PBXFileReference; name = "libRNSnackbar.a"; path = "libRNSnackbar.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		08C2E9F5AEA74BCC81F75574 /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; name = "RNSpinkit.xcodeproj"; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		3DCA177CC0804CFC98E08BAE /* libRNSpinkit.a */ = {isa = PBXFileReference; name = "libRNSpinkit.a"; path = "libRNSpinkit.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -424,6 +430,8 @@
 				D6CE348402AE433DB559C72C /* libRCTImageResizer.a in Frameworks */,
 				DDADC73128A347E08B0BF221 /* libRCTFBLogin.a in Frameworks */,
 				C9ACB9C6B2F043AAB39D5E29 /* libRNImagePicker.a in Frameworks */,
+				99DFE040E9E54A27A0373201 /* libRNSnackbar.a in Frameworks */,
+				E942D5F7DF7F4087B92AA872 /* libRNSpinkit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,6 +625,8 @@
 				69B518EA5DB740BB8F425CC6 /* RCTImageResizer.xcodeproj */,
 				B73B470FC0FF4E4491854EDF /* RCTFBLogin.xcodeproj */,
 				A6B3EE15F374419F8AC4D8BE /* RNImagePicker.xcodeproj */,
+				74947A31F9744679A89A668C /* RNSnackbar.xcodeproj */,
+				08C2E9F5AEA74BCC81F75574 /* RNSpinkit.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1287,6 +1297,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1296,6 +1308,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
+					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 				);
 			};
 			name = Debug;
@@ -1323,6 +1337,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1332,6 +1348,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
+					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 				);
 			};
 			name = Release;
@@ -1359,6 +1377,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
+					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 				);
 			};
 			name = Debug;
@@ -1385,6 +1405,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
+					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 				);
 			};
 			name = Release;
@@ -1421,6 +1443,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1430,6 +1454,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
+					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 				);
 			};
 			name = Debug;
@@ -1466,6 +1492,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1475,6 +1503,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
+					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 				);
 			};
 			name = Release;
@@ -1510,6 +1540,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1519,6 +1551,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
+					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 				);
 			};
 			name = Debug;
@@ -1554,6 +1588,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1563,6 +1599,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-resizer\ios\RCTImageResizer",
 					"$(SRCROOT)\..\node_modules\react-native-facebook-login\RCTFBLogin/**",
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
+					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
+					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 				);
 			};
 			name = Release;

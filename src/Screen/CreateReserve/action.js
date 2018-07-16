@@ -31,8 +31,20 @@ export function actAddReserve(params,img) {
 
         axios.post(host + 'reserve/add_reserve', data, config)
             .then((response) => {
+                dispatch({
+                    type:'ADD_RESERVE',
+                    status_add:response.data.status,
+                    message:response.data.message,
+                    data:[]
+                })
                 console.log(response)
             }).catch(error => {
+                dispatch({
+                    type:'ADD_RESERVE',
+                    status_add:false,
+                    message:error.message,
+                    data:[]
+                })
             console.log(error)
         })
     }

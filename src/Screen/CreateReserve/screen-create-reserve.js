@@ -22,6 +22,8 @@ import {jsDateToSqlD} from "../../Utils/func";
 import moment from 'moment';
 import "moment/locale/en-au";
 import {actAddReserve} from "./action";
+import Snackbar from 'react-native-snackbar';
+import Spinner from 'react-native-spinkit'
 
 const errors = {}
 const width = (Dimensions.get('window').width - 50);
@@ -79,11 +81,14 @@ class ScreenCreateReserve extends Component {
             value_note: '',
             value_reserve_cp: '',
             value_address: '',
-            input_error: []
+            input_error: [],
+            initialRedAddReserve: true,
+            create_loading : false
         }
     }
 
     componentDidMount() {
+        // console.log(this.props.redAuth.data.profile.user_id)
         let params = {}
         Api._POST('category/category_book', params).then((response) => {
             if (response.data.status) {
@@ -98,6 +103,58 @@ class ScreenCreateReserve extends Component {
                 province: response.data
             })
         })
+    }
+
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.initialRedAddReserve === this.props.redAddReserve.status) {
+            if (this.props.redAddReserve.status_add) {
+                this.componentDidMount();
+                this.setState({
+                    create_loading:false,
+                    input_error: [],
+                    imgPreview0: '',
+                    imgPreview1: '',
+                    imgPreview2: '',
+                    imgPreview3: '',
+                    imgPreview4: '',
+                    imgPreview5: '',
+                    imgValue0: '',
+                    imgValue1: '',
+                    imgValue2: '',
+                    imgValue3: '',
+                    imgValue4: '',
+                    imgValue5: '',
+                    data: [],
+                    data_kat: [],
+                    province: [],
+                    district: [],
+                    sub_district: [],
+                    value_title: "",
+                    value_description: "",
+                    value_note: "",
+                    value_reserve_name: "",
+                    value_reserve_cp: "",
+                    value_address: "",
+                    province_value: "",
+                    district_value: "",
+                    sub_district_value: "",
+                    endDateSave: "",
+                    endDatePreview: ""
+                })
+                Snackbar.show({
+                    title: 'Create reserve success',
+                    duration: Snackbar.LENGTH_LONG,
+                });
+            } else {
+                Snackbar.show({
+                    title: 'Create reserve failed',
+                    duration: Snackbar.LENGTH_LONG,
+                });
+            }
+            this.props.dispatch({type: 'RESET_RESERVE'})
+        }
+        // console.log(this.props.redAddReserve)
     }
 
     _showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
@@ -139,7 +196,16 @@ class ScreenCreateReserve extends Component {
     }
     onUp = (key, idx) => {
         return () => {
-            this.state.data[idx].count = this.state.data[idx].count + 1
+            this.state.data[idx].count = parseInt(this.state.data[idx].count) + 1
+            this.setState({
+                data: this.state.data
+            })
+        }
+    }
+    onChangeNumber = (key, idx) => {
+        return (e) => {
+            console.log(parseInt(e))
+            this.state.data[idx].count = parseInt(e)
             this.setState({
                 data: this.state.data
             })
@@ -149,7 +215,7 @@ class ScreenCreateReserve extends Component {
         return () => {
             if (this.state.data[idx].count > 0) {
 
-                this.state.data[idx].count = this.state.data[idx].count - 1
+                this.state.data[idx].count = parseInt(this.state.data[idx].count) - 1
                 this.setState({
                     data: this.state.data
                 })
@@ -306,7 +372,7 @@ class ScreenCreateReserve extends Component {
             this.state.imgValue5 !== "" && img_.push(this.state.imgValue5)
 
             const result = words.filter(word => word.check);
-            console.log(result.length)
+            // console.log(result.length)
             if (this.state.value_title.length < 1) {
                 errors['value_title'] = {error: true, error_message: 'required'}
                 count_errors.push({value_title: true})
@@ -384,11 +450,13 @@ class ScreenCreateReserve extends Component {
                     par_district: this.state.district_value,
                     par_sub_district: this.state.sub_district_value,
                     par_end_date: this.state.endDateSave,
-                    par_create_by: 1
+                    par_create_by: this.props.redAuth.data.profile.user_id
                 }
+                this.setState({
+                    create_loading:true
+                })
                 this.props.dispatch(actAddReserve(params, img_));
             } else {
-                console.log(errors)
                 this.setState({
                     input_error: errors,
                 })
@@ -441,6 +509,16 @@ class ScreenCreateReserve extends Component {
                     </View>
                     {/*{console.log("=>",this.state.data)}*/}
                 </View>
+                <Modal position={"center"}
+                       style={{width: 300, height: 100, justifyContent:'center',alignItems:'center'}}
+                       swipeToClose={false}
+                       isOpen={this.state.create_loading}
+                       backdropPressToClose={false}>
+                    <View style={{justifyContent:'center',alignItems:'center'}}>
+                        <Spinner type={'ChasingDots'} color={"#013976"}/>
+                        <Text>Please wait</Text>
+                    </View>
+                </Modal>
                 <Modal position={"center"}
                        style={[styles.modal, styles.modal3]}
                        swipeToClose={false}
@@ -613,6 +691,7 @@ class ScreenCreateReserve extends Component {
                                                 <View style={{width: '40%'}}>
                                                     <Item regular style={{height: 30, borderColor: '#FFF'}}>
                                                         <Input keyboardType="numeric" style={{fontSize: 12}}
+                                                               onChangeText={this.onChangeNumber(v.key, k)}
                                                                value={v.count.toString()}/>
                                                     </Item>
                                                 </View>
@@ -1048,7 +1127,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        redAuth: state.redAuth
+        redAuth: state.redAuth,
+        redAddReserve: state.redAddReserve
     };
 }
 

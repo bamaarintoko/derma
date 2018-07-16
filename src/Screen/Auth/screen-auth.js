@@ -19,14 +19,15 @@ class ScreenAuth extends Component {
             FBLoginManager.loginWithPermissions(["email"], (error, data) => {
                 if (!error) {
                     let profil = JSON.parse(data.profile)
-                    // console.log(profil)
+                    let data_ = {name:profil.name,photo: profil.picture.data.url}
+                    console.log(data_)
                     let params = {
                         par_user_email: profil.email,
                         par_user_name: profil.name,
                         par_user_id: profil.id,
                         par_user_photo: profil.picture.data.url
                     }
-                    this.props.dispatch(actLoginFacebook(params, data.profile));
+                    this.props.dispatch(actLoginFacebook(params, data_));
 
                 } else {
                     console.log("Error: ", data);

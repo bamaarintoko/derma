@@ -3,6 +3,8 @@ package com.book;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.react.rnspinkit.RNSpinkitPackage;
+import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -26,7 +28,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSpinkitPackage(),
             new ImageResizerPackage(),
+            new SnackbarPackage(),
             new ImagePickerPackage(),
             new VectorIconsPackage(),
                                                 new FacebookLoginPackage()
