@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     BackHandler, View, StatusBar
 } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator, createDrawerNavigator } from "react-navigation";
-import { initializeListeners } from 'react-navigation-redux-helpers'
-import { navigationPropConstructor } from '../Utils/Redux'
+import {createStackNavigator, createBottomTabNavigator, createDrawerNavigator} from "react-navigation";
+import {initializeListeners} from 'react-navigation-redux-helpers'
+import {navigationPropConstructor} from '../Utils/Redux'
 import ScreenHome from '../Screen/Home/screen-home'
 import ScreenProfile from '../Screen/Profile/screen-profile'
 import ScreenNews from '../Screen/News/screen-news'
@@ -12,31 +12,33 @@ import ScreenEvent from '../Screen/Event/screen-event'
 import ScreenAuth from '../Screen/Auth/screen-auth'
 import SplashScreen from '../Screen/Splash/screen-splash'
 import ScreenRegister from '../Screen/Auth/screen-register'
+import ScreenForgetPassword from '../Screen/Auth/screen-forget-password'
 import ScreenCreateReserve from '../Screen/CreateReserve/screen-create-reserve'
-import { connect } from "react-redux";
-import { addListener } from '../Utils/Redux';
+import {connect} from "react-redux";
+import {addListener} from '../Utils/Redux';
 
 export const Home = createBottomTabNavigator({
-    Home: { screen: ScreenHome },
-    News: { screen: ScreenNews },
-    Event: { screen: ScreenEvent },
-    Reserve: { screen: ScreenProfile },
+    Home: {screen: ScreenHome},
+    News: {screen: ScreenNews},
+    Event: {screen: ScreenEvent},
+    Reserve: {screen: ScreenProfile},
 })
 
 export const AppNavigator = createStackNavigator({
-    Menu: { screen: Home },
-    Auth: { screen: ScreenAuth },
-    Splash: { screen: SplashScreen },
-    Register: { screen: ScreenRegister },
-    CreateReserve: { screen: ScreenCreateReserve },
+    Menu: {screen: Home},
+    Auth: {screen: ScreenAuth},
+    Splash: {screen: SplashScreen},
+    Register: {screen: ScreenRegister},
+    CreateReserve: {screen: ScreenCreateReserve},
+    ForgetPassword: {screen: ScreenForgetPassword},
 
 }, {
-        headerMode: 'none',
+    headerMode: 'none',
 
-        navigationOptions: {
-            gesturesEnabled: true
-        }
-    });
+    navigationOptions: {
+        gesturesEnabled: true
+    }
+});
 
 class AppWithNavigationState extends Component {
     constructor(props) {
@@ -46,16 +48,17 @@ class AppWithNavigationState extends Component {
     componentDidMount() {
         initializeListeners('root', this.props.nav);
         BackHandler.addEventListener('hardwareBackPress', function () {
-            const { dispatch, navigation, nav } = this.props;
+            const {dispatch, navigation, nav} = this.props;
 
             if (nav.routes.length === 1) {
                 BackHandler.exitApp()
                 return false;
             }
-            dispatch({ type: 'Navigation/BACK' });
+            dispatch({type: 'Navigation/BACK'});
             return true;
         }.bind(this));
     }
+
     componentDidUpdate(prevProps, prevState) {
         // console.log("aaa");
     }
@@ -65,10 +68,10 @@ class AppWithNavigationState extends Component {
     }
 
     render() {
-        const { dispatch, nav } = this.props;
+        const {dispatch, nav} = this.props;
         const navigation = navigationPropConstructor(dispatch, nav);
         return (
-            <AppNavigator navigation={navigation} />
+            <AppNavigator navigation={navigation}/>
 
         )
     }

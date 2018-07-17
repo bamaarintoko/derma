@@ -26,6 +26,12 @@ class ScreenAuth extends Component {
             this.props.navigation.navigate('Register')
         }
     }
+    onForgotClick =()=>{
+        return ()=>{
+            console.log("asdf")
+            this.props.navigation.navigate('ForgetPassword')
+        }
+    }
 
     onLoginFacebookClick = () => {
         return () => {
@@ -168,7 +174,7 @@ class ScreenAuth extends Component {
                                 </TouchableWithoutFeedback>
                             </View>
                             <View style={{flex: 1}}>
-                                <TouchableWithoutFeedback onPress={this.onRegisterClick()}>
+                                <TouchableWithoutFeedback onPress={this.onForgotClick()}>
                                     <Text style={{
                                         color: '#FFF',
                                         fontWeight: 'bold',
