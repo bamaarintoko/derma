@@ -71,7 +71,7 @@ class ScreenProfile extends Component {
     onLogOutClick = () => {
         return () => {
             this.props.dispatch({type: 'LOGOUT'})
-            this.props.dispatch({type: 'HOME'})
+            this.props.dispatch({type: 'RESET'})
         }
     }
     onCreareReserveClick = () => {

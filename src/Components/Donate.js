@@ -1,23 +1,40 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {
     Platform,
     StyleSheet,
     Text,
     View, FlatList, StatusBar, Dimensions, Image
 } from 'react-native';
-export const Donate = () => {
+import {Thumbnail} from "native-base";
+import TimeAgo from 'react-native-timeago';
+import moment from "moment/moment";
+export const Donate = ({uri,name,create_date,reserve_title,reserve_description,reserve_end_date}) => {
     return (
-        <View style={{ height: 100, marginTop: 5 }}>
+        <View style={{height: 100, marginTop: 5}}>
+
             <View style={{
                 borderRadius: 5,
                 height: 90,
-                backgroundColor: '#1565C0', marginRight: 5, marginLeft: 15, marginTop: 10
+                backgroundColor: '#E3F2FD', marginRight: 5, marginLeft: 15, marginTop: 10
             }}>
-                <Text>aaaa</Text>
+                <View style={{position:'absolute',right:5}}>
+                    <TimeAgo style={{fontSize:12}} time={create_date} />
+                </View>
+                <View style={{position:'absolute',right:5, bottom:2}}>
+                    <Text style={{fontSize:12}}>End donation : {moment(reserve_end_date).format('LL')}</Text>
+                </View>
+                <View style={{marginLeft:75,marginTop:1}}>
+
+                <Text style={{fontSize:12, color:'black'}}>{name}</Text>
+                <Text style={{fontSize:12, color:'#424242'}}>{reserve_title.length > 30 ? reserve_title.slice(0,33) + "..." : reserve_title}</Text>
+                <Text style={{fontSize:12, color:'#424242', marginTop:4}}>{reserve_description.length > 50 ? reserve_description.slice(0,80) + "..." : reserve_description}</Text>
+                </View>
 
             </View>
-            <View style={{ overflow: 'hidden', left: 5, width: 70, height: 70, borderWidth: 2, borderStyle: 'solid', borderColor: '#013976', backgroundColor: '#FFF', borderRadius: 50, position: 'absolute' }}>
+            <View style={{overflow: 'hidden', left: 5, borderWidth: 3, borderColor:'#FFF', borderRadius:50, position: 'absolute', backgroundColor:'#FFF'}}>
+
+                <Thumbnail style={{width: 70, height: 70}} large source={{uri: uri}}/>
             </View>
         </View>
     )

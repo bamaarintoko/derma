@@ -6,7 +6,7 @@ import {actRegister} from "./action";
 import Snackbar from 'react-native-snackbar';
 import Spinner from 'react-native-spinkit';
 import Modal from 'react-native-modalbox';
-
+import md5 from 'crypto-js/md5';
 const errors = {};
 
 class ScreenRegister extends Component {
@@ -48,7 +48,7 @@ class ScreenRegister extends Component {
                     data: {data:data_,profile: this.props.redRegister.data},
                     message: "-"
                 })
-                this.props.dispatch({type: 'HOME'})
+                this.props.dispatch({type: 'RESET'})
             } else {
                 // console.log("asd -->false")
                 this.setState({
@@ -122,7 +122,7 @@ class ScreenRegister extends Component {
                 let params = {
                     par_user_name: this.state.value_name,
                     par_user_email: this.state.value_email,
-                    par_user_password: this.state.confirm_password
+                    par_user_password: md5(this.state.confirm_password).toString()
                 }
                 this.props.dispatch(actRegister(params))
 

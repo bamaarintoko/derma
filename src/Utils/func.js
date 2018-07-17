@@ -79,3 +79,23 @@ export function jsDateToSqlD(value) {
 
     return tomorrow.toISOString().substring(0, 10);
 }
+export function sqlToJsISO(sqlDateStr) {
+    if (sqlDateStr === null || sqlDateStr === "") {
+        sqlDateStr = '2018-02-22 00:00:00'
+    }
+    //returned from mysql timestamp/datetime field
+    let a = sqlDateStr.split(" ");
+    let d = a[0].split("-");
+    let t = a[1].split(":");
+    let formatedDate = new Date(d[0], (d[1] - 1), d[2], t[0], t[1], t[2]);
+    //console.log(formatedDate.toISOString())
+    return formatedDate.toISOString();
+}
+export function sqlToJsDate(sqlDateStr) {
+    if (sqlDateStr === '') {
+        sqlDateStr = '2018-02-22 00:00:00'
+    }
+    // sqlDateStr = sqlDateStr.replace(/:| /g, "-");
+    return new Date(Date.parse(sqlDateStr.replace('-', '/', 'g'))).toISOString()
+    // return sqlDate.toISOString().substring(0, 19).replace('T', ' ');
+}

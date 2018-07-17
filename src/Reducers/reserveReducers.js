@@ -1,4 +1,4 @@
-import {initialAdd} from "../Utils/initialState";
+import {initialAdd, initialGet} from "../Utils/initialState";
 
 export function redAddReserve(state = initialAdd, action) {
     switch (action.type) {
@@ -17,6 +17,27 @@ export function redAddReserve(state = initialAdd, action) {
                 data: []
             }
         default :
+            return state;
+    }
+}
+
+export function redGetListReserve(state = initialGet, action) {
+    switch (action.type) {
+        case "RESERVE":
+            return {
+                status: true,
+                status_get: action.status_get,
+                message: action.message,
+                data: action.data
+            }
+        case "RESET_RESERVE":
+            return {
+                status: false,
+                status_get: false,
+                message: "",
+                data: []
+            }
+        default:
             return state;
     }
 }

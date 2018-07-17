@@ -4,9 +4,22 @@ import {View, TouchableWithoutFeedback, StyleSheet} from "react-native";
 import {Button, Container, Content, Input, Item, Text} from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {FBLogin, FBLoginManager} from 'react-native-facebook-login';
-import {actLoginFacebook} from "./action";
+import Snackbar from 'react-native-snackbar';
+import Spinner from 'react-native-spinkit';
+import Modal from 'react-native-modalbox';
+import {actLogin, actLoginFacebook} from "./action";
+import md5 from 'crypto-js/md5';
 
 class ScreenAuth extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user_email: "",
+            user_password: "",
+            initialRedAuth: true,
+            isAuthLoading:false
+        }
+    }
 
     onRegisterClick = () => {
         return () => {
@@ -19,8 +32,8 @@ class ScreenAuth extends Component {
             FBLoginManager.loginWithPermissions(["email"], (error, data) => {
                 if (!error) {
                     let profil = JSON.parse(data.profile)
-                    let data_ = {name:profil.name,photo: profil.picture.data.url}
-                    console.log(data_)
+                    let data_ = {name: profil.name, photo: "https://graph.facebook.com/"+profil.id+"/picture?type=large"}
+                    console.log(profil)
                     let params = {
                         par_user_email: profil.email,
                         par_user_name: profil.name,
@@ -35,9 +48,45 @@ class ScreenAuth extends Component {
             })
         }
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        // console.log(this.props.redAuth)
+        if (prevState.initialRedAuth === this.props.redAuth.status) {
+            if (this.props.redAuth.status_get) {
+                this.props.dispatch({type: 'RESET'})
+            } else {
+                Snackbar.show({
+                    title: this.props.redAuth.message,
+                    duration: Snackbar.LENGTH_LONG,
+                });
+                this.setState({
+                    isAuthLoading:false
+                })
+                this.props.dispatch({type: 'LOGIN_RESET'})
+            }
+        }
+    }
+
+    onChangeText = (key) => {
+        return (e) => {
+            let state = {}
+            state[key] = e
+            this.setState(state);
+        }
+    }
     onLogin = () => {
         return () => {
-
+            if (this.state.user_password !=="" && this.state.user_email!==""){
+                let params = {
+                    par_user_password: md5(this.state.user_password).toString(),
+                    par_user_email: this.state.user_email
+                }
+                this.setState({
+                    isAuthLoading:true
+                })
+                console.log(params)
+                this.props.dispatch(actLogin(params))
+            }
         }
     }
 
@@ -49,6 +98,16 @@ class ScreenAuth extends Component {
                         <Icon name="arrow-left" size={20} color={'#FFF'}/>
                     </Button>
                 </View>
+                <Modal position={"center"}
+                       style={{width: 300, height: 100, justifyContent: 'center', alignItems: 'center'}}
+                       swipeToClose={false}
+                       isOpen={this.state.isAuthLoading}
+                       backdropPressToClose={false}>
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <Spinner type={'ChasingDots'} color={"#013976"}/>
+                        <Text>Please wait</Text>
+                    </View>
+                </Modal>
                 <Content style={{padding: 20}}>
                     <View>
                         <Text style={{fontWeight: 'bold', fontSize: 30, color: '#FFF'}}>Log In</Text>
@@ -65,7 +124,9 @@ class ScreenAuth extends Component {
                                     <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
                                         <Icon active name='envelope' size={20}/>
                                     </View>
-                                    <Input placeholder='email'/>
+                                    <Input onChangeText={this.onChangeText('user_email')}
+                                           style={{fontSize: 12, color: '#FFF'}} autoCapitalize={"none"}
+                                           keyboardType={'email-address'} placeholder='email'/>
                                 </Item>
                                 <Item style={{
                                     backgroundColor: '#013976',
@@ -76,7 +137,9 @@ class ScreenAuth extends Component {
                                     <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
                                         <Icon active name='lock' size={20}/>
                                     </View>
-                                    <Input placeholder='password'/>
+                                    <Input onChangeText={this.onChangeText('user_password')}
+                                           style={{fontSize: 12, color: '#FFF'}} autoCapitalize={"none"}
+                                           secureTextEntry={true} placeholder='password'/>
                                 </Item>
                             </View>
                             <View style={{width: '20%'}}>
@@ -143,7 +206,9 @@ let styles = {
 };
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        redAuth: state.redAuth
+    };
 }
 
 export default connect(

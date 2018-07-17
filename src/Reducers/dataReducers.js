@@ -22,6 +22,17 @@ export function nav(state = initialNavState, action) {
                 state
             );
             break;
+        case 'RESET':
+            nextState = AppNavigator.router.getStateForAction(
+                StackActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({routeName: 'Splash', params: {foo: 'bar'}})
+                    ]
+                }),
+                state
+            );
+            break;
         case 'LOGIN_':
             nextState = AppNavigator.router.getStateForAction(
                 StackActions.reset({
