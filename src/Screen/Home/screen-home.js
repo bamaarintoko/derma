@@ -3,16 +3,16 @@ import {connect} from 'react-redux';
 import {
     View, StatusBar, Dimensions, Image, FlatList
 } from 'react-native';
-import {withNavigation} from "react-navigation"
 import {Container, Content} from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper'
 import {Donate} from '../../Components/Donate'
 import {actGetListReserve} from "./action";
 import {sqlToJsISO} from "../../Utils/func";
-import moment from 'moment';
-import "moment/locale/en-au";
+
 const {width} = Dimensions.get('window')
+import Placeholder from 'rn-placeholder';
+import {Ph} from "../../Components/Content";
 
 function mapStateToProps(state) {
     return {
@@ -73,6 +73,7 @@ class ScreenHome extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: true,
             initialRedGetListReserve: true,
             color: '#FFFFFF',
             imgList: [
@@ -94,9 +95,11 @@ class ScreenHome extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+
         if (prevState.initialRedGetListReserve === this.props.redGetListReserve.status) {
-        console.log(this.props.redGetListReserve)
+            console.log(this.props.redGetListReserve)
             this.setState({
+                isLoading: false,
                 data: this.props.redGetListReserve.data
             })
             this.props.dispatch({type: "RESET_RESERVE"})
@@ -114,13 +117,8 @@ class ScreenHome extends Component {
         }
     }
 
-    onBarClick = () => {
-        return () => {
-            this.props.navigation.openDrawer()
-        }
-    }
-
     render() {
+
         // console.log(this.state.data)
         let firstQuery = ""
         return (
@@ -144,23 +142,39 @@ class ScreenHome extends Component {
 
                     </View>
                 </View>
-                <Content style={{marginBottom: 10}}>
-                    <FlatList
-                        showsHorizontalScrollIndicator={false}
-                        data={this.state.data}
-                        keyExtractor={(item, index) => '' + index}
-                        renderItem={({item}) =>
+                {
+                    this.state.isLoading
+                        ?
+                        <Content>
+                            <Ph/>
+                            <Ph/>
+                            <Ph/>
+                            <Ph/>
+                            <Ph/>
+                            <Ph/>
+                            <Ph/>
+                        </Content>
+                        :
+                        <Content style={{marginBottom: 10}}>
 
-                            <Donate uri={item.user_photo}
-                                    name={item.user_name}
-                                    reserve_title={item.reserve_title}
-                                    reserve_description={item.reserve_description}
-                                    reserve_end_date={item.reserve_end_date}
-                                    create_date={sqlToJsISO(item.reserve_create_date)}/>
-                        }
-                    />
+                            <FlatList
+                                showsHorizontalScrollIndicator={false}
+                                data={this.state.data}
+                                keyExtractor={(item, index) => '' + index}
+                                renderItem={({item}) =>
 
-                </Content>
+                                    <Donate uri={item.user_photo}
+                                            name={item.user_name}
+                                            reserve_title={item.reserve_title}
+                                            reserve_description={item.reserve_description}
+                                            reserve_end_date={item.reserve_end_date}
+                                            create_date={sqlToJsISO(item.reserve_create_date)}/>
+                                }
+                            />
+
+                        </Content>
+                }
+
             </Container>
         );
     }
