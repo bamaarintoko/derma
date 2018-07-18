@@ -11,11 +11,12 @@ import TimeAgo from 'react-native-timeago';
 import moment from "moment/moment";
 export const Donate = ({uri,name,create_date,reserve_title,reserve_description,reserve_end_date}) => {
     return (
-        <View style={{height: 100, marginTop: 5}}>
+        <View style={{minHeight:100, marginTop: 5}}>
 
             <View style={{
+                minHeight:90,
                 borderRadius: 5,
-                height: 90,
+                paddingBottom:20,
                 backgroundColor: '#E3F2FD', marginRight: 5, marginLeft: 15, marginTop: 10
             }}>
                 <View style={{position:'absolute',right:5}}>
@@ -28,7 +29,7 @@ export const Donate = ({uri,name,create_date,reserve_title,reserve_description,r
 
                 <Text style={{fontSize:12, color:'black'}}>{name}</Text>
                 <Text style={{fontSize:12, color:'#424242'}}>{reserve_title.length > 30 ? reserve_title.slice(0,33) + "..." : reserve_title}</Text>
-                <Text style={{fontSize:12, color:'#424242', marginTop:4}}>{reserve_description.length > 50 ? reserve_description.slice(0,80) + "..." : reserve_description}</Text>
+                <Text style={{fontSize:12, color:'#424242', marginTop:4}}>{reserve_description.length > 350 ? reserve_description.slice(0,350) + "..." : reserve_description}</Text>
                 </View>
 
             </View>
