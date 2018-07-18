@@ -83,15 +83,16 @@ class ScreenHome extends Component {
                 'https://gitlab.pro/yuji/demo/uploads/576ef91941b0bda5761dde6914dae9f0/kD3eeHe.jpg'
             ],
             loadQueue: [0, 0, 0, 0],
-            data: []
+            data: [],
+            isRefresh:false
         }
         // this.loadHandle = this.loadHandle.bind(this)
     }
 
     componentDidMount() {
         this.props.dispatch(actGetListReserve());
-        console.log(sqlToJsISO("2018-07-16 20:17:35"))
-        // console.log(JSON.parse(this.props.redAuth.data).picture)
+        // console.log(sqlToJsISO("2018-07-16 20:17:35"))
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -100,7 +101,8 @@ class ScreenHome extends Component {
             console.log(this.props.redGetListReserve)
             this.setState({
                 isLoading: false,
-                data: this.props.redGetListReserve.data
+                data: this.props.redGetListReserve.data,
+                isRefresh:false
             })
             this.props.dispatch({type: "RESET_RESERVE"})
         }
@@ -116,7 +118,14 @@ class ScreenHome extends Component {
             })
         }
     }
-
+    onRefresh=()=>{
+        return ()=>{
+            this.componentDidMount()
+            this.setState({
+                isRefresh : true
+            })
+        }
+    }
     render() {
 
         // console.log(this.state.data)
@@ -155,9 +164,11 @@ class ScreenHome extends Component {
                             <Ph/>
                         </Content>
                         :
-                        <Content style={{marginBottom: 10}}>
 
                             <FlatList
+                                style={{marginBottom: 10}}
+                                onRefresh={this.onRefresh()}
+                                refreshing={this.state.isRefresh}
                                 showsHorizontalScrollIndicator={false}
                                 data={this.state.data}
                                 keyExtractor={(item, index) => '' + index}
@@ -172,7 +183,6 @@ class ScreenHome extends Component {
                                 }
                             />
 
-                        </Content>
                 }
 
             </Container>

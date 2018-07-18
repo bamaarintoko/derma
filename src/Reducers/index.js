@@ -2,7 +2,7 @@ import {combineReducers} from 'redux'
 import {nav} from './dataReducers'
 import {redGetColor} from './colorReducers'
 import {redAuth, redRegister} from './authReducers'
-import {redAddReserve,redGetListReserve} from './reserveReducers'
+import {redAddReserve, redGetListReserve, redGetListReserveUser} from './reserveReducers'
 
 const rootReducer = combineReducers({
     redGetColor: redGetColor,
@@ -10,6 +10,7 @@ const rootReducer = combineReducers({
     redRegister: redRegister,
     redAddReserve: redAddReserve,
     redGetListReserve: redGetListReserve,
+    redGetListReserveUser: redGetListReserveUser,
     nav: nav
 })
 

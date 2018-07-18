@@ -1,12 +1,17 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {View, Thumbnail, Text, Container, Content, Button} from 'native-base';
-import {StatusBar, StyleSheet} from 'react-native';
+import {FlatList, StatusBar, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {Reserve} from "../../Components/Content";
+import {actGetListReserve} from "./action";
+import {redGetListReserveUser} from "../../Reducers/reserveReducers";
+import {sqlToJsISO} from "../../Utils/func";
 
 function mapStateToProps(state) {
     return {
-        redAuth: state.redAuth
+        redAuth: state.redAuth,
+        redGetListReserveUser: state.redGetListReserveUser
     };
 }
 
@@ -58,7 +63,10 @@ class ScreenProfile extends Component {
         this.state = {
             isLogin: false,
             name: '',
-            image: ''
+            image: '',
+            initialRedGetListReserveUser: true,
+            data: [],
+            isRefresh: false
         }
     }
 
@@ -81,9 +89,22 @@ class ScreenProfile extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.initialRedGetListReserveUser === this.props.redGetListReserveUser.status) {
+            this.setState({
+                data: this.props.redGetListReserveUser.data,
+                isRefresh: false
+            })
+            this.props.dispatch({type: 'RESET_RESERVE_USER'})
+        }
+    }
+
     componentDidMount() {
+        let params = {
+            par_user_id: this.props.redAuth.data.profile.user_id
+        }
+        this.props.dispatch(actGetListReserve(params));
         if (this.props.redAuth.status_get) {
-            console.log("-->",this.props.redAuth)
             this.setState({
                 isLogin: true,
                 name: this.props.redAuth.data.data.name,
@@ -96,12 +117,24 @@ class ScreenProfile extends Component {
         }
     }
 
+    onRefresh = () => {
+        return () => {
+            let params = {
+                par_user_id: this.props.redAuth.data.profile.user_id
+            }
+            this.props.dispatch(actGetListReserve(params));
+            this.setState({
+                isRefresh: true
+            })
+        }
+    }
+
     render() {
         return (
             <Container style={{backgroundColor: '#FFF'}}>
                 <StatusBar backgroundColor="#013976"/>
 
-                <View style={styles.MainContainer}>
+                <View>
 
                     <View style={styles.dd}/>
                     <View style={styles.TrapezoidStyle}/>
@@ -136,20 +169,53 @@ class ScreenProfile extends Component {
                     </View>
 
                 </View>
+                {
+                    this.state.isLogin
+                    &&
+                    <View style={{marginLeft: 10}}>
+                        <Text>Your reserve</Text>
+                    </View>
+                }
+                {
+                    !this.state.isLogin
+                        ?
+                        <Content>
+                            <Text>Heloo</Text>
+                        </Content>
+                        :
+                        this.state.data.length > 0
+                            ?
+                            <FlatList
+                                style={{marginLeft: 10, marginRight: 10}}
+                                onRefresh={this.onRefresh()}
+                                refreshing={this.state.isRefresh}
+                                showsHorizontalScrollIndicator={false}
+                                data={this.state.data}
+                                keyExtractor={(item, index) => '' + index}
+                                renderItem={({item}) =>
 
-                <Content style={{marginTop: 10}}>
+                                    <Reserve
+                                        title={item.reserve_title}
+                                        status={item.reserve_status}
+                                        cd={sqlToJsISO(item.reserve_create_date)}
+                                        ed={item.reserve_end_date}
+                                    />
+                                }
+                            />
+                            : <Text>No data</Text>
 
-                    {/*<View style={{padding:10}}>*/}
-                    {/*<Text>Edit Profile</Text>*/}
-                    {/*</View>*/}
-                    {/*<View style={{padding:10}}>*/}
-                    {/*<Text>Log Out</Text>*/}
-                    {/*</View>*/}
+
+                }
+                {/*<View style={{padding:10}}>*/}
+                {/*<Text>Edit Profile</Text>*/}
+                {/*</View>*/}
+                {/*<View style={{padding:10}}>*/}
+                {/*<Text>Log Out</Text>*/}
+                {/*</View>*/}
 
 
-                </Content>
                 {/*<Button full bordered info style={{margin: 10}} onPress={this.onCreareReserveClick()}>*/}
-                    {/*<Text>Create Reserve</Text>*/}
+                {/*<Text>Create Reserve</Text>*/}
                 {/*</Button>*/}
                 {
                     !this.state.isLogin
@@ -157,8 +223,8 @@ class ScreenProfile extends Component {
                         <View style={{
                             margin: 10
                         }}>
-                            <Button style={{borderColor:'#013976'}} full bordered onPress={this.onLoginClick()}>
-                                <Text style={{color:'#013976'}}>Login</Text>
+                            <Button style={{borderColor: '#013976'}} full bordered onPress={this.onLoginClick()}>
+                                <Text style={{color: '#013976'}}>Login</Text>
                             </Button>
                         </View>
                         :

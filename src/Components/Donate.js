@@ -18,7 +18,7 @@ export const Donate = ({uri, name, create_date, reserve_title, reserve_descripti
                 minHeight: 90,
                 borderRadius: 5,
                 paddingBottom: 20,
-                backgroundColor: '#E3F2FD', marginRight: 5, marginLeft: 15, marginTop: 10
+                backgroundColor: '#EEEEEE', marginRight: 5, marginLeft: 15, marginTop: 10
             }}>
                 <View style={{position: 'absolute', right: 5}}>
                     <TimeAgo style={{fontSize: 12}} time={create_date}/>

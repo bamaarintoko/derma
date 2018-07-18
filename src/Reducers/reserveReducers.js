@@ -41,3 +41,24 @@ export function redGetListReserve(state = initialGet, action) {
             return state;
     }
 }
+
+export function redGetListReserveUser(state = initialGet, action) {
+    switch (action.type) {
+        case "RESERVE_USER":
+            return {
+                status: true,
+                status_get: action.status_get,
+                message: action.message,
+                data: action.data
+            }
+        case "RESET_RESERVE_USER":
+            return {
+                status: false,
+                status_get: false,
+                message: "",
+                data: []
+            }
+        default :
+            return state;
+    }
+}
