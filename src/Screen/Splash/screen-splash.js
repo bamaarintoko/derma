@@ -6,8 +6,14 @@ import {Container, Content, View} from "native-base";
 class SplashScreen extends Component {
 
     componentDidMount() {
+        console.log(this.props.redAuth)
         setTimeout(() => {
-            this.props.navigation.dispatch({type: 'HOME'});
+            this.props.redAuth.status_get
+                ?
+                this.props.navigation.dispatch({type: 'HOME'})
+                :
+                this.props.navigation.dispatch({type: 'INTRO'})
+
         }, 3000)
     }
 
@@ -36,7 +42,9 @@ class SplashScreen extends Component {
 }
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        redAuth: state.redAuth
+    };
 }
 
 export default connect(

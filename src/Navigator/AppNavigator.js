@@ -11,6 +11,7 @@ import ScreenNews from '../Screen/News/screen-news'
 import ScreenEvent from '../Screen/Event/screen-event'
 import ScreenAuth from '../Screen/Auth/screen-auth'
 import SplashScreen from '../Screen/Splash/screen-splash'
+import ScreenIntro from '../Screen/Splash/screen-intro'
 import ScreenRegister from '../Screen/Auth/screen-register'
 import ScreenForgetPassword from '../Screen/Auth/screen-forget-password'
 import ScreenCreateReserve from '../Screen/CreateReserve/screen-create-reserve'
@@ -28,6 +29,7 @@ export const AppNavigator = createStackNavigator({
     Menu: {screen: Home},
     Auth: {screen: ScreenAuth},
     Splash: {screen: SplashScreen},
+    Intro: {screen: ScreenIntro},
     Register: {screen: ScreenRegister},
     CreateReserve: {screen: ScreenCreateReserve},
     ForgetPassword: {screen: ScreenForgetPassword},
