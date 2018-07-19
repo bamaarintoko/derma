@@ -6,6 +6,7 @@ import Placeholder from 'rn-placeholder';
 import {Text} from "native-base";
 import TimeAgo from 'react-native-timeago';
 import moment from "moment/moment";
+
 export const Ph = () => {
     return (
         <View
@@ -16,7 +17,7 @@ export const Ph = () => {
                     height={90}
                     width={'100%'}
                     radius={5}
-                    color="#EEEEEE"
+                    color="#BDBDBD"
                 />
             </View>
             <View style={{
@@ -32,17 +33,17 @@ export const Ph = () => {
                     height={70}
                     width={70}
                     radius={50}
-                    color="#EEEEEE"
+                    color="#BDBDBD"
                 />
             </View>
         </View>
     )
 }
 
-export const Reserve = ({title,status,cd,ed}) => {
+export const Reserve = ({title, status, cd, ed}) => {
     // console.log(ed)
     return (
-        <View style={{marginBottom:10}}>
+        <View style={{marginBottom: 10}}>
             <View style={{height: 15, alignItems: 'flex-end'}}>
                 <TimeAgo style={{fontSize: 12}} time={cd}/>
             </View>
@@ -51,14 +52,28 @@ export const Reserve = ({title,status,cd,ed}) => {
                     <Text style={{fontSize: 12}}>{title}</Text>
                 </View>
                 <View style={{flexDirection: 'row'}}>
-                    <View style={{alignItems: 'flex-start', height: 15,flex:1}}>
+                    <View style={{alignItems: 'flex-start', height: 15, flex: 1}}>
                         <Text style={{fontSize: 12}}>Status : {status}</Text>
                     </View>
-                    <View style={{height: 15, alignItems: 'flex-end',flex:1}}>
+                    <View style={{height: 15, alignItems: 'flex-end', flex: 1}}>
                         <Text style={{fontSize: 12}}>End donation : {moment(ed).format('LL')}</Text>
                     </View>
                 </View>
             </View>
+        </View>
+    )
+}
+
+export const Rph = () => {
+    return (
+        <View style={{marginLeft: 5, marginTop: 20, marginRight:5}}>
+            <Placeholder.Box
+                animate="fade"
+                height={50}
+                width={'100%'}
+                radius={5}
+                color="#BDBDBD"
+            />
         </View>
     )
 }

@@ -95,13 +95,14 @@ def enableSeparateBuildPerCPUArchitecture = true
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.book"
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 16
@@ -132,6 +133,10 @@ android {
     }
     buildTypes {
         release {
+            debuggable false
+            shrinkResources enableProguardInReleaseBuilds
+            zipAlignEnabled enableProguardInReleaseBuilds
+            useProguard enableProguardInReleaseBuilds
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release

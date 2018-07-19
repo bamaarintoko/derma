@@ -58,6 +58,7 @@
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class okhttp3.** { *; }
+-keep class com.magus.fblogin.FacebookLoginPackage.** { *; }
 -keep interface okhttp3.** { *; }
 -dontwarn okhttp3.**
 
@@ -67,3 +68,5 @@
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
+
+-ignorewarnings

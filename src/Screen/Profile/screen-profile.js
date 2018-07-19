@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {View, Thumbnail, Text, Container, Content, Button} from 'native-base';
-import {FlatList, StatusBar, StyleSheet} from 'react-native';
+import {FlatList, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {Reserve} from "../../Components/Content";
+import {Reserve,Rph} from "../../Components/Content";
 import {actGetListReserve} from "./action";
-import {redGetListReserveUser} from "../../Reducers/reserveReducers";
 import {sqlToJsISO} from "../../Utils/func";
-
+import Spinner from 'react-native-spinkit';
+import Placeholder from 'rn-placeholder';
 function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
@@ -66,7 +66,8 @@ class ScreenProfile extends Component {
             image: '',
             initialRedGetListReserveUser: true,
             data: [],
-            isRefresh: false
+            isRefresh: false,
+            isLoading: true
         }
     }
 
@@ -93,17 +94,20 @@ class ScreenProfile extends Component {
         if (prevState.initialRedGetListReserveUser === this.props.redGetListReserveUser.status) {
             this.setState({
                 data: this.props.redGetListReserveUser.data,
-                isRefresh: false
+                isRefresh: false,
+                isLoading: false
             })
             this.props.dispatch({type: 'RESET_RESERVE_USER'})
         }
     }
 
     componentDidMount() {
-        let params = {
-            par_user_id: this.props.redAuth.data.profile.user_id
+        if (this.props.redAuth.status_get) {
+            let params = {
+                par_user_id: this.props.redAuth.data.profile.user_id
+            }
+            this.props.dispatch(actGetListReserve(params));
         }
-        this.props.dispatch(actGetListReserve(params));
         if (this.props.redAuth.status_get) {
             this.setState({
                 isLogin: true,
@@ -143,16 +147,32 @@ class ScreenProfile extends Component {
                         this.state.isLogin
                         &&
                         <View style={{
+                            flexDirection: 'row',
                             height: 50,
                             position: 'absolute',
                             width: '100%',
                             justifyContent: 'center',
                             alignItems: 'center'
                         }}>
-                            <Button transparent light style={{width: 50, justifyContent: 'center'}}
-                                    onPress={this.onLogOutClick()}>
-                                <Icon name="sign-out" size={20} color={'#FFF'}/>
-                            </Button>
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Button transparent light style={{width: 50, justifyContent: 'center'}}
+                                        onPress={this.onLogOutClick()}>
+                                    <Icon name="sign-out" size={20} color={'#FFF'}/>
+                                </Button>
+                            </View>
+                            <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
+
+                            </View>
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Button full transparent light>
+                                    <Icon color={'#FFF'} size={20}
+                                          name="cog"/>
+                                </Button>
+                            </View>
+                            {/*<Button transparent light style={{width: 50, justifyContent: 'center'}}*/}
+                            {/*onPress={this.onLogOutClick()}>*/}
+                            {/*<Icon name="sign-out" size={20} color={'#FFF'}/>*/}
+                            {/*</Button>*/}
                         </View>
                     }
 
@@ -180,29 +200,46 @@ class ScreenProfile extends Component {
                     !this.state.isLogin
                         ?
                         <Content>
-                            <Text>Heloo</Text>
+                            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                                <Text>Heloo</Text>
+                            </View>
                         </Content>
                         :
-                        this.state.data.length > 0
+                        this.state.isLoading
                             ?
-                            <FlatList
-                                style={{marginLeft: 10, marginRight: 10}}
-                                onRefresh={this.onRefresh()}
-                                refreshing={this.state.isRefresh}
-                                showsHorizontalScrollIndicator={false}
-                                data={this.state.data}
-                                keyExtractor={(item, index) => '' + index}
-                                renderItem={({item}) =>
+                            <Content>
+                                <Rph/>
+                                <Rph/>
+                                <Rph/>
+                                <Rph/>
+                            </Content>
 
-                                    <Reserve
-                                        title={item.reserve_title}
-                                        status={item.reserve_status}
-                                        cd={sqlToJsISO(item.reserve_create_date)}
-                                        ed={item.reserve_end_date}
-                                    />
-                                }
-                            />
-                            : <Text>No data</Text>
+                            :
+                            this.state.data.length > 0
+                                ?
+                                <FlatList
+
+                                    style={{marginLeft: 10, marginRight: 10}}
+                                    onRefresh={this.onRefresh()}
+                                    refreshing={this.state.isRefresh}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={this.state.data}
+                                    keyExtractor={(item, index) => '' + index}
+                                    renderItem={({item}) =>
+                                        <TouchableOpacity
+                                            onPress={() => this.props.navigation.navigate('MyDetailReserve', {
+                                                reserve_id: item.reserve_id
+                                            })}>
+                                            <Reserve
+                                                title={item.reserve_title}
+                                                status={item.reserve_status}
+                                                cd={sqlToJsISO(item.reserve_create_date)}
+                                                ed={item.reserve_end_date}
+                                            />
+                                        </TouchableOpacity>
+                                    }
+                                />
+                                : <Text>No data</Text>
 
 
                 }

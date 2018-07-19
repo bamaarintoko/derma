@@ -7,7 +7,7 @@ import {
     TouchableWithoutFeedback,
     TouchableHighlight,
     ImageStore,
-    Image, TouchableOpacity
+    Image
 } from "react-native"
 import {Button, Container, Content, Input, Item, Text, Textarea, View} from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -362,7 +362,7 @@ class ScreenCreateReserve extends Component {
         return () => {
             let count_errors = [];
             let words = this.state.data;
-
+            console.log("--->",words)
             let img_ = [];
             this.state.imgValue0 !== "" && img_.push(this.state.imgValue0)
             this.state.imgValue1 !== "" && img_.push(this.state.imgValue1)
@@ -421,20 +421,20 @@ class ScreenCreateReserve extends Component {
                 errors['endDateSave'] = {error: false, error_message: 'required'}
                 count_errors.push()
             }
-            if (result.length < 1) {
+            if (words.length < 1) {
                 errors['category_value'] = {error: true, error_message: 'required'}
                 count_errors.push({category_value: true})
             } else {
                 errors['category_value'] = {error: false, error_message: 'required'}
                 count_errors.push()
             }
-            if (img_ < 4) {
-                errors['value_img'] = {error: true, error_message: 'required'}
-                count_errors.push({value_title: true})
-            } else {
-                errors['value_img'] = {error: false, error_message: 'required'}
-                count_errors.push()
-            }
+            // if (img_ < 4) {
+            //     errors['value_img'] = {error: true, error_message: 'required'}
+            //     count_errors.push({value_title: true})
+            // } else {
+            //     errors['value_img'] = {error: false, error_message: 'required'}
+            //     count_errors.push()
+            // }
 
 
             if (count_errors.length < 1) {
@@ -559,7 +559,7 @@ class ScreenCreateReserve extends Component {
                        swipeToClose={false}
                        isOpen={this.state.isProvinceOpen}
                        backdropPressToClose={false}>
-                    <View style={{flexDirection: 'column', padding: 5}}>
+                    <View style={{flexDirection: 'column', padding: 5, marginBottom:50}}>
                         <View style={{width: '100%'}}>
                             <Item regular style={{height: 40}}>
                                 <Input value={this.state.keyword}
@@ -596,7 +596,7 @@ class ScreenCreateReserve extends Component {
                        swipeToClose={false}
                        isOpen={this.state.isDistrictModalOpen}
                        backdropPressToClose={false}>
-                    <View style={{flexDirection: 'column', padding: 5}}>
+                    <View style={{flexDirection: 'column', padding: 5, marginBottom:50}}>
                         <View style={{width: '100%'}}>
                             <FlatList
                                 data={this.state.district}
@@ -627,7 +627,7 @@ class ScreenCreateReserve extends Component {
                        swipeToClose={false}
                        isOpen={this.state.isSubDistrictModalOpen}
                        backdropPressToClose={false}>
-                    <View style={{flexDirection: 'column', padding: 5}}>
+                    <View style={{flexDirection: 'column', padding: 5, marginBottom:50}}>
                         <View style={{width: '100%'}}>
                             <FlatList
                                 data={this.state.sub_district}
