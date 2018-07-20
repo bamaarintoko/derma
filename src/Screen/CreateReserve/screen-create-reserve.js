@@ -428,13 +428,13 @@ class ScreenCreateReserve extends Component {
                 errors['category_value'] = {error: false, error_message: 'required'}
                 count_errors.push()
             }
-            // if (img_ < 4) {
-            //     errors['value_img'] = {error: true, error_message: 'required'}
-            //     count_errors.push({value_title: true})
-            // } else {
-            //     errors['value_img'] = {error: false, error_message: 'required'}
-            //     count_errors.push()
-            // }
+            if (img_ < 4) {
+                errors['value_img'] = {error: true, error_message: 'required'}
+                count_errors.push({value_title: true})
+            } else {
+                errors['value_img'] = {error: false, error_message: 'required'}
+                count_errors.push()
+            }
 
 
             if (count_errors.length < 1) {
