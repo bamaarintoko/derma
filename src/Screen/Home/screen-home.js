@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {
-    View, StatusBar, Dimensions, Image, FlatList
+    View, StatusBar, Dimensions, Image, FlatList, TouchableOpacity
 } from 'react-native';
 import {Container, Content} from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -84,7 +84,7 @@ class ScreenHome extends Component {
             ],
             loadQueue: [0, 0, 0, 0],
             data: [],
-            isRefresh:false
+            isRefresh: false
         }
         // this.loadHandle = this.loadHandle.bind(this)
     }
@@ -102,7 +102,7 @@ class ScreenHome extends Component {
             this.setState({
                 isLoading: false,
                 data: this.props.redGetListReserve.data,
-                isRefresh:false
+                isRefresh: false
             })
             this.props.dispatch({type: "RESET_RESERVE"})
         }
@@ -118,14 +118,27 @@ class ScreenHome extends Component {
             })
         }
     }
-    onRefresh=()=>{
-        return ()=>{
+    onRefresh = () => {
+        return () => {
             this.componentDidMount()
             this.setState({
-                isRefresh : true
+                isRefresh: true
             })
         }
     }
+
+    onPress = (id, img, name,cd) => {
+        return () => {
+            // console.log(id)
+            this.props.navigation.navigate('ScreenDetail', {
+                reserve_id: id,
+                img: img,
+                name: name,
+                cd : sqlToJsISO(cd)
+            })
+        }
+    }
+
     render() {
 
         // console.log(this.state.data)
@@ -147,9 +160,9 @@ class ScreenHome extends Component {
                             }
                         </Swiper>
                     </View>
-                    <View style={{height: 70, backgroundColor: '#013976', margin: 5, borderRadius: 5}}>
+                    {/*<View style={{height: 70, backgroundColor: '#013976', margin: 5, borderRadius: 5}}>*/}
 
-                    </View>
+                    {/*</View>*/}
                 </View>
                 {
                     this.state.isLoading
@@ -165,23 +178,25 @@ class ScreenHome extends Component {
                         </Content>
                         :
 
-                            <FlatList
-                                style={{marginBottom: 10}}
-                                onRefresh={this.onRefresh()}
-                                refreshing={this.state.isRefresh}
-                                showsHorizontalScrollIndicator={false}
-                                data={this.state.data}
-                                keyExtractor={(item, index) => '' + index}
-                                renderItem={({item}) =>
-
+                        <FlatList
+                            style={{marginBottom: 10}}
+                            onRefresh={this.onRefresh()}
+                            refreshing={this.state.isRefresh}
+                            showsHorizontalScrollIndicator={false}
+                            data={this.state.data}
+                            keyExtractor={(item, index) => '' + index}
+                            renderItem={({item}) =>
+                                <TouchableOpacity
+                                    onPress={this.onPress(item.reserve_id, item.user_photo, item.user_name, item.reserve_create_date)}>
                                     <Donate uri={item.user_photo}
                                             name={item.user_name}
                                             reserve_title={item.reserve_title}
                                             reserve_description={item.reserve_description}
                                             reserve_end_date={item.reserve_end_date}
                                             create_date={sqlToJsISO(item.reserve_create_date)}/>
-                                }
-                            />
+                                </TouchableOpacity>
+                            }
+                        />
 
                 }
 

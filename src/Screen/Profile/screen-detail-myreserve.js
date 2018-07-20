@@ -8,15 +8,17 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Api from "../../Utils/Api";
 import moment from "moment/moment";
-import {InputSelect, InputText, InputTextArea} from "../../Components/Input";
+import {InputDate, InputSelect, InputText, InputTextArea} from "../../Components/Input";
 import CheckBox from "react-native-check-box";
 import Modal from 'react-native-modalbox';
-
+import DateTimePicker from 'react-native-modal-datetime-picker';
 const errors = {}
 const width = (Dimensions.get('window').width - 50);
 const val = [];
 import Spinner from 'react-native-spinkit';
-
+import {jsDateToSqlD} from "../../Utils/func";
+let tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 7)
 class ScreenMyReserveDetail extends Component {
     constructor(props) {
         super(props);
@@ -33,6 +35,7 @@ class ScreenMyReserveDetail extends Component {
             value_sub_district: '',
             value_end_date: '',
             par_key_word: '',
+            endDateSave: '',
             province: [],
             district: [],
             sub_district: [],
@@ -42,7 +45,8 @@ class ScreenMyReserveDetail extends Component {
             isProvinceOpen: false,
             isDistrictModalOpen: false,
             isSubDistrictModalOpen: false,
-            isLoading: true
+            isLoading: true,
+            isDateTimePickerVisible: false
 
         }
     }
@@ -87,6 +91,19 @@ class ScreenMyReserveDetail extends Component {
         })
     }
 
+    _showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
+
+    _hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
+
+    _handleDatePicked = (date) => {
+        this.setState({
+            value_end_date: moment(date).format('LL'),
+            endDateSave: jsDateToSqlD(date.toISOString())
+        })
+        // console.log('A date has been picked: --->', jsDateToSqlD(date.toISOString()));
+        // console.log('A date has been picked: --->', moment(date).format('LL'));
+        this._hideDateTimePicker();
+    };
     onValidate = (key) => {
         return (e) => {
             if (this.state[key].length < 1) {
@@ -300,7 +317,7 @@ class ScreenMyReserveDetail extends Component {
                               name="times"/>
                     </Button>
                 </View>
-                <View style={{padding: 5, marginTop: 30, marginBottom:50}}>
+                <View style={{padding: 5, marginTop: 30, marginBottom: 50}}>
                     <FlatList
                         data={this.state.data}
                         keyExtractor={(item, index) => '' + index}
@@ -314,7 +331,14 @@ class ScreenMyReserveDetail extends Component {
                         }
                     />
                 </View>
-                <View style={{position: 'absolute', bottom: 0, width: '100%', padding: 5, flexDirection: 'row', marginTop:30}}>
+                <View style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    width: '100%',
+                    padding: 5,
+                    flexDirection: 'row',
+                    marginTop: 30
+                }}>
                     <Button block info style={{justifyContent: 'center', width: '100%'}}
                             onPress={this.onPickClick()}>
                         <Icon color={'#FFF'} size={20}
@@ -700,7 +724,24 @@ class ScreenMyReserveDetail extends Component {
                                         // isError={cek_s}
                                         label={"Sub District"} value={this.state.value_sub_district}
                                         onClick={this.state.value_province.length !== 0 && this.state.value_district.length !== 0 ? this.onSubDistrictClick() : () => console.log("lala")}/>
+                                    <InputDate
+                                        // isError={cek_e}
+                                        label={"Donation end date"}
+                                        onClick={this._showDateTimePicker}
+                                        value={moment(this.state.value_end_date).format('LL')}/>
+                                    <View style={{flex: 1}}>
+                                        <DateTimePicker
+                                            minimumDate={tomorrow}
+                                            isVisible={this.state.isDateTimePickerVisible}
+                                            onConfirm={this._handleDatePicked}
+                                            onCancel={this._hideDateTimePicker}
+                                        />
+                                    </View>
+                                    <Button block info>
+                                        <Text>Save</Text>
+                                    </Button>
                                 </View>
+
 
                         }
 

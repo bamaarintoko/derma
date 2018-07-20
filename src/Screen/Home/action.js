@@ -22,3 +22,7 @@ export function actGetListReserve() {
         })
     }
 }
+
+export function actGetDetailReserve() {
+
+}
