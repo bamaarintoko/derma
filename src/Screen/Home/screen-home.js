@@ -146,24 +146,7 @@ class ScreenHome extends Component {
         return (
             <Container style={{backgroundColor: this.state.color}}>
                 <StatusBar backgroundColor="#013976"/>
-                <View>
-                    <View style={{height: 120}}>
-                        <Swiper activeDotColor={"#FFB300"} autoplayTimeout={4} autoplay={true} loadMinimal
-                                loadMinimalSize={1} style={styles.wrapper} loop={true}>
-                            {
-                                this.state.imgList.map((item, i) => <Slide
-                                    loadHandle={this.loadHandle()}
-                                    loaded={!!this.state.loadQueue[i]}
-                                    uri={item}
-                                    i={i}
-                                    key={i}/>)
-                            }
-                        </Swiper>
-                    </View>
-                    {/*<View style={{height: 70, backgroundColor: '#013976', margin: 5, borderRadius: 5}}>*/}
 
-                    {/*</View>*/}
-                </View>
                 {
                     this.state.isLoading
                         ?

@@ -10,7 +10,7 @@ import moment from "moment/moment";
 export const Ph = () => {
     return (
         <View
-            style={{marginRight: 5}}>
+            style={{marginRight: 5, marginTop:15}}>
             <View style={{marginLeft: 15, marginTop: 10}}>
                 <Placeholder.Box
                     animate="fade"
@@ -66,7 +66,7 @@ export const Reserve = ({title, status, cd, ed}) => {
 
 export const Rph = () => {
     return (
-        <View style={{marginLeft: 5, marginTop: 20, marginRight:5}}>
+        <View style={{marginLeft: 10, marginTop: 20, marginRight:10}}>
             <Placeholder.Box
                 animate="fade"
                 height={50}

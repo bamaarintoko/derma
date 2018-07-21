@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button, Container, Content, Text, Thumbnail, View} from "native-base";
-import {StatusBar, Dimensions} from "react-native";
+import {StatusBar, Dimensions, Share} from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Api from "../../Utils/Api";
 import TimeAgo from 'react-native-timeago';
@@ -36,6 +36,23 @@ class ScreenDetail extends Component {
             location: '',
             data: [],
             endDonation:''
+        }
+    }
+
+    onShare = ()=>{
+        return ()=>{
+            Share.share({
+                message: 'Devel devel',
+                url: 'http://mlskodimg.com',
+                title: 'Wow, did you see that?'
+            }, {
+                // Android only:
+                dialogTitle: 'Derma Buku',
+                // iOS only:
+                excludedActivityTypes: [
+                    'com.apple.UIKit.activity.PostToTwitter'
+                ]
+            })
         }
     }
 
@@ -112,6 +129,12 @@ class ScreenDetail extends Component {
                         <View style={{marginLeft: 10}}>
                             <Text style={{fontSize: 12}}>{this.state.user_name}</Text>
                             <TimeAgo style={{fontSize: 12}} time={this.state.create_date}/>
+                        </View>
+                        <View style={{marginLeft: 10}}>
+                            <Button full transparent light onPress={this.onShare()}>
+                                <Icon color={'#000000'} size={20}
+                                      name="share-alt-square"/>
+                            </Button>
                         </View>
                     </View>
                     <View style={{marginTop: 10}}>

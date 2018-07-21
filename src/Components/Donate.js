@@ -12,7 +12,7 @@ import moment from "moment/moment";
 
 export const Donate = ({uri, name, create_date, reserve_title, reserve_description, reserve_end_date}) => {
     return (
-        <View style={{minHeight: 100, marginTop: 5}}>
+        <View style={{minHeight: 100, marginTop: 15}}>
 
             <View style={{
                 minHeight: 90,

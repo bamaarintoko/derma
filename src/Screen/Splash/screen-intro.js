@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native'
+import {Image, StyleSheet, View} from 'react-native'
 import {connect} from 'react-redux';
 import {Container, Content, Text} from "native-base";
 import AppIntro from 'react-native-app-intro';
@@ -25,25 +25,29 @@ class ScreenIntro extends Component {
                         onDoneBtnClick={()=>this.props.navigation.dispatch({type: 'HOME'})}
                         doneBtnLabel={<Text style={{color:'#FFF', fontSize:25, paddingLeft:20}}>{'   '}Done</Text>}
                     >
-                        <View style={[styles.slide,{ backgroundColor: '#fa931d' }]}>
-                            <View level={10}><Text style={styles.text}>Page 1</Text></View>
-                            <View level={15}><Text style={styles.text}>Page 1</Text></View>
-                            <View level={8}><Text style={styles.text}>Page 1</Text></View>
+                        <View style={[styles.slide,{ backgroundColor: '#013976' }]}>
+                            <Image
+                                style={{flex: 1}}
+                                width={200}
+                                source={require('../../Assets/Intro/Assets1.png')}
+                                resizeMode={"contain"}
+                            />
                         </View>
-                        <View style={[styles.slide, { backgroundColor: '#a4b602' }]}>
-                            <View level={-10}><Text style={styles.text}>Page 2</Text></View>
-                            <View level={5}><Text style={styles.text}>Page 2</Text></View>
-                            <View level={20}><Text style={styles.text}>Page 2</Text></View>
+                        <View style={[styles.slide, { backgroundColor: '#013976' }]}>
+                            <Image
+                                style={{flex: 1}}
+                                width={200}
+                                source={require('../../Assets/Intro/Assets2.png')}
+                                resizeMode={"contain"}
+                            />
                         </View>
-                        <View style={[styles.slide,{ backgroundColor: '#fa931d' }]}>
-                            <View level={8}><Text style={styles.text}>Page 3</Text></View>
-                            <View level={0}><Text style={styles.text}>Page 3</Text></View>
-                            <View level={-10}><Text style={styles.text}>Page 3</Text></View>
-                        </View>
-                        <View style={[styles.slide, { backgroundColor: '#a4b602' }]}>
-                            <View level={5}><Text style={styles.text}>Page 4</Text></View>
-                            <View level={10}><Text style={styles.text}>Page 4</Text></View>
-                            <View level={15}><Text style={styles.text}>Page 4</Text></View>
+                        <View style={[styles.slide,{ backgroundColor: '#013976' }]}>
+                            <Image
+                                style={{flex: 1}}
+                                width={200}
+                                source={require('../../Assets/Intro/Assets3.png')}
+                                resizeMode={"contain"}
+                            />
                         </View>
                     </AppIntro>
             </Container>
