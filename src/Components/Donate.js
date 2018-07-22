@@ -18,7 +18,7 @@ export const Donate = ({uri, name, create_date, reserve_title, reserve_descripti
                 minHeight: 90,
                 borderRadius: 5,
                 paddingBottom: 20,
-                backgroundColor: '#BDBDBD', marginRight: 5, marginLeft: 15, marginTop: 10
+                backgroundColor: '#FAFAFA', marginRight: 10, marginLeft: 15, marginTop: 10
             }}>
                 <View style={{position: 'absolute', right: 5}}>
                     <TimeAgo style={{fontSize: 12}} time={create_date}/>
@@ -26,7 +26,7 @@ export const Donate = ({uri, name, create_date, reserve_title, reserve_descripti
                 <View style={{position: 'absolute', right: 5, bottom: 2}}>
                     <Text style={{fontSize: 12}}>End donation : {moment(reserve_end_date).format('LL')}</Text>
                 </View>
-                <View style={{marginLeft: 75, marginTop: 1}}>
+                <View style={{marginLeft: 75, marginTop: 1, padding:5}}>
                     <View style={{width:'60%'}}>
                         <Text style={{fontSize: 12, color: 'black'}}>{name}</Text>
                     </View>

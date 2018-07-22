@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Container, Content, Input, Item, Text, Thumbnail} from "native-base";
+import {Button, Container, Content, Input, Item, Text} from "native-base";
 import {
     Dimensions, FlatList, Image, StatusBar, StyleSheet, TouchableHighlight, TouchableWithoutFeedback,
     View
@@ -517,14 +517,14 @@ class ScreenMyReserveDetail extends Component {
                                         </Item>
                                     </View>
                                     <View style={{marginBottom: 10}}>
-                                        <Text style={{fontSize: 12}}>Reserve name</Text>
+                                        <Text style={{fontSize: 12}}>Recipient name</Text>
                                         <Item regular style={{width: '100%', minHeight: 40, borderColor: '#FFF'}}>
                                             <Text style={{fontSize: 14}}> {this.state.value_reserve_name}</Text>
                                             {/*<Input onBlur={onBlur} style={{fontSize: 14}} value={value} onChangeText={onChangeText}/>*/}
                                         </Item>
                                     </View>
                                     <View style={{marginBottom: 10}}>
-                                        <Text style={{fontSize: 12}}>Reserve contact person</Text>
+                                        <Text style={{fontSize: 12}}>Recipient contact person</Text>
                                         <Item regular style={{width: '100%', minHeight: 40, borderColor: '#FFF'}}>
                                             <Text style={{fontSize: 14}}> {this.state.value_reserve_cp}</Text>
                                             {/*<Input onBlur={onBlur} style={{fontSize: 14}} value={value} onChangeText={onChangeText}/>*/}
@@ -562,7 +562,7 @@ class ScreenMyReserveDetail extends Component {
                                         </View>
                                     </View>
                                     <View style={{marginBottom: 10}}>
-                                        <Text style={{fontSize: 12}}>Reserve address</Text>
+                                        <Text style={{fontSize: 12}}>Recipient address</Text>
                                         <Item regular style={{width: '100%', minHeight: 40, borderColor: '#FFF'}}>
                                             <Text style={{fontSize: 14}}> {this.state.value_address}</Text>
                                             {/*<Input onBlur={onBlur} style={{fontSize: 14}} value={value} onChangeText={onChangeText}/>*/}
@@ -687,13 +687,13 @@ class ScreenMyReserveDetail extends Component {
                                         // isError={this.state.input_error.value_reserve_name}
                                         value={this.state.value_reserve_name}
                                         onChangeText={this.onChangeText('value_reserve_name')}
-                                        label={"Reserve name"}/>
+                                        label={"Recipient name"}/>
                                     <InputText
                                         onBlur={this.onValidate('value_reserve_cp')}
                                         // isError={this.state.input_error.value_reserve_cp}
                                         value={this.state.value_reserve_cp}
                                         onChangeText={this.onChangeText('value_reserve_cp')}
-                                        label={"Reserve Contact Person"}/>
+                                        label={"Recipient Contact Person"}/>
                                     <View style={{marginTop: 5, marginBottom: 5}}>
                                         <Text style={{fontSize: 12, marginBottom: 5}}>Image (Click plus button to
                                             add
@@ -710,7 +710,7 @@ class ScreenMyReserveDetail extends Component {
                                         value={this.state.value_address}
                                         onChangeText={this.onChangeText('value_address')}
                                         // isError={this.state.input_error.value_address}
-                                        label={'Address'}
+                                        label={'Recipient Address'}
                                     />
                                     <InputSelect
                                         // isError={cek_p}

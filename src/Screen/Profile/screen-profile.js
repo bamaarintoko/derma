@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {View, Thumbnail, Text, Container, Content, Button} from 'native-base';
-import {FlatList, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+import {FlatList, Image, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {Reserve,Rph} from "../../Components/Content";
+import {Reserve, Rph} from "../../Components/Content";
 import {actGetListReserve} from "./action";
 import {sqlToJsISO} from "../../Utils/func";
-import Spinner from 'react-native-spinkit';
-import Placeholder from 'rn-placeholder';
+
 function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
@@ -73,7 +72,6 @@ class ScreenProfile extends Component {
 
     onLoginClick = () => {
         return () => {
-            console.log("aaa")
             this.props.navigation.navigate('Auth')
         }
     }
@@ -92,16 +90,27 @@ class ScreenProfile extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.initialRedGetListReserveUser === this.props.redGetListReserveUser.status) {
-            this.setState({
-                data: this.props.redGetListReserveUser.data,
-                isRefresh: false,
-                isLoading: false
-            })
+            if (this.props.redGetListReserveUser.status){
+                this.setState({
+                    data: this.props.redGetListReserveUser.data,
+                    isRefresh: false,
+                    isLoading: false
+                })
+            } else {
+                this.setState({
+                    data: [],
+                    isRefresh: false,
+                    isLoading: false
+                })
+            }
+
             this.props.dispatch({type: 'RESET_RESERVE_USER'})
         }
     }
 
     componentDidMount() {
+        // this.props.dispatch({type: 'LOGOUT'})
+        console.log("===>",this.props.redAuth)
         if (this.props.redAuth.status_get) {
             let params = {
                 par_user_id: this.props.redAuth.data.profile.user_id
@@ -199,11 +208,26 @@ class ScreenProfile extends Component {
                 {
                     !this.state.isLogin
                         ?
-                        <Content>
-                            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                                <Text>Heloo</Text>
+                        <View
+                            style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+                            <View style={{flex: 1}}>
+                                <Image
+                                    style={{flex: 1}}
+                                    width={150}
+                                    source={require('../../Assets/login.png')}
+                                    resizeMode={"contain"}
+                                />
                             </View>
-                        </Content>
+                            <View style={{flex: 1}}>
+                                <View style={{justifyContent:'center',alignItems:'center',marginTop:40}}>
+                                    <Text style={{textAlign: 'center', fontSize: 12}}>You can't give happiness, but you
+                                        can
+                                        give books.</Text>
+                                    <Text style={{textAlign: 'center', fontSize: 12}}>Login to reserve/request
+                                        donation</Text>
+                                </View>
+                            </View>
+                        </View>
                         :
                         this.state.isLoading
                             ?
@@ -239,7 +263,25 @@ class ScreenProfile extends Component {
                                         </TouchableOpacity>
                                     }
                                 />
-                                : <Text>No data</Text>
+                                : <View
+                                    style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+                                    <View style={{flex: 1}}>
+                                        <Image
+                                            style={{flex: 1}}
+                                            width={150}
+                                            source={require('../../Assets/login.png')}
+                                            resizeMode={"contain"}
+                                        />
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <View style={{justifyContent:'center',alignItems:'center',marginTop:40}}>
+                                            <Text style={{textAlign: 'center', fontSize: 12}}>You can't give happiness, but you
+                                                can
+                                                give books.</Text>
+                                            <Text style={{textAlign: 'center', fontSize: 12}}>No data</Text>
+                                        </View>
+                                    </View>
+                                </View>
 
 
                 }

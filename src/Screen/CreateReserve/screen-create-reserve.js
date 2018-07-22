@@ -740,7 +740,7 @@ class ScreenCreateReserve extends Component {
                             isError={this.state.input_error.value_reserve_name}
                             value={this.state.value_reserve_name}
                             onChangeText={this.onChangeText('value_reserve_name')}
-                            label={"Reserve name"}/>
+                            label={"Recipient name"}/>
                         <InputText
                             onBlur={this.onValidate('value_reserve_cp')}
                             isError={this.state.input_error.value_reserve_cp}

@@ -1,8 +1,9 @@
-package com.book;
+package com.mlskoding.derma_buku;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.barefootcoders.android.react.KDSocialShare.KDSocialShare;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new KDSocialShare(),
             new RNSpinkitPackage(),
             new ImageResizerPackage(),
             new SnackbarPackage(),

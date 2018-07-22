@@ -10,7 +10,6 @@ export function actGetListReserve() {
                     data: response.data.result,
                     message: response.data.message
                 })
-                console.log(response)
             }).catch((err) => {
             dispatch({
                 type: 'RESERVE',
@@ -18,7 +17,6 @@ export function actGetListReserve() {
                 data: [],
                 message: err.message
             })
-            console.log(err)
         })
     }
 }

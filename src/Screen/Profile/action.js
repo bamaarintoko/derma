@@ -4,6 +4,7 @@ export function actGetListReserve(params) {
     return dispatch => {
         Api._POST('reserve/list_reserve_by_user', params)
             .then((response) => {
+                console.log(response)
                 dispatch({
                     type: "RESERVE_USER",
                     status_get: response.data.status,

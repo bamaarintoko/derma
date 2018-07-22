@@ -8,7 +8,13 @@ import TimeAgo from 'react-native-timeago';
 import Carousel from 'react-native-snap-carousel';
 import Image from 'react-native-scalable-image';
 import moment from 'moment';
+import Spinner from 'react-native-spinkit';
+
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
+import {
+    shareOnFacebook,
+    shareOnTwitter,
+} from 'react-native-social-share';
 
 function wp(percentage) {
     const value = (percentage * viewportWidth) / 100;
@@ -26,6 +32,9 @@ class ScreenDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            pic:'',
+            note:'',
+            cp:'',
             user_photo: '',
             user_name: '',
             create_date: '',
@@ -35,24 +44,58 @@ class ScreenDetail extends Component {
             address: '',
             location: '',
             data: [],
-            endDonation:''
+            endDonation: '',
+            isLoading: true
         }
     }
 
-    onShare = ()=>{
-        return ()=>{
+    onShare = () => {
+        return () => {
             Share.share({
-                message: 'Devel devel',
-                url: 'http://mlskodimg.com',
-                title: 'Wow, did you see that?'
+                message: this.state.description + " Download Derma Buku apps on playstore : "+this.props.redSetting.data[1].play_store_link,
+                url: this.props.redSetting.data[1].play_store_link,
+                title: this.state.title
             }, {
                 // Android only:
-                dialogTitle: 'Derma Buku',
+                dialogTitle: 'Share Derma Buku',
                 // iOS only:
                 excludedActivityTypes: [
                     'com.apple.UIKit.activity.PostToTwitter'
                 ]
             })
+        }
+    }
+
+    onShareFacebook = () => {
+        return () => {
+            console.log(this.props.redSetting)
+            shareOnFacebook({
+                    'text': this.state.description + " Download Derma Buku apps on playstore : "+this.props.redSetting.data[1].play_store_link,
+                    'link': this.props.redSetting.data[1].play_store_link,
+                    'imagelink': this.props.redSetting.data[4].logo_link,
+                    //or use image
+                    'image': this.props.redSetting.data[4].logo_link,
+                },
+                (results) => {
+                    console.log(results);
+                }
+            );
+        }
+    }
+
+    shareOnTwitter = () => {
+        return () => {
+            shareOnTwitter({
+                    'text': this.state.title + " Download Derma Buku apps on playstore : "+this.props.redSetting.data[1].play_store_link,
+                    'link': this.props.redSetting.data[1].play_store_link,
+                    'imagelink': this.props.redSetting.data[4].logo_link,
+                    //or use image
+                    'image': this.props.redSetting.data[4].logo_link,
+                },
+                (results) => {
+                    console.log(results);
+                }
+            );
         }
     }
 
@@ -69,16 +112,23 @@ class ScreenDetail extends Component {
         Api._POST('reserve/detail_reserve', params)
             .then((response) => {
                 this.setState({
+                    isLoading: false,
                     title: response.data.result.reserve.reserve_title,
+                    pic: response.data.result.reserve.reserve_pic,
+                    cp: response.data.result.reserve.reserve_contact,
+                    note: response.data.result.reserve.reserve_note,
                     description: response.data.result.reserve.reserve_description,
                     address: response.data.result.reserve.reserve_address,
                     img: response.data.result.image,
                     location: response.data.result.reserve.reserve_province + ", " + response.data.result.reserve.reserve_district + ", " + response.data.result.reserve.reserve_sub_district,
                     data: JSON.parse(response.data.result.reserve.reserve_category),
-                    endDonation:moment(response.data.result.reserve.reserve_end_date).format('LL')
+                    endDonation: moment(response.data.result.reserve.reserve_end_date).format('LL')
                 })
                 console.log(response)
             }).catch((err) => {
+            this.setState({
+                isLoading: false,
+            })
             console.log(err)
         })
     }
@@ -117,8 +167,10 @@ class ScreenDetail extends Component {
 
                     </View>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-
-
+                        <Button style={{width: 50}} full transparent light onPress={this.onShare()}>
+                            <Icon color={'#000000'} size={20}
+                                  name="ellipsis-v"/>
+                        </Button>
                     </View>
                 </View>
                 <Content style={{backgroundColor: '#FFF', padding: 5, paddingBottom: 10}}>
@@ -130,65 +182,87 @@ class ScreenDetail extends Component {
                             <Text style={{fontSize: 12}}>{this.state.user_name}</Text>
                             <TimeAgo style={{fontSize: 12}} time={this.state.create_date}/>
                         </View>
-                        <View style={{marginLeft: 10}}>
-                            <Button full transparent light onPress={this.onShare()}>
-                                <Icon color={'#000000'} size={20}
-                                      name="share-alt-square"/>
+                        <View style={{marginLeft: 10, flexDirection: 'row', position: 'absolute', right: 0}}>
+                            <Button style={{width: 50}} full transparent light onPress={this.onShareFacebook()}>
+                                <Icon color={'#3B5998'} size={20}
+                                      name="facebook-square"/>
                             </Button>
+                            <Button style={{width: 50}} full transparent light onPress={this.shareOnTwitter()}>
+                                <Icon color={'#1DA1F2'} size={20}
+                                      name="twitter-square"/>
+                            </Button>
+
                         </View>
                     </View>
-                    <View style={{marginTop: 10}}>
-                        <Text style={{fontSize: 14, fontWeight: 'bold'}}>{this.state.title}</Text>
-                    </View>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Carousel
-                            ref={(c) => {
-                                this._carousel = c;
-                            }}
-                            data={this.state.img}
-                            renderItem={this._renderItem}
-                            sliderWidth={itemWidth}
-                            itemWidth={200}
-                        />
-                    </View>
-                    <View style={{marginTop: 10}}>
-                        <Text style={{fontSize: 14}}>{this.state.description}</Text>
-                    </View>
-                    <View style={{marginTop: 15, marginBottom: 10}}>
-                        <Text style={{fontSize: 14, fontWeight: 'bold'}}>What we need :</Text>
-                        <View style={{flexDirection: 'row'}}>
-                            <View style={{width:'20%'}}>
-                                <Text style={{fontSize:12, fontWeight:'bold'}}>Quantity</Text>
+                    {
+                        this.state.isLoading
+                            ?
+                            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                                <Spinner type={'ChasingDots'} color={"#013976"}/>
                             </View>
-                            <View style={{width:'80%'}}>
-                                <Text style={{fontSize:12, fontWeight:'bold'}}>Category</Text>
-                            </View>
-                        </View>
-                        {
-                            this.state.data.map((v, k) => {
-                                return (
-                                    <View key={k} style={{flexDirection: 'row'}}>
-                                        <View style={{width:'20%'}}>
-                                            <Text style={{fontSize: 12}}>{v.count}</Text>
+                            :
+                            <View style={{margin:5}}>
+                                <View style={{marginTop: 10}}>
+                                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>{this.state.title}</Text>
+                                </View>
+                                <View style={{justifyContent: 'center', alignItems: 'center', marginTop:15}}>
+                                    <Carousel
+                                        ref={(c) => {
+                                            this._carousel = c;
+                                        }}
+                                        data={this.state.img}
+                                        renderItem={this._renderItem}
+                                        sliderWidth={itemWidth}
+                                        itemWidth={200}
+                                    />
+                                </View>
+                                <View style={{marginTop: 10}}>
+                                    <Text style={{fontSize: 14, textAlign:'justify'}}>{this.state.description}</Text>
+                                </View>
+                                <View style={{marginTop: 10}}>
+                                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>Note :</Text>
+                                    <Text style={{fontSize: 12,}}>{this.state.note}</Text>
+                                </View>
+                                <View style={{marginTop: 15, marginBottom: 10}}>
+                                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>What we need :</Text>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <View style={{width: '20%'}}>
+                                            <Text style={{fontSize: 12, fontWeight: 'bold'}}>Quantity</Text>
                                         </View>
-                                        <View style={{width:'80%'}}>
-                                            <Text style={{fontSize: 12}}>{v.value}</Text>
+                                        <View style={{width: '80%'}}>
+                                            <Text style={{fontSize: 12, fontWeight: 'bold'}}>Category</Text>
                                         </View>
                                     </View>
-                                )
-                            })
-                        }
+                                    {
+                                        this.state.data.map((v, k) => {
+                                            return (
+                                                <View key={k} style={{flexDirection: 'row'}}>
+                                                    <View style={{width: '20%'}}>
+                                                        <Text style={{fontSize: 12}}>{v.count}</Text>
+                                                    </View>
+                                                    <View style={{width: '80%'}}>
+                                                        <Text style={{fontSize: 12}}>{v.value}</Text>
+                                                    </View>
+                                                </View>
+                                            )
+                                        })
+                                    }
+                                </View>
 
-                    </View>
-                    <View style={{marginTop: 10}}>
-                        <Text style={{fontSize: 14, fontWeight: 'bold'}}>Address :</Text>
-                        <Text style={{fontSize: 12,}}>{this.state.address}</Text>
-                        <Text style={{fontSize: 12,}}>{this.state.location}</Text>
-                    </View>
-                    <View style={{marginTop: 10, marginBottom: 10}}>
-                        <Text style={{fontSize: 14, fontWeight: 'bold'}}>End donation :</Text>
-                        <Text style={{fontSize: 12,}}>{this.state.endDonation}</Text>
-                    </View>
+                                <View style={{marginTop: 10}}>
+                                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>Address :</Text>
+                                    <Text style={{fontSize: 12,}}>{this.state.pic}</Text>
+                                    <Text style={{fontSize: 12,}}>{this.state.cp}</Text>
+                                    <Text style={{fontSize: 12,}}>{this.state.address}</Text>
+                                    <Text style={{fontSize: 12,}}>{this.state.location}</Text>
+                                </View>
+                                <View style={{marginTop: 10, marginBottom: 10}}>
+                                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>End donation :</Text>
+                                    <Text style={{fontSize: 12,}}>{this.state.endDonation}</Text>
+                                </View>
+                            </View>
+                    }
+
                 </Content>
             </Container>
         );
@@ -196,7 +270,9 @@ class ScreenDetail extends Component {
 }
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        redSetting: state.redSetting
+    };
 }
 
 export default connect(

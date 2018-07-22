@@ -3,15 +3,13 @@ import {connect} from 'react-redux';
 import {
     View, StatusBar, Dimensions, Image, FlatList, TouchableOpacity
 } from 'react-native';
-import {Container, Content} from "native-base"
+import {Container, Content, Text} from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Swiper from 'react-native-swiper'
 import {Donate} from '../../Components/Donate'
 import {actGetListReserve} from "./action";
 import {sqlToJsISO} from "../../Utils/func";
 
 const {width} = Dimensions.get('window')
-import Placeholder from 'rn-placeholder';
 import {Ph} from "../../Components/Content";
 
 function mapStateToProps(state) {
@@ -66,7 +64,11 @@ class ScreenHome extends Component {
     static navigationOptions = {
         header: null,
         tabBarIcon: ({tintColor}) => {
-            return <Icon name="home" size={20} color={tintColor}/>;
+            return <Image
+                style={{flex: 1}}
+                source={require('../../Assets/home.png')}
+                resizeMode={"contain"}
+            />;
         }
     }
 
@@ -91,14 +93,12 @@ class ScreenHome extends Component {
 
     componentDidMount() {
         this.props.dispatch(actGetListReserve());
-        // console.log(sqlToJsISO("2018-07-16 20:17:35"))
 
     }
 
     componentDidUpdate(prevProps, prevState) {
 
         if (prevState.initialRedGetListReserve === this.props.redGetListReserve.status) {
-            console.log(this.props.redGetListReserve)
             this.setState({
                 isLoading: false,
                 data: this.props.redGetListReserve.data,
@@ -127,25 +127,43 @@ class ScreenHome extends Component {
         }
     }
 
-    onPress = (id, img, name,cd) => {
+    onPress = (id, img, name, cd) => {
         return () => {
-            // console.log(id)
             this.props.navigation.navigate('ScreenDetail', {
                 reserve_id: id,
                 img: img,
                 name: name,
-                cd : sqlToJsISO(cd)
+                cd: sqlToJsISO(cd)
             })
         }
     }
 
     render() {
-
-        // console.log(this.state.data)
-        let firstQuery = ""
         return (
-            <Container style={{backgroundColor: this.state.color}}>
+            <Container style={{backgroundColor: '#FFF'}}>
                 <StatusBar backgroundColor="#013976"/>
+                <View style={{
+                    flexDirection: 'row',
+                    height: 50,
+                    backgroundColor: '#FFF',
+                    borderBottomColor: '#BDBDBD',
+                    borderBottomWidth: 1
+                }}>
+                    <View style={{flex: 1,}}>
+
+                    </View>
+                    <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
+                        <Image
+                            style={{flex: 1}}
+                            width={100}
+                            source={require('../../Assets/head.png')}
+                            resizeMode={"contain"}
+                        />
+                    </View>
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+
+                    </View>
+                </View>
 
                 {
                     this.state.isLoading
@@ -160,26 +178,48 @@ class ScreenHome extends Component {
                             <Ph/>
                         </Content>
                         :
-
-                        <FlatList
-                            style={{marginBottom: 10}}
-                            onRefresh={this.onRefresh()}
-                            refreshing={this.state.isRefresh}
-                            showsHorizontalScrollIndicator={false}
-                            data={this.state.data}
-                            keyExtractor={(item, index) => '' + index}
-                            renderItem={({item}) =>
-                                <TouchableOpacity
-                                    onPress={this.onPress(item.reserve_id, item.user_photo, item.user_name, item.reserve_create_date)}>
-                                    <Donate uri={item.user_photo}
-                                            name={item.user_name}
-                                            reserve_title={item.reserve_title}
-                                            reserve_description={item.reserve_description}
-                                            reserve_end_date={item.reserve_end_date}
-                                            create_date={sqlToJsISO(item.reserve_create_date)}/>
-                                </TouchableOpacity>
-                            }
-                        />
+                        this.state.data.length > 0
+                            ?
+                            <FlatList
+                                onRefresh={this.onRefresh()}
+                                refreshing={this.state.isRefresh}
+                                showsHorizontalScrollIndicator={false}
+                                data={this.state.data}
+                                keyExtractor={(item, index) => '' + index}
+                                renderItem={({item}) =>
+                                    <TouchableOpacity
+                                        onPress={this.onPress(item.reserve_id, item.user_photo, item.user_name, item.reserve_create_date)}>
+                                        <Donate uri={item.user_photo}
+                                                name={item.user_name}
+                                                reserve_title={item.reserve_title}
+                                                reserve_description={item.reserve_description}
+                                                reserve_end_date={item.reserve_end_date}
+                                                create_date={sqlToJsISO(item.reserve_create_date)}/>
+                                    </TouchableOpacity>
+                                }
+                            />
+                            :
+                            <View style={{
+                                flex: 1,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                backgroundColor: '#FFF',
+                                flexDirection: 'column'
+                            }}>
+                                <View style={{flex: 2}}>
+                                    <Image
+                                        style={{flex: 1}}
+                                        width={150}
+                                        source={require('../../Assets/login.png')}
+                                        resizeMode={"contain"}
+                                    />
+                                </View>
+                                <View style={{flex:1}}>
+                                    <Text style={{fontSize: 12}}>
+                                        Sorry, no data donation for now.
+                                    </Text>
+                                </View>
+                            </View>
 
                 }
 

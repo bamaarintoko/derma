@@ -28,7 +28,6 @@ class ScreenAuth extends Component {
     }
     onForgotClick =()=>{
         return ()=>{
-            console.log("asdf")
             this.props.navigation.navigate('ForgetPassword')
         }
     }
@@ -39,7 +38,6 @@ class ScreenAuth extends Component {
                 if (!error) {
                     let profil = JSON.parse(data.profile)
                     let data_ = {name: profil.name, photo: "https://graph.facebook.com/"+profil.id+"/picture?type=large"}
-                    console.log(profil)
                     let params = {
                         par_user_email: profil.email,
                         par_user_name: profil.name,
@@ -56,7 +54,6 @@ class ScreenAuth extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // console.log(this.props.redAuth)
         if (prevState.initialRedAuth === this.props.redAuth.status) {
             if (this.props.redAuth.status_get) {
                 this.props.dispatch({type: 'RESET'})
@@ -90,7 +87,6 @@ class ScreenAuth extends Component {
                 this.setState({
                     isAuthLoading:true
                 })
-                console.log(params)
                 this.props.dispatch(actLogin(params))
             }
         }
@@ -98,10 +94,10 @@ class ScreenAuth extends Component {
 
     render() {
         return (
-            <Container style={{backgroundColor: '#013976'}}>
+            <Container style={{backgroundColor: '#FFF'}}>
                 <View style={{height: 50, paddingLeft: 20, justifyContent: 'center'}}>
                     <Button transparent light style={{width: 50}} onPress={() => this.props.navigation.goBack()}>
-                        <Icon name="arrow-left" size={20} color={'#FFF'}/>
+                        <Icon name="arrow-left" size={20} color={'#013976'}/>
                     </Button>
                 </View>
                 <Modal position={"center"}
@@ -110,20 +106,20 @@ class ScreenAuth extends Component {
                        isOpen={this.state.isAuthLoading}
                        backdropPressToClose={false}>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Spinner type={'ChasingDots'} color={"#013976"}/>
+                        <Spinner type={'ChasingDots'} color={"#FFF"}/>
                         <Text>Please wait</Text>
                     </View>
                 </Modal>
                 <Content style={{padding: 20}}>
                     <View>
-                        <Text style={{fontWeight: 'bold', fontSize: 30, color: '#FFF'}}>Log In</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 30, color: '#013976'}}>Log In</Text>
                     </View>
                     <View style={{marginTop: 120}}>
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{width: '80%'}}>
                                 <Item style={{
-                                    backgroundColor: '#013976',
-                                    borderColor: '#FFF',
+                                    backgroundColor: '#FFF',
+                                    borderColor: '#013976',
                                     borderWidth: 2,
                                     height: 40
                                 }}>
@@ -131,12 +127,12 @@ class ScreenAuth extends Component {
                                         <Icon active name='envelope' size={20}/>
                                     </View>
                                     <Input onChangeText={this.onChangeText('user_email')}
-                                           style={{fontSize: 12, color: '#FFF'}} autoCapitalize={"none"}
+                                           style={{fontSize: 12, color: '#013976'}} autoCapitalize={"none"}
                                            keyboardType={'email-address'} placeholder='email'/>
                                 </Item>
                                 <Item style={{
-                                    backgroundColor: '#013976',
-                                    borderColor: '#013976',
+                                    backgroundColor: '#FFF',
+                                    borderColor: '#FFF',
                                     borderWidth: 2,
                                     height: 40
                                 }}>
@@ -144,13 +140,13 @@ class ScreenAuth extends Component {
                                         <Icon active name='lock' size={20}/>
                                     </View>
                                     <Input onChangeText={this.onChangeText('user_password')}
-                                           style={{fontSize: 12, color: '#FFF'}} autoCapitalize={"none"}
+                                           style={{fontSize: 12, color: '#013976'}} autoCapitalize={"none"}
                                            secureTextEntry={true} placeholder='password'/>
                                 </Item>
                             </View>
                             <View style={{width: '20%'}}>
                                 <Button transparent full onPress={this.onLogin()}>
-                                    <Icon active name='sign-in' size={40} color={'#FFF'}/>
+                                    <Icon active name='sign-in' size={40} color={'#013976'}/>
                                 </Button>
                             </View>
                         </View>
@@ -168,15 +164,15 @@ class ScreenAuth extends Component {
                         <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
                             <View
                                 style={{flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{color: '#FFF', fontSize: 12}}>First time here?</Text>
+                                <Text style={{color: '#013976', fontSize: 12}}>First time here?</Text>
                                 <TouchableWithoutFeedback onPress={this.onRegisterClick()}>
-                                    <Text style={{color: '#FFF', fontWeight: 'bold', fontSize: 14}}> Sign up</Text>
+                                    <Text style={{color: '#013976', fontWeight: 'bold', fontSize: 14}}> Sign up</Text>
                                 </TouchableWithoutFeedback>
                             </View>
                             <View style={{flex: 1}}>
                                 <TouchableWithoutFeedback onPress={this.onForgotClick()}>
                                     <Text style={{
-                                        color: '#FFF',
+                                        color: '#013976',
                                         fontWeight: 'bold',
                                         fontSize: 14,
                                         alignSelf: 'flex-end'

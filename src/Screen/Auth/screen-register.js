@@ -23,17 +23,9 @@ class ScreenRegister extends Component {
         }
     }
 
-    componentDidMount() {
-        // const deviceName = DeviceInfo.getDeviceName();
-        // console.log(deviceName)
-    }
-
     componentDidUpdate(prevProps, prevState) {
-        console.log("-->props",this.props.redRegister)
         if (prevState.initialRedRegister === this.props.redRegister.status) {
-            console.log(this.props.redRegister)
             if (this.props.redRegister.status_add){
-                // console.log("asd -->true")
                 this.setState({
                     showRegisterModal:false
                 })
@@ -50,7 +42,6 @@ class ScreenRegister extends Component {
                 })
                 this.props.dispatch({type: 'RESET'})
             } else {
-                // console.log("asd -->false")
                 this.setState({
                     showRegisterModal:false
                 })
@@ -89,12 +80,10 @@ class ScreenRegister extends Component {
                 errors['confirm_password'] = false
             }
             this.setState({input_error: errors})
-            // console.log('----->e', this.state[key].length)
         }
     }
     onRegister = () => {
         return () => {
-            // console.log("asdasd")
             let count_errors = [];
             if (this.state.value_name.length < 1) {
                 errors['value_name'] = {error: true, error_message: 'required'}
@@ -116,8 +105,6 @@ class ScreenRegister extends Component {
                 errors['confirm_password'] = {error: true, error_message: 'required'}
                 count_errors.push({confirm_password: true})
             }
-            // console.log(errors)
-            // console.log(count_errors)
             if (count_errors.length < 1) {
                 let params = {
                     par_user_name: this.state.value_name,
@@ -139,16 +126,15 @@ class ScreenRegister extends Component {
     }
 
     render() {
-        console.log("--------->",this.state.showRegisterModal)
         let cek_n = typeof this.state.input_error.value_name === 'undefined' ? false : this.state.input_error.value_name.error;
         let cek_e = typeof this.state.input_error.value_email === 'undefined' ? false : this.state.input_error.value_email.error;
         let cek_p = typeof this.state.input_error.value_password === 'undefined' ? false : this.state.input_error.value_password.error;
         let cek_c = typeof this.state.input_error.confirm_password === 'undefined' ? false : this.state.input_error.confirm_password.error;
         return (
-            <Container style={{backgroundColor: '#013976'}}>
+            <Container style={{backgroundColor: '#FFF'}}>
                 <View style={{height: 50, paddingLeft: 20, justifyContent: 'center'}}>
                     <Button transparent light style={{width: 50}} onPress={() => this.props.navigation.goBack()}>
-                        <Icon name="arrow-left" size={20} color={'#FFF'}/>
+                        <Icon name="arrow-left" size={20} color={'#013976'}/>
                     </Button>
                 </View>
                 <Modal position={"center"}
@@ -163,15 +149,15 @@ class ScreenRegister extends Component {
                 </Modal>
                 <Content style={{padding: 20}}>
                     <View>
-                        <Text style={{fontWeight: 'bold', fontSize: 30, color: '#FFF'}}>Create Account</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 30, color: '#013976'}}>Create Account</Text>
                     </View>
                     <View style={{marginTop: 80, alignItems: 'center'}}>
-                        <Item error={true} style={{backgroundColor: '#013976', borderColor: '#FFF', borderWidth: 2}}>
+                        <Item error={true} style={{backgroundColor: '#FFF', borderColor: '#013976', borderWidth: 2}}>
                             <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon active name='user' size={20} color={'#FFF'}/>
+                                <Icon active name='user' size={20} color={'#013976'}/>
                             </View>
                             <Input
-                                style={{fontSize: 14, color: '#FFF'}}
+                                style={{fontSize: 14, color: '#013976'}}
                                 value={this.state.value_name}
                                 onBlur={this.onValidate('value_name')}
                                 onChangeText={this.onChangeText('value_name')}
@@ -184,12 +170,12 @@ class ScreenRegister extends Component {
                                 </View>
                             }
                         </Item>
-                        <Item style={{backgroundColor: '#013976', borderColor: '#FFF', borderWidth: 2}}>
+                        <Item style={{backgroundColor: '#FFF', borderColor: '#013976', borderWidth: 2}}>
                             <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon active name='envelope' size={20} color={'#FFF'}/>
+                                <Icon active name='envelope' size={20} color={'#013976'}/>
                             </View>
                             <Input autoCapitalize={"none"} keyboardType={'email-address'}
-                                   style={{fontSize: 14, color: '#FFF'}}
+                                   style={{fontSize: 14, color: '#013976'}}
                                    value={this.state.value_email}
                                    onBlur={this.onValidate('value_email')}
                                    onChangeText={this.onChangeText('value_email')}
@@ -202,13 +188,13 @@ class ScreenRegister extends Component {
                                 </View>
                             }
                         </Item>
-                        <Item style={{backgroundColor: '#013976', borderColor: '#FFF', borderWidth: 2}}>
+                        <Item style={{backgroundColor: '#FFF', borderColor: '#013976', borderWidth: 2}}>
                             <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon active name='lock' size={20} color={'#FFF'}/>
+                                <Icon active name='lock' size={20} color={'#013976'}/>
                             </View>
                             <Input
                                 autoCapitalize={"none"} secureTextEntry={true}
-                                style={{fontSize: 14, color: '#FFF'}}
+                                style={{fontSize: 14, color: '#013976'}}
                                 value={this.state.value_password}
                                 onBlur={this.onValidate('value_password')}
                                 onChangeText={this.onChangeText('value_password')}
@@ -222,13 +208,13 @@ class ScreenRegister extends Component {
                                 </View>
                             }
                         </Item>
-                        <Item style={{backgroundColor: '#013976', borderColor: '#FFF', borderWidth: 2}}>
+                        <Item style={{backgroundColor: '#FFF', borderColor: '#013976', borderWidth: 2}}>
                             <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon active name='lock' size={20} color={'#FFF'}/>
+                                <Icon active name='lock' size={20} color={'#013976'}/>
                             </View>
                             <Input
                                 autoCapitalize={"none"} secureTextEntry={true}
-                                style={{fontSize: 14, color: '#FFF'}}
+                                style={{fontSize: 14, color: '#013976'}}
                                 value={this.state.confirm_password}
                                 onBlur={this.onValidate('confirm_password')}
                                 onChangeText={this.onChangeText('confirm_password')}

@@ -1,4 +1,4 @@
-package com.book;
+package com.mlskoding.derma_buku;
 
 import com.facebook.react.ReactActivity;
 

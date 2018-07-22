@@ -60,6 +60,8 @@
 		C9ACB9C6B2F043AAB39D5E29 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F244ECE275E42B990AD46F6 /* libRNImagePicker.a */; };
 		99DFE040E9E54A27A0373201 /* libRNSnackbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F30D33B7A749DD973FFC02 /* libRNSnackbar.a */; };
 		E942D5F7DF7F4087B92AA872 /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCA177CC0804CFC98E08BAE /* libRNSpinkit.a */; };
+		1BF2DF388E6E425CA9893C0A /* ReactNativeSocialShare.app in Resources */ = {isa = PBXBuildFile; fileRef = 6A238770A5FA4B948DDE93EE /* ReactNativeSocialShare.app */; };
+		A0B8637951A74F87B22032B6 /* ReactNativeSocialShareTests.xctest in Resources */ = {isa = PBXBuildFile; fileRef = 0C6128A1A56545F9AD96253E /* ReactNativeSocialShareTests.xctest */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -396,6 +398,9 @@
 		D4F30D33B7A749DD973FFC02 /* libRNSnackbar.a */ = {isa = PBXFileReference; name = "libRNSnackbar.a"; path = "libRNSnackbar.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		08C2E9F5AEA74BCC81F75574 /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; name = "RNSpinkit.xcodeproj"; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		3DCA177CC0804CFC98E08BAE /* libRNSpinkit.a */ = {isa = PBXFileReference; name = "libRNSpinkit.a"; path = "libRNSpinkit.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		A945071753B34ABAA74036E5 /* ReactNativeSocialShare.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeSocialShare.xcodeproj"; path = "../node_modules/react-native-social-share/ReactNativeSocialShare.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		6A238770A5FA4B948DDE93EE /* ReactNativeSocialShare.app */ = {isa = PBXFileReference; name = "ReactNativeSocialShare.app"; path = "ReactNativeSocialShare.app"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.application; explicitFileType = undefined; includeInIndex = 0; };
+		0C6128A1A56545F9AD96253E /* ReactNativeSocialShareTests.xctest */ = {isa = PBXFileReference; name = "ReactNativeSocialShareTests.xctest"; path = "ReactNativeSocialShareTests.xctest"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.cfbundle; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -432,6 +437,8 @@
 				C9ACB9C6B2F043AAB39D5E29 /* libRNImagePicker.a in Frameworks */,
 				99DFE040E9E54A27A0373201 /* libRNSnackbar.a in Frameworks */,
 				E942D5F7DF7F4087B92AA872 /* libRNSpinkit.a in Frameworks */,
+				1BF2DF388E6E425CA9893C0A /* ReactNativeSocialShare.app in Resources */,
+				A0B8637951A74F87B22032B6 /* ReactNativeSocialShareTests.xctest in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +634,7 @@
 				A6B3EE15F374419F8AC4D8BE /* RNImagePicker.xcodeproj */,
 				74947A31F9744679A89A668C /* RNSnackbar.xcodeproj */,
 				08C2E9F5AEA74BCC81F75574 /* RNSpinkit.xcodeproj */,
+				A945071753B34ABAA74036E5 /* ReactNativeSocialShare.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1299,6 +1307,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1310,6 +1320,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
 				);
 			};
 			name = Debug;
@@ -1339,6 +1350,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1350,6 +1363,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
 				);
 			};
 			name = Release;
@@ -1379,6 +1393,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
 				);
 			};
 			name = Debug;
@@ -1407,6 +1422,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
 				);
 			};
 			name = Release;
@@ -1445,6 +1461,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1456,6 +1474,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
 				);
 			};
 			name = Debug;
@@ -1494,6 +1513,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1505,6 +1526,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
 				);
 			};
 			name = Release;
@@ -1542,6 +1564,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1553,6 +1577,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
 				);
 			};
 			name = Debug;
@@ -1590,6 +1615,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1601,6 +1628,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
 				);
 			};
 			name = Release;
