@@ -68,7 +68,7 @@ class ScreenDetail extends Component {
 
     onShareFacebook = () => {
         return () => {
-            console.log(this.props.redSetting)
+            // console.log(this.props.redSetting)
             shareOnFacebook({
                     'text': this.state.description + " Download Derma Buku apps on playstore : "+this.props.redSetting.data[1].play_store_link,
                     'link': this.props.redSetting.data[1].play_store_link,
@@ -77,7 +77,7 @@ class ScreenDetail extends Component {
                     'image': this.props.redSetting.data[4].logo_link,
                 },
                 (results) => {
-                    console.log(results);
+                    // console.log(results);
                 }
             );
         }
@@ -93,7 +93,7 @@ class ScreenDetail extends Component {
                     'image': this.props.redSetting.data[4].logo_link,
                 },
                 (results) => {
-                    console.log(results);
+                    // console.log(results);
                 }
             );
         }
@@ -103,7 +103,7 @@ class ScreenDetail extends Component {
         let params = {
             par_reserve_id: this.props.navigation.getParam('reserve_id')
         }
-        console.log(this.props.navigation.getParam('img'))
+        // console.log(this.props.navigation.getParam('img'))
         this.setState({
             user_photo: this.props.navigation.getParam('img'),
             user_name: this.props.navigation.getParam('name'),
@@ -124,12 +124,12 @@ class ScreenDetail extends Component {
                     data: JSON.parse(response.data.result.reserve.reserve_category),
                     endDonation: moment(response.data.result.reserve.reserve_end_date).format('LL')
                 })
-                console.log(response)
+                // console.log(response)
             }).catch((err) => {
             this.setState({
                 isLoading: false,
             })
-            console.log(err)
+            // console.log(err)
         })
     }
 
@@ -146,7 +146,7 @@ class ScreenDetail extends Component {
     }
 
     render() {
-        console.log(this.state.data)
+        // console.log(this.state.data)
         return (
             <Container>
                 <StatusBar backgroundColor="#013976"/>

@@ -1,16 +1,29 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {View, Thumbnail, Text, Container, Content, Button} from 'native-base';
-import {FlatList, Image, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
+import {FlatList, Image, ImageStore, StatusBar, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Reserve, Rph} from "../../Components/Content";
 import {actGetListReserve} from "./action";
 import {sqlToJsISO} from "../../Utils/func";
+import ImagePicker from "react-native-image-picker";
+import ImageResizer from 'react-native-image-resizer'
+import {host} from "../../Utils/Api";
+import axios from "axios/index";
+
+let options = {
+    title: 'Select Image',
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
+    }
+};
 
 function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
-        redGetListReserveUser: state.redGetListReserveUser
+        redGetListReserveUser: state.redGetListReserveUser,
+        redAddReserve: state.redAddReserve,
     };
 }
 
@@ -64,9 +77,11 @@ class ScreenProfile extends Component {
             name: '',
             image: '',
             initialRedGetListReserveUser: true,
+            initialRedAddReserve: true,
             data: [],
             isRefresh: false,
-            isLoading: true
+            isLoading: true,
+            image_save: ''
         }
     }
 
@@ -89,8 +104,16 @@ class ScreenProfile extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if (prevState.initialRedAddReserve === this.props.redAddReserve.status) {
+            if (this.props.redAuth.status_get) {
+                let params = {
+                    par_user_id: this.props.redAuth.data.profile.user_id
+                }
+                this.props.dispatch(actGetListReserve(params));
+            }
+        }
         if (prevState.initialRedGetListReserveUser === this.props.redGetListReserveUser.status) {
-            if (this.props.redGetListReserveUser.status){
+            if (this.props.redGetListReserveUser.status) {
                 this.setState({
                     data: this.props.redGetListReserveUser.data,
                     isRefresh: false,
@@ -110,7 +133,8 @@ class ScreenProfile extends Component {
 
     componentDidMount() {
         // this.props.dispatch({type: 'LOGOUT'})
-        console.log("===>",this.props.redAuth)
+        // this.props.dispatch({type: 'LOGOUT'})
+        // console.log("===>", this.props.redAuth)
         if (this.props.redAuth.status_get) {
             let params = {
                 par_user_id: this.props.redAuth.data.profile.user_id
@@ -139,6 +163,68 @@ class ScreenProfile extends Component {
             this.setState({
                 isRefresh: true
             })
+        }
+    }
+    onPickImage = (key, val) => {
+        return () => {
+            ImagePicker.showImagePicker(options, (response) => {
+                // console.log('Response = ', response);
+
+                if (response.didCancel) {
+                    // console.log('User cancelled image picker');
+                }
+                else if (response.error) {
+                    // console.log('ImagePicker Error: ', response.error);
+                }
+                else if (response.customButton) {
+                    // console.log('User tapped custom button: ', response.customButton);
+                }
+                else {
+                    console.log(response)
+                    ImageResizer.createResizedImage('data:image/png;base64,' + response.data, 500, 500, 'JPEG', 80)
+                        .then(({uri}) => {
+                            const config = {
+                                headers: {'content-type': 'multipart/form-data'}
+                            };
+                            const data = new FormData();
+                            data.append('par_image_user', {
+                                uri: uri,
+                                type: response.type, // or photo.type
+                                name: response.fileName
+                            });
+                            data.append('par_user_id', this.props.redAuth.data.profile.user_id);
+                            axios.post(host + 'auth/update_image', data, config)
+                                .then((response) => {
+                                    console.log(response)
+                                    if (response.data.status) {
+                                        let data_ = {
+                                            name: response.data.result.user_name,
+                                            photo: response.data.result.user_photo
+                                        }
+                                        this.props.dispatch({
+                                            type: 'LOGIN',
+                                            status_get: true,
+                                            data: {data: data_, profile: response.data.result},
+                                            message: response.data.message
+                                        })
+                                    }
+                                }).catch((err) => {
+                            })
+                        }).catch((err) => {
+                    });
+
+                    ImageResizer.createResizedImage('data:image/png;base64,' + response.data, 200, 200, 'JPEG', 80)
+                        .then(({uri}) => {
+                            ImageStore.getBase64ForTag(uri, (data) => {
+                                let source = 'data:image/png;base64,' + data;
+                                this.setState({image: source})
+                            }, (e) => {
+                                console.log('getBase64ForTag-error', e);
+                            });
+                        }).catch((err) => {
+                    });
+                }
+            });
         }
     }
 
@@ -173,7 +259,8 @@ class ScreenProfile extends Component {
 
                             </View>
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Button full transparent light>
+                                <Button full transparent light
+                                        onPress={() => this.props.navigation.navigate('Setting')}>
                                     <Icon color={'#FFF'} size={20}
                                           name="cog"/>
                                 </Button>
@@ -185,15 +272,22 @@ class ScreenProfile extends Component {
                         </View>
                     }
 
-                    <View style={{position: 'absolute', top: 40, right: 10}}>
+                    <View style={{position: 'absolute', top: 50, right: 10}}>
                         {
                             this.state.isLogin
                             &&
-                            <Thumbnail large
-                                       source={{uri: this.state.image}}/>
+                            <TouchableOpacity onPress={this.onPickImage()}>
+                                <Thumbnail large
+                                           source={{uri: this.state.image}}/>
+                                <View style={{position: 'absolute', left: 0}}>
+                                    <Icon color={'#FFF'} size={20}
+                                          name="camera"/>
+
+                                </View>
+                            </TouchableOpacity>
                         }
                     </View>
-                    <View style={{position: 'absolute', top: 120, right: 10}}>
+                    <View style={{position: 'absolute', top: 130, right: 10}}>
                         <Text style={{color: '#FFF'}}>{this.state.name}</Text>
                     </View>
 
@@ -219,7 +313,7 @@ class ScreenProfile extends Component {
                                 />
                             </View>
                             <View style={{flex: 1}}>
-                                <View style={{justifyContent:'center',alignItems:'center',marginTop:40}}>
+                                <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 40}}>
                                     <Text style={{textAlign: 'center', fontSize: 12}}>You can't give happiness, but you
                                         can
                                         give books.</Text>
@@ -264,7 +358,12 @@ class ScreenProfile extends Component {
                                     }
                                 />
                                 : <View
-                                    style={{flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        flexDirection: 'column'
+                                    }}>
                                     <View style={{flex: 1}}>
                                         <Image
                                             style={{flex: 1}}
@@ -274,8 +373,9 @@ class ScreenProfile extends Component {
                                         />
                                     </View>
                                     <View style={{flex: 1}}>
-                                        <View style={{justifyContent:'center',alignItems:'center',marginTop:40}}>
-                                            <Text style={{textAlign: 'center', fontSize: 12}}>You can't give happiness, but you
+                                        <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 40}}>
+                                            <Text style={{textAlign: 'center', fontSize: 12}}>You can't give happiness, but
+                                                you
                                                 can
                                                 give books.</Text>
                                             <Text style={{textAlign: 'center', fontSize: 12}}>No data</Text>
@@ -285,17 +385,6 @@ class ScreenProfile extends Component {
 
 
                 }
-                {/*<View style={{padding:10}}>*/}
-                {/*<Text>Edit Profile</Text>*/}
-                {/*</View>*/}
-                {/*<View style={{padding:10}}>*/}
-                {/*<Text>Log Out</Text>*/}
-                {/*</View>*/}
-
-
-                {/*<Button full bordered info style={{margin: 10}} onPress={this.onCreareReserveClick()}>*/}
-                {/*<Text>Create Reserve</Text>*/}
-                {/*</Button>*/}
                 {
                     !this.state.isLogin
                         ?

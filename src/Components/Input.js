@@ -2,13 +2,15 @@ import {View, TouchableWithoutFeedback} from "react-native";
 import {Input, Item, Text, Textarea} from "native-base";
 import React from 'react';
 
-export const InputText = ({label, onBlur, value, onChangeText, isError}) => {
+export const InputText = ({label, onBlur, value, onChangeText, isError, isPin}) => {
+    let isPass = typeof isPin === 'undefined' ? false : isPin === true
+        // console.log("-->", isPass)
     return (
         <View style={{marginBottom: 10}}>
             <Text style={{fontSize: 12}}>{label}</Text>
             <Item regular style={{width: '100%', height: 40}}
                   error={typeof isError === 'undefined' ? false : !!isError.error}>
-                <Input onBlur={onBlur} style={{fontSize: 14}} value={value} onChangeText={onChangeText}/>
+                <Input secureTextEntry={isPass} onBlur={onBlur} style={{fontSize: 14}} value={value} onChangeText={onChangeText}/>
             </Item>
         </View>
     )
@@ -29,7 +31,7 @@ export const InputTextArea = ({label, onBlur, value, onChangeText, isError}) => 
         </View>
     )
 }
-export const InputSelect = ({label, onClick, value,isError}) => {
+export const InputSelect = ({label, onClick, value, isError}) => {
     return (
         <TouchableWithoutFeedback onPress={onClick}>
             <View style={{marginBottom: 10}}>
@@ -37,7 +39,7 @@ export const InputSelect = ({label, onClick, value,isError}) => {
                 <View style={{
                     width: '100%',
                     height: 40,
-                    borderColor: isError ? 'red' :'#E0E0E0',
+                    borderColor: isError ? 'red' : '#E0E0E0',
                     borderWidth: 1,
                     borderStyle: 'solid',
                     justifyContent: 'center',
@@ -51,7 +53,7 @@ export const InputSelect = ({label, onClick, value,isError}) => {
 
 }
 
-export const InputDate = ({label, onClick, value,isError}) => {
+export const InputDate = ({label, onClick, value, isError}) => {
     return (
         <TouchableWithoutFeedback onPress={onClick}>
             <View style={{marginBottom: 10}}>
@@ -59,7 +61,7 @@ export const InputDate = ({label, onClick, value,isError}) => {
                 <View style={{
                     width: '100%',
                     height: 40,
-                    borderColor: isError ? 'red' :'#E0E0E0',
+                    borderColor: isError ? 'red' : '#E0E0E0',
                     borderWidth: 1,
                     borderStyle: 'solid',
                     justifyContent: 'center',

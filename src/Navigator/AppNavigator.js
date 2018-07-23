@@ -6,8 +6,11 @@ import {createStackNavigator, createBottomTabNavigator, createDrawerNavigator} f
 import {initializeListeners} from 'react-navigation-redux-helpers'
 import {navigationPropConstructor} from '../Utils/Redux'
 import ScreenHome from '../Screen/Home/screen-home'
+import ScreenSetting from '../Screen/Setting/screen-setting'
 import ScreenDetail from '../Screen/Home/screen-detail'
 import ScreenProfile from '../Screen/Profile/screen-profile'
+import ScreenChangePassword from '../Screen/Profile/screen-change-password'
+import ScreenEditProfil from '../Screen/Profile/screen-edit-profil'
 import ScreenMyReserveDetail from '../Screen/Profile/screen-detail-myreserve'
 import ScreenNews from '../Screen/News/screen-news'
 import ScreenEvent from '../Screen/Event/screen-event'
@@ -37,6 +40,9 @@ export const AppNavigator = createStackNavigator({
     ForgetPassword: {screen: ScreenForgetPassword},
     MyDetailReserve: {screen: ScreenMyReserveDetail},
     ScreenDetail: {screen: ScreenDetail},
+    Setting: {screen: ScreenSetting},
+    ChangePassword: {screen: ScreenChangePassword},
+    EditProfil: {screen: ScreenEditProfil},
 
 }, {
     headerMode: 'none',

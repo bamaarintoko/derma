@@ -16,6 +16,7 @@ function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
         redGetListReserve: state.redGetListReserve,
+        redAddReserve: state.redAddReserve,
     };
 }
 
@@ -77,6 +78,7 @@ class ScreenHome extends Component {
         this.state = {
             isLoading: true,
             initialRedGetListReserve: true,
+            initialRedAddReserve: true,
             color: '#FFFFFF',
             imgList: [
                 'https://gitlab.pro/yuji/demo/uploads/d6133098b53fe1a5f3c5c00cf3c2d670/DVrj5Hz.jpg_1',
@@ -97,7 +99,9 @@ class ScreenHome extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-
+        if (prevState.initialRedAddReserve === this.props.redAddReserve.status){
+            this.props.dispatch(actGetListReserve());
+        }
         if (prevState.initialRedGetListReserve === this.props.redGetListReserve.status) {
             this.setState({
                 isLoading: false,
