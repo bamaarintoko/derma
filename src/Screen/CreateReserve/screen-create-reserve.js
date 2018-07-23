@@ -152,7 +152,7 @@ class ScreenCreateReserve extends Component {
                     duration: Snackbar.LENGTH_LONG,
                 });
             }
-            this.props.dispatch({type: 'RESET_RESERVE'})
+            this.props.dispatch({type: 'RESET_ADD_RESERVE'})
         }
         // console.log(this.props.redAddReserve)
     }
@@ -421,7 +421,7 @@ class ScreenCreateReserve extends Component {
                 errors['endDateSave'] = {error: false, error_message: 'required'}
                 count_errors.push()
             }
-            if (words.length < 1) {
+            if (result.length < 1) {
                 errors['category_value'] = {error: true, error_message: 'required'}
                 count_errors.push({category_value: true})
             } else {
@@ -440,7 +440,7 @@ class ScreenCreateReserve extends Component {
             if (count_errors.length < 1) {
                 let params = {
                     par_title: this.state.value_title,
-                    par_kategory: JSON.stringify(result),
+                    par_kategory: JSON.stringify(words),
                     par_description: this.state.value_description,
                     par_note: this.state.value_note,
                     par_reserve_name: this.state.value_reserve_name,

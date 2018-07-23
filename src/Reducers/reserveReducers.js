@@ -9,7 +9,7 @@ export function redAddReserve(state = initialAdd, action) {
                 message: action.message,
                 data: action.data
             }
-        case "RESET_RESERVE":
+        case "RESET_ADD_RESERVE":
             return {
                 status: false,
                 status_add: false,

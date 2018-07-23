@@ -471,7 +471,10 @@ class ScreenMyReserveDetail extends Component {
                                         <Text style={{fontSize: 12}}>Kategori</Text>
                                         {
                                             this.state.data.map((v, k) => {
+
                                                 return (
+                                                    v.check
+                                                    &&
                                                     <View key={k} style={{
                                                         marginBottom: 5,
                                                         flexDirection: 'row',
