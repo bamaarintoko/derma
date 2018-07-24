@@ -24,6 +24,7 @@ function mapStateToProps(state) {
         redAuth: state.redAuth,
         redGetListReserveUser: state.redGetListReserveUser,
         redAddReserve: state.redAddReserve,
+        redUpdateReserve: state.redUpdateReserve,
     };
 }
 
@@ -77,6 +78,7 @@ class ScreenProfile extends Component {
             name: '',
             image: '',
             initialRedGetListReserveUser: true,
+            initialRedUpdateReserve: true,
             initialRedAddReserve: true,
             data: [],
             isRefresh: false,
@@ -104,6 +106,13 @@ class ScreenProfile extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if (prevState.initialRedUpdateReserve === this.props.redUpdateReserve.status) {
+            let params = {
+                par_user_id: this.props.redAuth.data.profile.user_id
+            }
+            this.props.dispatch(actGetListReserve(params));
+            // this.props.dispatch({type:"UPDATE_RESET"})
+        }
         if (prevState.initialRedAddReserve === this.props.redAddReserve.status) {
             if (this.props.redAuth.status_get) {
                 let params = {
@@ -132,9 +141,6 @@ class ScreenProfile extends Component {
     }
 
     componentDidMount() {
-        // this.props.dispatch({type: 'LOGOUT'})
-        // this.props.dispatch({type: 'LOGOUT'})
-        // console.log("===>", this.props.redAuth)
         if (this.props.redAuth.status_get) {
             let params = {
                 par_user_id: this.props.redAuth.data.profile.user_id
@@ -168,19 +174,14 @@ class ScreenProfile extends Component {
     onPickImage = (key, val) => {
         return () => {
             ImagePicker.showImagePicker(options, (response) => {
-                // console.log('Response = ', response);
 
                 if (response.didCancel) {
-                    // console.log('User cancelled image picker');
                 }
                 else if (response.error) {
-                    // console.log('ImagePicker Error: ', response.error);
                 }
                 else if (response.customButton) {
-                    // console.log('User tapped custom button: ', response.customButton);
                 }
                 else {
-                    console.log(response)
                     ImageResizer.createResizedImage('data:image/png;base64,' + response.data, 500, 500, 'JPEG', 80)
                         .then(({uri}) => {
                             const config = {
@@ -195,7 +196,6 @@ class ScreenProfile extends Component {
                             data.append('par_user_id', this.props.redAuth.data.profile.user_id);
                             axios.post(host + 'auth/update_image', data, config)
                                 .then((response) => {
-                                    console.log(response)
                                     if (response.data.status) {
                                         let data_ = {
                                             name: response.data.result.user_name,
@@ -219,7 +219,6 @@ class ScreenProfile extends Component {
                                 let source = 'data:image/png;base64,' + data;
                                 this.setState({image: source})
                             }, (e) => {
-                                console.log('getBase64ForTag-error', e);
                             });
                         }).catch((err) => {
                     });

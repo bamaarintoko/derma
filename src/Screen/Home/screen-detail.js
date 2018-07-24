@@ -236,6 +236,8 @@ class ScreenDetail extends Component {
                                     {
                                         this.state.data.map((v, k) => {
                                             return (
+                                                v.check
+                                                &&
                                                 <View key={k} style={{flexDirection: 'row'}}>
                                                     <View style={{width: '20%'}}>
                                                         <Text style={{fontSize: 12}}>{v.count}</Text>

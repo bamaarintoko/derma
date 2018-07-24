@@ -43,9 +43,6 @@ class ScreenSetting extends Component {
                 </View>
                 <Content>
                     <List>
-                        <ListItem>
-                            <Text>Edit profil</Text>
-                        </ListItem>
                         <ListItem onPress={() => this.props.navigation.navigate('ChangePassword')}>
                             <Text>Change password</Text>
                         </ListItem>

@@ -88,7 +88,6 @@ class ScreenCreateReserve extends Component {
     }
 
     componentDidMount() {
-        // console.log(this.props.redAuth.data.profile.user_id)
         let params = {}
         Api._POST('category/category_book', params).then((response) => {
             if (response.data.status) {
@@ -154,7 +153,6 @@ class ScreenCreateReserve extends Component {
             }
             this.props.dispatch({type: 'RESET_ADD_RESERVE'})
         }
-        // console.log(this.props.redAddReserve)
     }
 
     _showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
@@ -166,8 +164,6 @@ class ScreenCreateReserve extends Component {
             endDatePreview: moment(date).format('LL'),
             endDateSave: jsDateToSqlD(date.toISOString())
         })
-        // console.log('A date has been picked: --->', jsDateToSqlD(date.toISOString()));
-        // console.log('A date has been picked: --->', moment(date).format('LL'));
         this._hideDateTimePicker();
     };
     onOpenClick = () => {
@@ -204,7 +200,6 @@ class ScreenCreateReserve extends Component {
     }
     onChangeNumber = (key, idx) => {
         return (e) => {
-            console.log(parseInt(e))
             this.state.data[idx].count = parseInt(e)
             this.setState({
                 data: this.state.data
@@ -235,7 +230,6 @@ class ScreenCreateReserve extends Component {
                 par_province_name: this.state.province_value
             }
             Api._POST('location/district', params).then((response) => {
-                // console.log(response)
                 this.setState({
                     district: response.data
                 })
@@ -251,7 +245,6 @@ class ScreenCreateReserve extends Component {
                 par_district_name: this.state.district_value
             }
             Api._POST('location/sub_district', params).then((response) => {
-                // console.log(response)
                 this.setState({
                     sub_district: response.data
                 })
@@ -275,7 +268,6 @@ class ScreenCreateReserve extends Component {
             let state = {}
             state[key] = e
             this.setState(state);
-            // console.log(e)
         }
     }
     onSelectChangeText = (key) => {
@@ -308,26 +300,20 @@ class ScreenCreateReserve extends Component {
     onPickImage = (key, val) => {
         return () => {
             ImagePicker.showImagePicker(options, (response) => {
-                console.log('Response = ', response);
 
                 if (response.didCancel) {
-                    console.log('User cancelled image picker');
                 }
                 else if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
                 }
                 else if (response.customButton) {
-                    console.log('User tapped custom button: ', response.customButton);
                 }
                 else {
-                    console.log(response)
                     ImageResizer.createResizedImage('data:image/png;base64,' + response.data, 500, 500, 'JPEG', 80)
                         .then(({uri}) => {
                             let state = {};
                             state[val] = {uri: uri, type: response.type, fileName: response.fileName};
                             this.setState(state)
                             img.push({uri: uri, type: response.type, fileName: response.fileName})
-                            console.log(uri)
                         }).catch((err) => {
                     });
 
@@ -339,7 +325,6 @@ class ScreenCreateReserve extends Component {
                                 state[key] = source;
                                 this.setState(state)
                             }, (e) => {
-                                console.log('getBase64ForTag-error', e);
                             });
                         }).catch((err) => {
                     });
@@ -355,14 +340,12 @@ class ScreenCreateReserve extends Component {
                 errors[key] = false
             }
             this.setState({input_error: errors})
-            // console.log('----->e', this.state[key].length)
         }
     }
     onCreate = () => {
         return () => {
             let count_errors = [];
             let words = this.state.data;
-            console.log("--->",words)
             let img_ = [];
             this.state.imgValue0 !== "" && img_.push(this.state.imgValue0)
             this.state.imgValue1 !== "" && img_.push(this.state.imgValue1)
@@ -372,7 +355,6 @@ class ScreenCreateReserve extends Component {
             this.state.imgValue5 !== "" && img_.push(this.state.imgValue5)
 
             const result = words.filter(word => word.check);
-            // console.log(result.length)
             if (this.state.value_title.length < 1) {
                 errors['value_title'] = {error: true, error_message: 'required'}
                 count_errors.push({value_title: true})
@@ -480,7 +462,6 @@ class ScreenCreateReserve extends Component {
         let cek_s = typeof this.state.input_error.sub_district_value === 'undefined' ? false : this.state.input_error.sub_district_value.error;
         let cek_e = typeof this.state.input_error.endDateSave === 'undefined' ? false : this.state.input_error.endDateSave.error;
         let cek_c = typeof this.state.input_error.category_value === 'undefined' ? false : this.state.input_error.category_value.error;
-        // console.log(typeof this.state.input_error.value_img === 'undefined' ? false : this.state.input_error.value_img.error)
         return (
             <Container>
                 <View style={{
@@ -507,7 +488,6 @@ class ScreenCreateReserve extends Component {
                                   name="check"/>
                         </Button>
                     </View>
-                    {/*{console.log("=>",this.state.data)}*/}
                 </View>
                 <Modal position={"center"}
                        style={{width: 300, height: 100, justifyContent:'center',alignItems:'center'}}

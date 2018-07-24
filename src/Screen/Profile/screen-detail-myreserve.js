@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Button, Container, Content, Input, Item, Text} from "native-base";
 import {
-    Dimensions, FlatList, Image, StatusBar, StyleSheet, TouchableHighlight, TouchableWithoutFeedback,
+    Dimensions, FlatList, Image, ImageStore, StatusBar, StyleSheet, TouchableHighlight, TouchableWithoutFeedback,
     View
 } from "react-native";
+import RadioForm from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Api from "../../Utils/Api";
 import moment from "moment/moment";
@@ -12,20 +13,53 @@ import {InputDate, InputSelect, InputText, InputTextArea} from "../../Components
 import CheckBox from "react-native-check-box";
 import Modal from 'react-native-modalbox';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+
 const errors = {}
 const width = (Dimensions.get('window').width - 50);
 const val = [];
 import Spinner from 'react-native-spinkit';
 import {jsDateToSqlD} from "../../Utils/func";
+import {actUpdateReserve} from "./action";
+import ImagePicker from "react-native-image-picker";
+import ImageResizer from 'react-native-image-resizer'
+import Snackbar from 'react-native-snackbar';
+let radio_props = [
+    { label: 'Publish', value: 'publish' },
+    { label: 'Close', value: 'close' }
+];
+
 let tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 7)
+const img = [];
+let options = {
+    title: 'Select Image',
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
+    }
+};
+let data_del = [];
+
 class ScreenMyReserveDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            imgPreview0: '',
+            imgPreview1: '',
+            imgPreview2: '',
+            imgPreview3: '',
+            imgPreview4: '',
+            imgPreview5: '',
+            imgValue0: '',
+            imgValue1: '',
+            imgValue2: '',
+            imgValue3: '',
+            imgValue4: '',
+            imgValue5: '',
             value_title: '',
             value_address: '',
             data: [],
+            value_status: '',
             value_description: '',
             value_note: '',
             value_reserve_name: '',
@@ -45,14 +79,16 @@ class ScreenMyReserveDetail extends Component {
             isProvinceOpen: false,
             isDistrictModalOpen: false,
             isSubDistrictModalOpen: false,
+            initialRedUpdateReserve: true,
             isLoading: true,
-            isDateTimePickerVisible: false
+            isDateTimePickerVisible: false,
+            isUpdate: false
 
         }
     }
 
     componentDidMount() {
-        console.log(this.props.navigation.getParam('reserve_id'))
+        data_del = [];
         let params = {
             par_reserve_id: this.props.navigation.getParam('reserve_id')
         }
@@ -74,15 +110,20 @@ class ScreenMyReserveDetail extends Component {
                         value_district: response.data.result.reserve.reserve_district,
                         value_sub_district: response.data.result.reserve.reserve_sub_district,
                         value_end_date: response.data.result.reserve.reserve_end_date,
+                        endDateSave: response.data.result.reserve.reserve_end_date,
+                        value_status: response.data.result.reserve.reserve_status,
                         image_preview: response.data.result.image
                     })
+                    response.data.result.image.map((v, k) => {
+                        let state = {}
+                        state["imgPreview" + k] = v.media_value
+                        this.setState(state)
+                    })
                 }
-                console.log(response)
             }).catch((err) => {
             this.setState({
                 isLoading: false
             })
-            console.log(err.message)
         })
         Api._POST('location/province', params).then((response) => {
             this.setState({
@@ -91,17 +132,35 @@ class ScreenMyReserveDetail extends Component {
         })
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.initialRedUpdateReserve === this.props.redUpdateReserve.status) {
+            this.setState({
+                isUpdate: false
+            })
+            if (this.props.redUpdateReserve.status_update) {
+                Snackbar.show({
+                    title: 'Update reserve success',
+                    duration: Snackbar.LENGTH_LONG,
+                });
+            } else {
+                Snackbar.show({
+                    title: 'Update reserve failed',
+                    duration: Snackbar.LENGTH_LONG,
+                });
+            }
+            this.props.dispatch({type: "UPDATE_RESET"})
+        }
+    }
+
     _showDateTimePicker = () => this.setState({isDateTimePickerVisible: true});
 
     _hideDateTimePicker = () => this.setState({isDateTimePickerVisible: false});
 
     _handleDatePicked = (date) => {
         this.setState({
-            value_end_date: moment(date).format('LL'),
+            value_end_date: date,
             endDateSave: jsDateToSqlD(date.toISOString())
         })
-        // console.log('A date has been picked: --->', jsDateToSqlD(date.toISOString()));
-        // console.log('A date has been picked: --->', moment(date).format('LL'));
         this._hideDateTimePicker();
     };
     onValidate = (key) => {
@@ -112,7 +171,6 @@ class ScreenMyReserveDetail extends Component {
                 errors[key] = false
             }
             this.setState({input_error: errors})
-            // console.log('----->e', this.state[key].length)
         }
     }
     onOpenClick = () => {
@@ -135,7 +193,6 @@ class ScreenMyReserveDetail extends Component {
                 par_province_name: this.state.value_province
             }
             Api._POST('location/district', params).then((response) => {
-                // console.log(response)
                 this.setState({
                     district: response.data
                 })
@@ -151,7 +208,6 @@ class ScreenMyReserveDetail extends Component {
                 par_district_name: this.state.value_district
             }
             Api._POST('location/sub_district', params).then((response) => {
-                // console.log(response)
                 this.setState({
                     sub_district: response.data
                 })
@@ -175,7 +231,6 @@ class ScreenMyReserveDetail extends Component {
             let state = {}
             state[key] = e
             this.setState(state);
-            // console.log(e)
         }
     }
     onCheck = (key, idx) => {
@@ -196,7 +251,6 @@ class ScreenMyReserveDetail extends Component {
     }
     onChangeNumber = (key, idx) => {
         return (e) => {
-            console.log(parseInt(e))
             this.state.data[idx].count = parseInt(e)
             this.setState({
                 data: this.state.data
@@ -238,8 +292,6 @@ class ScreenMyReserveDetail extends Component {
                 isProvinceOpen: false,
                 isDistrictModalOpen: false,
                 isSubDistrictModalOpen: false,
-                value_district: '',
-                value_sub_district: ''
             })
             if (key === 'value_province') {
                 this.setState({
@@ -258,9 +310,85 @@ class ScreenMyReserveDetail extends Component {
             })
         }
     }
+    onDeleteImg = (prev, val, trash) => {
+        return () => {
+            let state = {};
+            if (trash.charAt(0) === 'h') {
+                data_del.push(trash)
+            }
+            state[prev] = "";
+            state[val] = "";
+            this.setState(state)
+        }
+    }
+    onPickImage = (key, val) => {
+        return () => {
+            ImagePicker.showImagePicker(options, (response) => {
+                if (response.didCancel) {
+                }
+                else if (response.error) {
+                }
+                else if (response.customButton) {
+                }
+                else {
+                    ImageResizer.createResizedImage('data:image/png;base64,' + response.data, 500, 500, 'JPEG', 80)
+                        .then(({uri}) => {
+                            let state = {};
+                            state[val] = {uri: uri, type: response.type, fileName: response.fileName};
+                            this.setState(state)
+                            img.push({uri: uri, type: response.type, fileName: response.fileName})
+                        }).catch((err) => {
+                    });
+
+                    ImageResizer.createResizedImage('data:image/png;base64,' + response.data, 200, 200, 'JPEG', 80)
+                        .then(({uri}) => {
+                            ImageStore.getBase64ForTag(uri, (data) => {
+                                let source = 'data:image/png;base64,' + data;
+                                let state = {};
+                                state[key] = source;
+                                this.setState(state)
+                            }, (e) => {
+                            });
+                        }).catch((err) => {
+                    });
+                }
+            });
+        }
+    }
+
+    onSave = () => {
+        return () => {
+            let img_ = [];
+            this.state.imgValue0 !== "" && img_.push(this.state.imgValue0)
+            this.state.imgValue1 !== "" && img_.push(this.state.imgValue1)
+            this.state.imgValue2 !== "" && img_.push(this.state.imgValue2)
+            this.state.imgValue3 !== "" && img_.push(this.state.imgValue3)
+            this.state.imgValue4 !== "" && img_.push(this.state.imgValue4)
+            this.state.imgValue5 !== "" && img_.push(this.state.imgValue5)
+
+            let params = {
+                par_reserve_id: this.props.navigation.getParam('reserve_id'),
+                par_title: this.state.value_title,
+                par_kategory: JSON.stringify(this.state.data),
+                par_description: this.state.value_description,
+                par_note: this.state.value_note,
+                par_reserve_name: this.state.value_reserve_name,
+                par_reserve_cp: this.state.value_reserve_cp,
+                par_address: this.state.value_address,
+                par_province: this.state.value_province,
+                par_district: this.state.value_district,
+                par_sub_district: this.state.value_sub_district,
+                par_end_date: this.state.endDateSave,
+                par_status: this.state.value_status
+            }
+            this.setState({
+                isUpdate:true
+            })
+            this.props.dispatch(actUpdateReserve(params, img_, JSON.stringify(data_del)))
+        }
+    }
 
     render() {
-        console.log(this.state.image_preview)
         return <Container>
             <StatusBar backgroundColor="#013976"/>
             <View style={{
@@ -303,7 +431,16 @@ class ScreenMyReserveDetail extends Component {
 
                 </View>
             </View>
-
+            <Modal position={"center"}
+                   style={{width: 300, height: 100, justifyContent: 'center', alignItems: 'center'}}
+                   swipeToClose={false}
+                   isOpen={this.state.isUpdate}
+                   backdropPressToClose={false}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Spinner type={'ChasingDots'} color={"#013976"}/>
+                    <Text>Please wait</Text>
+                </View>
+            </Modal>
             <Modal position={"center"}
                    style={[styles.modal, styles.modal3]}
                    swipeToClose={false}
@@ -698,14 +835,321 @@ class ScreenMyReserveDetail extends Component {
                                         onChangeText={this.onChangeText('value_reserve_cp')}
                                         label={"Recipient Contact Person"}/>
                                     <View style={{marginTop: 5, marginBottom: 5}}>
-                                        <Text style={{fontSize: 12, marginBottom: 5}}>Image (Click plus button to
-                                            add
+                                        <Text style={{fontSize: 12, marginBottom: 5}}>Image (Click plus button to add
                                             image)</Text>
                                         <View style={{
                                             flex: 1,
                                             flexDirection: 'row',
                                             justifyContent: 'space-between',
                                         }}>
+                                            <View>
+
+                                                <TouchableWithoutFeedback
+                                                    onPress={this.state.imgPreview0.length > 0 ?()=>console.log("asd") : this.onPickImage('imgPreview0', 'imgValue0')}>
+                                                    <View style={{
+                                                        height: width / 3,
+                                                        overflow: 'hidden',
+                                                        borderRadius: 5,
+                                                        width: width / 3,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        backgroundColor: '#E3F2FD'
+                                                    }}>
+
+                                                        {
+                                                            this.state.imgPreview0.length > 0
+                                                                ?
+                                                                <Image
+
+                                                                    style={{width: width / 3, height: width / 3}}
+                                                                    source={{
+                                                                        isStatic: true,
+                                                                        uri: this.state.imgPreview0
+                                                                    }}/>
+                                                                :
+                                                                <Icon color={'#FFF'} size={20}
+                                                                      name="picture-o"/>
+                                                        }
+
+
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                                {
+                                                    this.state.imgPreview0 !== ""
+                                                    &&
+                                                    <TouchableWithoutFeedback
+                                                        onPress={this.onDeleteImg('imgPreview0', 'imgValue0', this.state.imgPreview0)}>
+                                                        <View style={{
+                                                            width: 25,
+                                                            height: 25,
+                                                            backgroundColor: '#E0E0E0',
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            borderTopRightRadius: 5,
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <Icon color={'#FFF'} size={12}
+                                                                  name="times"/>
+                                                        </View>
+                                                    </TouchableWithoutFeedback>
+                                                }
+
+                                            </View>
+                                            <View>
+                                                <TouchableWithoutFeedback
+                                                    onPress={this.state.imgPreview1.length > 0 ?()=>console.log("asd") : this.onPickImage('imgPreview1', 'imgValue1', this.state.imgPreview0)}>
+                                                    <View style={{
+                                                        height: width / 3,
+                                                        overflow: 'hidden',
+                                                        borderRadius: 5,
+                                                        width: width / 3,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        backgroundColor: '#E3F2FD'
+                                                    }}>
+                                                        {
+                                                            this.state.imgPreview1.length > 0
+                                                                ?
+                                                                <Image
+
+                                                                    style={{width: width / 3, height: width / 3}}
+                                                                    source={{
+                                                                        isStatic: true,
+                                                                        uri: this.state.imgPreview1
+                                                                    }}/>
+                                                                :
+                                                                <Icon color={'#FFF'} size={20}
+                                                                      name="picture-o"/>
+                                                        }
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                                {
+                                                    this.state.imgPreview1 !== ""
+                                                    &&
+                                                    <TouchableWithoutFeedback
+                                                        onPress={this.onDeleteImg('imgPreview1', 'imgValue1', this.state.imgPreview1)}>
+                                                        <View style={{
+                                                            width: 25,
+                                                            height: 25,
+                                                            backgroundColor: '#E0E0E0',
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            borderTopRightRadius: 5,
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <Icon color={'#FFF'} size={12}
+                                                                  name="times"/>
+                                                        </View>
+                                                    </TouchableWithoutFeedback>
+                                                }
+                                            </View>
+                                            <View>
+                                                <TouchableWithoutFeedback
+                                                    onPress={this.state.imgPreview2.length > 0 ?()=>console.log("asd") : this.onPickImage('imgPreview2', 'imgValue2')}>
+                                                    <View style={{
+                                                        height: width / 3,
+                                                        overflow: 'hidden',
+                                                        borderRadius: 5,
+                                                        width: width / 3,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        backgroundColor: '#E3F2FD'
+                                                    }}>
+                                                        {
+                                                            this.state.imgPreview2.length > 0
+                                                                ?
+                                                                <Image
+
+                                                                    style={{width: width / 3, height: width / 3}}
+                                                                    source={{
+                                                                        isStatic: true,
+                                                                        uri: this.state.imgPreview2
+                                                                    }}/>
+                                                                :
+                                                                <Icon color={'#FFF'} size={20}
+                                                                      name="picture-o"/>
+                                                        }
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                                {
+                                                    this.state.imgPreview2 !== ""
+                                                    &&
+                                                    <TouchableWithoutFeedback
+                                                        onPress={this.onDeleteImg('imgPreview2', 'imgValue2', this.state.imgPreview2)}>
+                                                        <View style={{
+                                                            width: 25,
+                                                            height: 25,
+                                                            backgroundColor: '#E0E0E0',
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            borderTopRightRadius: 5,
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <Icon color={'#FFF'} size={12}
+                                                                  name="times"/>
+                                                        </View>
+                                                    </TouchableWithoutFeedback>
+                                                }
+                                            </View>
+
+                                        </View>
+                                        <View style={{
+                                            marginTop: 10,
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                        }}>
+                                            <View>
+                                                <TouchableWithoutFeedback
+                                                    onPress={this.state.imgPreview3.length > 0 ?()=>console.log("asd") : this.onPickImage('imgPreview3', 'imgValue3')}>
+                                                    <View style={{
+                                                        height: width / 3,
+                                                        overflow: 'hidden',
+                                                        borderRadius: 5,
+                                                        width: width / 3,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        backgroundColor: '#E3F2FD'
+                                                    }}>
+                                                        {
+                                                            this.state.imgPreview3.length > 0
+                                                                ?
+                                                                <Image
+
+                                                                    style={{width: width / 3, height: width / 3}}
+                                                                    source={{
+                                                                        isStatic: true,
+                                                                        uri: this.state.imgPreview3
+                                                                    }}/>
+                                                                :
+                                                                <Icon color={'#FFF'} size={20}
+                                                                      name="picture-o"/>
+                                                        }
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                                {
+                                                    this.state.imgPreview3 !== ""
+                                                    &&
+                                                    <TouchableWithoutFeedback
+                                                        onPress={this.onDeleteImg('imgPreview3', 'imgValue3', this.state.imgPreview3)}>
+                                                        <View style={{
+                                                            width: 25,
+                                                            height: 25,
+                                                            backgroundColor: '#E0E0E0',
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            borderTopRightRadius: 5,
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <Icon color={'#FFF'} size={12}
+                                                                  name="times"/>
+                                                        </View>
+                                                    </TouchableWithoutFeedback>
+                                                }
+                                            </View>
+                                            <View>
+                                                <TouchableWithoutFeedback
+                                                    onPress={this.state.imgPreview4.length > 0 ?()=>console.log("asd") : this.onPickImage('imgPreview4', 'imgValue4')}>
+                                                    <View style={{
+                                                        height: width / 3,
+                                                        overflow: 'hidden',
+                                                        borderRadius: 5,
+                                                        width: width / 3,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        backgroundColor: '#E3F2FD'
+                                                    }}>
+                                                        {
+                                                            this.state.imgPreview4.length > 0
+                                                                ?
+                                                                <Image
+
+                                                                    style={{width: width / 3, height: width / 3}}
+                                                                    source={{
+                                                                        isStatic: true,
+                                                                        uri: this.state.imgPreview4
+                                                                    }}/>
+                                                                :
+                                                                <Icon color={'#FFF'} size={20}
+                                                                      name="picture-o"/>
+                                                        }
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                                {
+                                                    this.state.imgPreview4 !== ""
+                                                    &&
+                                                    <TouchableWithoutFeedback
+                                                        onPress={this.onDeleteImg('imgPreview4', 'imgValue5', this.state.imgPreview4)}>
+                                                        <View style={{
+                                                            width: 25,
+                                                            height: 25,
+                                                            backgroundColor: '#E0E0E0',
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            borderTopRightRadius: 5,
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <Icon color={'#FFF'} size={12}
+                                                                  name="times"/>
+                                                        </View>
+                                                    </TouchableWithoutFeedback>
+                                                }
+                                            </View>
+                                            <View>
+                                                <TouchableWithoutFeedback
+                                                    onPress={this.state.imgPreview5.length > 0 ?()=>console.log("asd") : this.onPickImage('imgPreview5', 'imgValue5')}>
+                                                    <View style={{
+                                                        height: width / 3,
+                                                        overflow: 'hidden',
+                                                        borderRadius: 5,
+                                                        width: width / 3,
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        backgroundColor: '#E3F2FD'
+                                                    }}>
+                                                        {
+                                                            this.state.imgPreview5.length > 0
+                                                                ?
+                                                                <Image
+
+                                                                    style={{width: width / 3, height: width / 3}}
+                                                                    source={{
+                                                                        isStatic: true,
+                                                                        uri: this.state.imgPreview5
+                                                                    }}/>
+                                                                :
+                                                                <Icon color={'#FFF'} size={20}
+                                                                      name="picture-o"/>
+                                                        }
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                                {
+                                                    this.state.imgPreview5 !== ""
+                                                    &&
+                                                    <TouchableWithoutFeedback
+                                                        onPress={this.onDeleteImg('imgPreview5', 'imgValue05', this.state.imgPreview5)}>
+                                                        <View style={{
+                                                            width: 25,
+                                                            height: 25,
+                                                            backgroundColor: '#E0E0E0',
+                                                            position: 'absolute',
+                                                            right: 0,
+                                                            borderTopRightRadius: 5,
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center'
+                                                        }}>
+                                                            <Icon color={'#FFF'} size={12}
+                                                                  name="times"/>
+                                                        </View>
+                                                    </TouchableWithoutFeedback>
+                                                }
+                                            </View>
+
                                         </View>
                                     </View>
                                     <InputTextArea
@@ -723,6 +1167,7 @@ class ScreenMyReserveDetail extends Component {
                                         // isError={cek_d}
                                         label={"District"} value={this.state.value_district}
                                         onClick={this.state.value_province.length !== 0 ? this.onDistrictClick() : () => console.log("lala")}/>
+
                                     <InputSelect
                                         // isError={cek_s}
                                         label={"Sub District"} value={this.state.value_sub_district}
@@ -732,6 +1177,19 @@ class ScreenMyReserveDetail extends Component {
                                         label={"Donation end date"}
                                         onClick={this._showDateTimePicker}
                                         value={moment(this.state.value_end_date).format('LL')}/>
+                                    <View style={{ marginBottom:10}}>
+                                        <Text style={{fontSize: 12}}>Status</Text>
+
+                                        <RadioForm
+                                            formHorizontal={true}
+                                            labelHorizontal={true}
+                                            radioStyle={{ paddingRight: 20 }}
+                                            radio_props={radio_props}
+                                            initial={this.state.value_status === "publish"? 0 : 1}
+                                            onPress={(v)=>this.setState({value_status:v})}
+                                        />
+                                    </View>
+
                                     <View style={{flex: 1}}>
                                         <DateTimePicker
                                             minimumDate={tomorrow}
@@ -740,18 +1198,14 @@ class ScreenMyReserveDetail extends Component {
                                             onCancel={this._hideDateTimePicker}
                                         />
                                     </View>
-                                    <Button block info>
+
+                                    <Button block info onPress={this.onSave()}>
                                         <Text>Save</Text>
                                     </Button>
                                 </View>
-
-
                         }
-
                     </Content>
             }
-
-
         </Container>;
     }
 }
@@ -805,7 +1259,9 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        redUpdateReserve: state.redUpdateReserve,
+    };
 }
 
 export default connect(
