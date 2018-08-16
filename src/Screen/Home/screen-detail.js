@@ -32,9 +32,9 @@ class ScreenDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pic:'',
-            note:'',
-            cp:'',
+            pic: '',
+            note: '',
+            cp: '',
             user_photo: '',
             user_name: '',
             create_date: '',
@@ -45,14 +45,15 @@ class ScreenDetail extends Component {
             location: '',
             data: [],
             endDonation: '',
-            isLoading: true
+            isLoading: true,
+            create_by:''
         }
     }
 
     onShare = () => {
         return () => {
             Share.share({
-                message: this.state.description + " Download Derma Buku apps on playstore : "+this.props.redSetting.data[1].play_store_link,
+                message: this.state.description + " Download Derma Buku apps on playstore : " + this.props.redSetting.data[1].play_store_link,
                 url: this.props.redSetting.data[1].play_store_link,
                 title: this.state.title
             }, {
@@ -70,7 +71,7 @@ class ScreenDetail extends Component {
         return () => {
             // console.log(this.props.redSetting)
             shareOnFacebook({
-                    'text': this.state.description + " Download Derma Buku apps on playstore : "+this.props.redSetting.data[1].play_store_link,
+                    'text': this.state.description + " Download Derma Buku apps on playstore : " + this.props.redSetting.data[1].play_store_link,
                     'link': this.props.redSetting.data[1].play_store_link,
                     'imagelink': this.props.redSetting.data[4].logo_link,
                     //or use image
@@ -86,7 +87,7 @@ class ScreenDetail extends Component {
     shareOnTwitter = () => {
         return () => {
             shareOnTwitter({
-                    'text': this.state.title + " Download Derma Buku apps on playstore : "+this.props.redSetting.data[1].play_store_link,
+                    'text': this.state.title + " Download Derma Buku apps on playstore : " + this.props.redSetting.data[1].play_store_link,
                     'link': this.props.redSetting.data[1].play_store_link,
                     'imagelink': this.props.redSetting.data[4].logo_link,
                     //or use image
@@ -99,11 +100,17 @@ class ScreenDetail extends Component {
         }
     }
 
+    onMessage = () => {
+        return () => {
+            this.props.navigation.navigate('Conversation')
+        }
+    }
+
     componentDidMount() {
         let params = {
             par_reserve_id: this.props.navigation.getParam('reserve_id')
         }
-        // console.log(this.props.navigation.getParam('img'))
+        console.log(this.props.redAuth)
         this.setState({
             user_photo: this.props.navigation.getParam('img'),
             user_name: this.props.navigation.getParam('name'),
@@ -122,9 +129,10 @@ class ScreenDetail extends Component {
                     img: response.data.result.image,
                     location: response.data.result.reserve.reserve_province + ", " + response.data.result.reserve.reserve_district + ", " + response.data.result.reserve.reserve_sub_district,
                     data: JSON.parse(response.data.result.reserve.reserve_category),
-                    endDonation: moment(response.data.result.reserve.reserve_end_date).format('LL')
+                    endDonation: moment(response.data.result.reserve.reserve_end_date).format('LL'),
+                    create_by : response.data.result.reserve.reserve_create_by
                 })
-                // console.log(response)
+                console.log(response)
             }).catch((err) => {
             this.setState({
                 isLoading: false,
@@ -146,7 +154,8 @@ class ScreenDetail extends Component {
     }
 
     render() {
-        // console.log(this.state.data)
+        console.log("-->",typeof this.state.create_by)
+        console.log(this.props.redAuth.data.profile.user_id)
         return (
             <Container>
                 <StatusBar backgroundColor="#013976"/>
@@ -167,7 +176,7 @@ class ScreenDetail extends Component {
 
                     </View>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Button style={{width: 50}} full transparent light onPress={this.onShare()}>
+                        <Button full transparent light onPress={this.onShare()}>
                             <Icon color={'#000000'} size={20}
                                   name="ellipsis-v"/>
                         </Button>
@@ -182,17 +191,30 @@ class ScreenDetail extends Component {
                             <Text style={{fontSize: 12}}>{this.state.user_name}</Text>
                             <TimeAgo style={{fontSize: 12}} time={this.state.create_date}/>
                         </View>
-                        <View style={{marginLeft: 10, flexDirection: 'row', position: 'absolute', right: 0}}>
-                            <Button style={{width: 50}} full transparent light onPress={this.onShareFacebook()}>
-                                <Icon color={'#3B5998'} size={20}
-                                      name="facebook-square"/>
-                            </Button>
-                            <Button style={{width: 50}} full transparent light onPress={this.shareOnTwitter()}>
-                                <Icon color={'#1DA1F2'} size={20}
-                                      name="twitter-square"/>
-                            </Button>
+                        {
+                            !this.state.isLoading
+                                &&
+                                <View style={{marginLeft: 10, flexDirection: 'row', position: 'absolute', right: 0}}>
+                                    <Button style={{width: 50}} full transparent light onPress={this.onShareFacebook()}>
+                                        <Icon color={'#3B5998'} size={20}
+                                              name="facebook-square"/>
+                                    </Button>
+                                    <Button style={{width: 50}} full transparent light onPress={this.shareOnTwitter()}>
+                                        <Icon color={'#1DA1F2'} size={20}
+                                              name="twitter-square"/>
+                                    </Button>
+                                    {
+                                        this.props.redAuth.data.profile.user_id.toString() !== this.state.create_by
+                                        &&
+                                        <Button style={{width: 50}} full transparent light onPress={this.onMessage()}>
+                                            <Icon color={'#1DA1F2'} size={20}
+                                                  name="comments"/>
+                                        </Button>
+                                    }
 
-                        </View>
+                                </View>
+
+                        }
                     </View>
                     {
                         this.state.isLoading
@@ -201,11 +223,11 @@ class ScreenDetail extends Component {
                                 <Spinner type={'ChasingDots'} color={"#013976"}/>
                             </View>
                             :
-                            <View style={{margin:5}}>
+                            <View style={{margin: 5}}>
                                 <View style={{marginTop: 10}}>
                                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>{this.state.title}</Text>
                                 </View>
-                                <View style={{justifyContent: 'center', alignItems: 'center', marginTop:15}}>
+                                <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 15}}>
                                     <Carousel
                                         ref={(c) => {
                                             this._carousel = c;
@@ -217,7 +239,7 @@ class ScreenDetail extends Component {
                                     />
                                 </View>
                                 <View style={{marginTop: 10}}>
-                                    <Text style={{fontSize: 14, textAlign:'justify'}}>{this.state.description}</Text>
+                                    <Text style={{fontSize: 14, textAlign: 'justify'}}>{this.state.description}</Text>
                                 </View>
                                 <View style={{marginTop: 10}}>
                                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>Note :</Text>
@@ -273,7 +295,8 @@ class ScreenDetail extends Component {
 
 function mapStateToProps(state) {
     return {
-        redSetting: state.redSetting
+        redSetting: state.redSetting,
+        redAuth: state.redAuth
     };
 }
 

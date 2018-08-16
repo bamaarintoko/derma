@@ -18,11 +18,19 @@ class SplashScreen extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (this.props.redSetting.status === prevState.initialRedSetting) {
             if (this.props.redSetting.data[0].maintenance !== "0") {
-                this.setState({
-                    isMaintenance: true,
-                    message: "Sorry we are under maintenance :)"
-                })
-                this.props.dispatch({type: 'RESET_SETTING'})
+                setTimeout(() => {
+                    this.props.redAuth.status_get
+                        ?
+                        this.props.navigation.dispatch({type: 'HOME'})
+                        :
+                        this.props.navigation.dispatch({type: 'INTRO'})
+
+                }, 3000)
+                // this.setState({
+                //     isMaintenance: true,
+                //     message: "Sorry we are under maintenance :)"
+                // })
+                // this.props.dispatch({type: 'RESET_SETTING'})
             } else {
                 setTimeout(() => {
                     this.props.redAuth.status_get

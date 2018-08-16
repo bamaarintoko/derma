@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {
     View, StatusBar, Dimensions, Image, FlatList, TouchableOpacity
 } from 'react-native';
-import {Container, Content, Text} from "native-base"
+import {Button, Container, Content, Text} from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Donate} from '../../Components/Donate'
 import {actGetListReserve} from "./action";
@@ -101,10 +101,10 @@ class ScreenHome extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.initialRedUpdateReserve === this.props.redUpdateReserve.status){
+        if (prevState.initialRedUpdateReserve === this.props.redUpdateReserve.status) {
             this.props.dispatch(actGetListReserve());
         }
-        if (prevState.initialRedAddReserve === this.props.redAddReserve.status){
+        if (prevState.initialRedAddReserve === this.props.redAddReserve.status) {
             this.props.dispatch(actGetListReserve());
         }
         if (prevState.initialRedGetListReserve === this.props.redGetListReserve.status) {
@@ -147,6 +147,13 @@ class ScreenHome extends Component {
         }
     }
 
+    onPressMessage = () => {
+        return () => {
+            this.props.navigation.navigate('Message')
+            console.log("asd")
+        }
+    }
+
     render() {
         return (
             <Container style={{backgroundColor: '#FFF'}}>
@@ -170,7 +177,10 @@ class ScreenHome extends Component {
                         />
                     </View>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-
+                        <Button full transparent light onPress={this.onPressMessage()}>
+                            <Icon color={'#000000'} size={20}
+                                  name="comments"/>
+                        </Button>
                     </View>
                 </View>
 
@@ -223,7 +233,7 @@ class ScreenHome extends Component {
                                         resizeMode={"contain"}
                                     />
                                 </View>
-                                <View style={{flex:1}}>
+                                <View style={{flex: 1}}>
                                     <Text style={{fontSize: 12}}>
                                         Sorry, no data donation for now.
                                     </Text>

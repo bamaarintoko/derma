@@ -20,6 +20,8 @@ import ScreenIntro from '../Screen/Splash/screen-intro'
 import ScreenRegister from '../Screen/Auth/screen-register'
 import ScreenForgetPassword from '../Screen/Auth/screen-forget-password'
 import ScreenCreateReserve from '../Screen/CreateReserve/screen-create-reserve'
+import ScreenConversation from '../Screen/Message/screen-conversation'
+import ScreenMessageList from '../Screen/Message/screen-message-list'
 import {connect} from "react-redux";
 import {addListener} from '../Utils/Redux';
 
@@ -40,6 +42,8 @@ export const AppNavigator = createStackNavigator({
     ForgetPassword: {screen: ScreenForgetPassword},
     MyDetailReserve: {screen: ScreenMyReserveDetail},
     ScreenDetail: {screen: ScreenDetail},
+    Conversation: {screen: ScreenConversation},
+    Message: {screen: ScreenMessageList},
     Setting: {screen: ScreenSetting},
     ChangePassword: {screen: ScreenChangePassword},
     EditProfil: {screen: ScreenEditProfil},
