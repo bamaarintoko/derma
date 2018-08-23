@@ -50,6 +50,7 @@ class SplashScreen extends Component {
     }
 
     render() {
+        console.log("====>",this.state.isMaintenance)
         return (
             <Container>
                 <StatusBar backgroundColor="#013976"/>

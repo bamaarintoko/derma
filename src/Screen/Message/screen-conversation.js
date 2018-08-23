@@ -5,19 +5,76 @@ import {StatusBar} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {GiftedChat} from 'react-native-gifted-chat'
 
+window.navigator.userAgent = 'react-native';
+
+import io from 'socket.io-client/dist/socket.io'
+
 function mapStateToProps(state) {
-    return {};
+    return {
+        redAuth: state.redAuth
+    };
 }
 
+// let url = 'http://192.168.43.72:3010/';
+// let url = 'http://192.168.100.77:3010/';
+let url = 'https://rocky-woodland-93586.herokuapp.com/';
+const socket = io('http://localhost:3010/');
+
+// let socket = io.connect();
 class ScreenConversation extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: []
+            message: [],
+            userId: null
         }
+        this.socket = io.connect(url, {
+            transports: ['websocket'],
+            reconnect: true
+        })
+        this.socket.on('message', (message) => {
+            console.log("==>",message)
+            this.onSetMessage(message)
+        });
+        this.socket.on('connect', (socket) => {
+            console.log("====>", socket)
+            this.socket.emit('init', {
+                senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
+                receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email
+            });
+        })
+        this.socket.on('connect_error', (error) => {
+            console.log(error)
+        });
+    }
+
+    onSetMessage = (data) => {
+            console.log("onSetMessage===>",data)
+            this._storeMessages(data.text)
+
+    }
+
+    _storeMessages = (data) => {
+        console.log("_storeMessages",data)
+            this.setState((previousState) => {
+                return {
+                    messages: GiftedChat.append(previousState.messages, data),
+                };
+            });
+
     }
 
     componentDidMount() {
+        // console.log(this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'))
+
+
+        // console.log(this.socket)
+        // socket.on('connect',()=>{
+        //     console.log(socket.connected)
+        // })
+        // socket.on('error',()=>{
+        //     console.log(socket.error)
+        // })
         this.setState({
             messages: [
                 {
@@ -48,7 +105,13 @@ class ScreenConversation extends Component {
         return (messages = []) => {
             this.setState(previousState => ({
                 messages: GiftedChat.append(previousState.messages, messages),
-            }))
+            }));
+
+            this.socket.emit('message', {
+                text: messages,
+                senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
+                receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email
+            })
         }
     }
 
@@ -80,7 +143,7 @@ class ScreenConversation extends Component {
                     messages={this.state.messages}
                     onSend={this.onSend()}
                     user={{
-                        _id: 1,
+                        _id: this.props.redAuth.data.profile.user_id,
                     }}
                 />
             </Container>

@@ -7,14 +7,17 @@ import {sqlToJsISO} from "../../Utils/func";
 
 const email = [
     {
+        id:6,
         email: 'sinatriohappy.triaji@gmail.com',
         name: 'Happy'
     },
     {
+        id:2,
         email: 'yosafatbama.arintoko@gmail.com',
         name: 'Bama'
     },
     {
+        id:3,
         email: 'jonis8729@gmail.com',
         name: 'John Wick'
     }
@@ -31,10 +34,11 @@ class ScreenMessageList extends Component {
         console.log("===>",this.props.redAuth.data.profile.user_email)
     }
 
-    onPressConversation = (email,name)=>{
+    onPressConversation = (email,name,id)=>{
         return ()=>{
             this.props.navigation.navigate('Conversation', {
                 email: email,
+                id: id,
                 name:name
             })
         }
@@ -71,7 +75,7 @@ class ScreenMessageList extends Component {
                         item.email !== this.props.redAuth.data.profile.user_email
                         &&
                         <List>
-                            <ListItem avatar onPress={this.onPressConversation(item.email, item.name)}>
+                            <ListItem avatar onPress={this.onPressConversation(item.email, item.name, item.id)}>
                                 <Left>
                                     <Thumbnail
                                         source={{uri: 'http://debu.mlskoding.com/public/user/4115-1532421046.jpeg'}}/>
