@@ -8,6 +8,7 @@ import {GiftedChat} from 'react-native-gifted-chat'
 window.navigator.userAgent = 'react-native';
 
 import io from 'socket.io-client/dist/socket.io'
+import Api from "../../Utils/Api";
 
 function mapStateToProps(state) {
     return {
@@ -37,14 +38,14 @@ class ScreenConversation extends Component {
             this.onSetMessage(message)
         });
         this.socket.on('connect', (socket) => {
-            console.log("====>", socket)
+            console.log("====>", this.socket)
             this.socket.emit('init', {
                 senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
                 receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email
             });
         })
         this.socket.on('connect_error', (error) => {
-            console.log(error)
+            console.log("error===>",error)
         });
     }
 
@@ -103,6 +104,7 @@ class ScreenConversation extends Component {
 
     onSend = () => {
         return (messages = []) => {
+            // console.log("-->",messages[0].text)
             this.setState(previousState => ({
                 messages: GiftedChat.append(previousState.messages, messages),
             }));
@@ -112,6 +114,19 @@ class ScreenConversation extends Component {
                 senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
                 receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email
             })
+
+            let params = {
+                par_sender_id : this.props.redAuth.data.profile.user_id,
+                par_receiver_id : this.props.navigation.getParam('id'),
+                par_text : messages[0].text
+            }
+            Api._POST('message/send_message',params)
+                .then((response)=>{
+                    console.log(response)
+                }).catch((err)=>{
+                    console.log(err)
+            })
+            console.log("====>",params)
         }
     }
 
