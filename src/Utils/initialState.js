@@ -25,3 +25,11 @@ export const initialDelete = {
     data            : [],
     message         : ""
 }
+
+export const _initialGet = {
+    status : false,
+    status_get : false,
+    data : [],
+    message : "",
+    kode : ""
+}

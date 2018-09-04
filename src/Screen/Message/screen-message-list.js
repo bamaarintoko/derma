@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import {sqlToJsISO} from "../../Utils/func";
 import Api from "../../Utils/Api";
 import TimeAgo from 'react-native-timeago';
+import {RESET_MESSAGE} from "../../Utils/Constant";
 
 const email = [
     {
@@ -27,7 +28,8 @@ const email = [
 
 function mapStateToProps(state) {
     return {
-        redAuth: state.redAuth
+        redAuth: state.redAuth,
+        redMessage: state.redMessage
     };
 }
 
@@ -38,38 +40,31 @@ class ScreenMessageList extends Component {
             data_message: [],
             resp_message: "",
             resp_kode: "",
+            initialRedMessage: true,
         }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
     }
 
     componentDidMount() {
-        let params = {
-            par_user_id: this.props.redAuth.data.profile.user_id
-        }
-
-        Api._POST('message/get_messages', params)
-            .then((response) => {
-                console.log(response)
+        console.log(this.props.redMessage)
+        if (this.props.redMessage.status_get){
                 this.setState({
-                    data_message: response.data.data,
-                    resp_kode: response.data.kode,
-                    resp_message: response.data.message
+                    data_message : this.props.redMessage.data,
+                    resp_message : this.props.redMessage.message,
+                    resp_kode : this.props.redMessage.kode
                 })
-            }).catch((err) => {
-            this.setState({
-                data_message: [],
-                resp_kode: err.response.status.toString(),
-                resp_message: err.message
-            })
-        })
-        // console.log("===>",this.props.redAuth.data.profile.user_id)
+        }
     }
 
-    onPressConversation = (email, name, id) => {
+    onPressConversation = (email, name, id,conversation_id) => {
         return () => {
             this.props.navigation.navigate('Conversation', {
                 email: email,
                 id: id,
-                name: name
+                name: name,
+                conversation_id: conversation_id
             })
         }
     }
@@ -111,7 +106,7 @@ class ScreenMessageList extends Component {
                                     ?
                                     <List>
                                         <ListItem avatar
-                                                  onPress={this.onPressConversation(item.user.user_email, item.user.user_name, item.user.user_id)}>
+                                                  onPress={this.onPressConversation(item.user.user_email, item.user.user_name, item.user.user_id,item.conversation_id)}>
                                             <Left>
                                                 <Thumbnail
                                                     source={{uri: item.user.user_photo}}/>

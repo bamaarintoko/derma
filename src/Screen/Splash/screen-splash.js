@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Image, StatusBar} from 'react-native'
 import {Container, Content, Text, View} from "native-base";
-import {actGetSetting} from "./action";
+import {actGetMessage, actGetSetting} from "./action";
 
 class SplashScreen extends Component {
     constructor(props) {
@@ -16,6 +16,7 @@ class SplashScreen extends Component {
 
 
     componentDidUpdate(prevProps, prevState) {
+        // console.log("===>",this.props.redMessage)
         if (this.props.redSetting.status === prevState.initialRedSetting) {
             if (this.props.redSetting.data[0].maintenance !== "0") {
                 setTimeout(() => {
@@ -46,6 +47,13 @@ class SplashScreen extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props.redAuth)
+        if (this.props.redAuth.status_get){
+            let params = {
+                par_user_id: this.props.redAuth.data.profile.user_id
+            }
+            this.props.dispatch(actGetMessage(params))
+        }
         this.props.dispatch(actGetSetting());
     }
 
@@ -81,7 +89,8 @@ class SplashScreen extends Component {
 function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
-        redSetting: state.redSetting
+        redSetting: state.redSetting,
+        redMessage: state.redMessage
     };
 }
 

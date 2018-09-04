@@ -3,7 +3,8 @@ import {nav} from './dataReducers'
 import {redGetColor} from './colorReducers'
 import {redSetting} from './settingReducers'
 import {redAuth, redRegister} from './authReducers'
-import {redAddReserve, redGetListReserve, redGetListReserveUser,redUpdateReserve} from './reserveReducers'
+import {redMessage} from './messageReducers'
+import {redAddReserve, redGetListReserve, redGetListReserveUser, redUpdateReserve} from './reserveReducers'
 
 const rootReducer = combineReducers({
     redGetColor: redGetColor,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     redGetListReserveUser: redGetListReserveUser,
     redSetting: redSetting,
     redUpdateReserve: redUpdateReserve,
+    redMessage: redMessage,
     nav: nav
 })
 
