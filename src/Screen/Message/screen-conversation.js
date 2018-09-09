@@ -17,9 +17,9 @@ function mapStateToProps(state) {
     };
 }
 
-// let url = 'http://192.168.43.72:3010/';
+let url = 'http://192.168.43.72:3010/';
 // let url = 'http://192.168.100.77:3010/';
-let url = 'https://rocky-woodland-93586.herokuapp.com/';
+// let url = 'https://rocky-woodland-93586.herokuapp.com/';
 const socket = io('http://localhost:3010/');
 
 // let socket = io.connect();
@@ -39,17 +39,21 @@ class ScreenConversation extends Component {
             console.log("==>", message)
             this.onSetMessage(message)
         });
+        this.socket.on('send', (data) => {
+            console.log("converation =====>", data)
+            // this.onSetMessage(message)
+        });
 
     }
 
     onSetMessage = (data) => {
-        console.log("onSetMessage===>", data)
+        // console.log("onSetMessage===>", data)
         this._storeMessages(data.text)
 
     }
 
     _storeMessages = (data) => {
-        console.log("_storeMessages", data)
+        // console.log("_storeMessages", data)
         this.setState((previousState) => {
             return {
                 messages: GiftedChat.append(previousState.messages, data),
@@ -63,30 +67,44 @@ class ScreenConversation extends Component {
     }
 
     componentDidMount() {
-        this.socket.on('connect', (socket) => {
-            console.log("====>", this.socket)
-            this.setState({
-                isConnecting: false
-            })
-            this.socket.emit('init', {
-                senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
-                receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email
-            });
-
-            let params = {
-                par_conversation_id : this.props.navigation.getParam('conversation_id')
-            }
-            console.log(params)
-            Api._POST('message/get_conversation', params)
-                .then((response) => {
-                    this.setState({
-                        messages:response.data.data
-                    })
-                    console.log(response.data)
-                }).catch((err) => {
-                console.log(err)
-            })
+        // this.socket.on('connect', (socket) => {
+        //     console.log("====>", this.socket)
+        //     this.setState({
+        //         isConnecting: false
+        //     })
+        this.socket.emit('notif', {
+            email: this.props.navigation.getParam('email'),
+            // email_receiver: this.props.navigation.getParam('email'),
+            // email_sender: this.props.redAuth.data.profile.user_email,
+            // email_sender: this.props.redAuth.data.profile.user_email
         })
+        this.socket.emit('init', {
+            senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
+            receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email,
+            email: this.props.navigation.getParam('email')
+        });
+
+        // this.socket.emit('notif', {
+        //     // senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
+        //     // receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email,
+        //     email: this.props.navigation.getParam('email'),
+        //     // email_sender: this.props.redAuth.data.profile.user_email,
+        // });
+
+        let params = {
+            par_conversation_id: this.props.navigation.getParam('conversation_id')
+        }
+        console.log(params)
+        Api._POST('message/get_conversation', params)
+            .then((response) => {
+                this.setState({
+                    messages: response.data.data
+                })
+                console.log(response.data)
+            }).catch((err) => {
+            console.log(err)
+        })
+        // })
         this.socket.on('connect_error', (error) => {
             console.log("error===>", error)
         });
@@ -129,32 +147,38 @@ class ScreenConversation extends Component {
     onSend = () => {
         return (messages = []) => {
             // console.log("-->",messages[0].text)
-            if (!this.state.isConnecting) {
+            // if (!this.state.isConnecting) {
 
-                this.setState(previousState => ({
-                    messages: GiftedChat.append(previousState.messages, messages),
-                }));
-                this.socket.emit('message', {
-                    text: messages,
-                    senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
-                    receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email
-                })
-
-                let params = {
-                    par_sender_id: this.props.redAuth.data.profile.user_id,
-                    par_receiver_id: this.props.navigation.getParam('id'),
-                    par_text: messages[0].text
-                }
-
-
-                Api._POST('message/send_message', params)
-                    .then((response) => {
-                        console.log(response)
-                    }).catch((err) => {
-                    console.log(err)
-                })
-                console.log("====>", params)
+            this.setState(previousState => ({
+                messages: GiftedChat.append(previousState.messages, messages),
+            }));
+            this.socket.emit('message', {
+                text: messages,
+                senderId: this.props.redAuth.data.profile.user_id + this.props.navigation.getParam('email'),
+                receiverId: this.props.navigation.getParam('id') + this.props.redAuth.data.profile.user_email
+            })
+            this.socket.emit('send', {
+                email: this.props.navigation.getParam('email'),
+                message : messages,
+                from : this.props.redAuth.data.profile.user_email
+                // email_receiver: this.props.navigation.getParam('email'),
+                // email_sender: this.props.redAuth.data.profile.user_email,
+            });
+            let params = {
+                par_sender_id: this.props.redAuth.data.profile.user_id,
+                par_receiver_id: this.props.navigation.getParam('id'),
+                par_text: messages[0].text
             }
+
+
+            // Api._POST('message/send_message', params)
+            //     .then((response) => {
+            //         console.log(response)
+            //     }).catch((err) => {
+            //     console.log(err)
+            // })
+            // console.log("====>", params)
+            // }
         }
     }
 
@@ -176,11 +200,7 @@ class ScreenConversation extends Component {
                         </Button>
                     </View>
                     <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
-                        {
-                            this.state.isConnecting
-                            &&
-                            <Spinner type={'Wave'} size={30} color={"#013976"}/>
-                        }
+
                     </View>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 

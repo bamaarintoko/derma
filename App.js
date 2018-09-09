@@ -11,7 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { store, persistor } from './src//Store/configureStore'
 import AppWithNavigationState from './src/Navigator/AppNavigator';
 import { YellowBox } from 'react-native'
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader','Setting a timer']);
 
 // type Props = {};
 export default class App extends Component {
