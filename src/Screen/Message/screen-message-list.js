@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Container, Content, List, ListItem, Thumbnail, Left, Body, Right, Text} from 'native-base'
+import {Button, Container, Badge, List, ListItem, Thumbnail, Left, Body, Right, Text} from 'native-base'
 import {StatusBar, View, FlatList} from "react-native"
 import Icon from "react-native-vector-icons/FontAwesome";
 import {sqlToJsISO} from "../../Utils/func";
@@ -11,6 +11,7 @@ import {RESET_MESSAGE} from "../../Utils/Constant";
 import Spinner from "react-native-spinkit";
 // let url = 'https://rocky-woodland-93586.herokuapp.com/';
 let url = 'http://192.168.43.72:3010/';
+let data = [];
 const email = [
     {
         id: 6,
@@ -58,7 +59,7 @@ class ScreenMessageList extends Component {
             this.setState({
                 message: data.message[0].text,
                 from: data.from,
-                isUpdate:true
+                isUpdate: true
             })
             // this.onSetMessage(message)
         });
@@ -76,10 +77,10 @@ class ScreenMessageList extends Component {
                     data_message: this.props.redMessage.data,
                     resp_message: this.props.redMessage.message,
                     resp_kode: this.props.redMessage.kode,
-                    isUpdate : false
+                    isUpdate: false
                 })
             }
-        console.log('asd', this.state.from)
+            console.log('asd', this.state.from)
         }
     }
 
@@ -100,6 +101,7 @@ class ScreenMessageList extends Component {
         })
         console.log(this.props.redMessage)
         if (this.props.redMessage.status_get) {
+            data = this.props.redMessage.data;
             this.setState({
                 data_message: this.props.redMessage.data,
                 resp_message: this.props.redMessage.message,
@@ -121,7 +123,7 @@ class ScreenMessageList extends Component {
     }
 
     render() {
-        console.log(this.state.message)
+        console.log(data)
         return (
             <Container style={{backgroundColor: '#FFF'}}>
                 <StatusBar backgroundColor="#013976"/>
@@ -141,8 +143,10 @@ class ScreenMessageList extends Component {
                     <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
                         {
                             this.state.isConnecting
-                            &&
+                            ?
                             <Text>Connecting...</Text>
+                                :
+                            <Text>Messages</Text>
                         }
                     </View>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -152,10 +156,8 @@ class ScreenMessageList extends Component {
                 {
                     this.state.resp_kode === "00"
                         ?
-                        this.state.data_message.map((item,k)=>{
+                        data.map((item, k) => {
                             return (
-
-
                                 <View key={k}>{
                                     item.user.user_email !== this.props.redAuth.data.profile.user_email
                                         ?
@@ -171,24 +173,33 @@ class ScreenMessageList extends Component {
                                                 <Text note>
                                                     {
                                                         this.state.from === item.user.user_email
-                                                        ?
+                                                            ?
                                                             this.state.message
                                                             :
                                                             item.reply.reply
                                                     }
                                                     {/*{item.reply.reply}*/}
                                                 </Text>
+
                                                 </Body>
                                                 <Right>
                                                     <TimeAgo style={{fontSize: 12}}
                                                              time={sqlToJsISO(item.reply.create_date)}/>
+                                                    {
+                                                        parseInt(item.read_count) > 0
+                                                        &&
+                                                        <Badge info>
+                                                            <Text>{item.read_count}</Text>
+                                                        </Badge>
+                                                    }
+
                                                 </Right>
                                             </ListItem>
                                         </List>
                                         :
                                         <List>
                                             <ListItem avatar
-                                                      onPress={this.onPressConversation(item.from.user_email, item.from.user_name, item.from.user_id)}>
+                                                      onPress={this.onPressConversation(item.from.user_email, item.from.user_name, item.from.user_id, item.conversation_id)}>
                                                 <Left>
                                                     <Thumbnail
                                                         source={{uri: item.from.user_photo}}/>
@@ -202,6 +213,9 @@ class ScreenMessageList extends Component {
                                                         :
                                                         item.reply.reply
                                                 }</Text>
+                                                <Badge primary>
+                                                    <Text>2</Text>
+                                                </Badge>
                                                 </Body>
                                                 <Right>
                                                     <TimeAgo style={{fontSize: 12}}
@@ -216,7 +230,6 @@ class ScreenMessageList extends Component {
                         :
                         <Text>{this.state.resp_message}</Text>
                 }
-
 
 
             </Container>
