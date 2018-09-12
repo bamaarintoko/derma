@@ -11,7 +11,8 @@ import {RESET_MESSAGE} from "../../Utils/Constant";
 import Spinner from "react-native-spinkit";
 // let url = 'https://rocky-woodland-93586.herokuapp.com/';
 let url = 'http://192.168.43.72:3010/';
-let data = [];
+let data_ = [];
+// let array = [{id: 1, date:"2018-08-27 14:55:27"}, {id: 2, date:"2018-08-28 14:54:27"},{id: 3, date:"2018-08-27 14:54:27"}];
 const email = [
     {
         id: 6,
@@ -28,8 +29,10 @@ const email = [
         email: 'jonis8729@gmail.com',
         name: 'John Wick'
     }
-]
-
+];
+function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+}
 function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
@@ -49,19 +52,27 @@ class ScreenMessageList extends Component {
             from: '',
             message: '',
             isUpdate: false
-        }
+        };
         this.socket = io.connect(url, {
             transports: ['websocket'],
             reconnect: true
-        })
+        });
         this.socket.on('send', (data) => {
-            console.log("===============>", data.message[0].text)
+            // console.log("===============>", data.message[0].text)
             this.setState({
                 message: data.message[0].text,
                 from: data.from,
                 isUpdate: true
-            })
-            // this.onSetMessage(message)
+            });
+            for(let key in data_) {
+                // console.log(data_[key]);
+                if(data_[key].conversation_id === data.idx) {
+                    console.log(key);
+                    data_[key].reply.create_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+                }
+            }
+            this.setState(this.state)
         });
 
 
@@ -71,6 +82,12 @@ class ScreenMessageList extends Component {
     //     // return true;
     // }
     componentDidUpdate(prevProps, prevState) {
+        console.log("cdup")
+        data_.sort(function(a,b){
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.reply.create_date) - new Date(a.reply.create_date);
+        });
         if (this.state.isUpdate) {
             if (this.props.redMessage.status_get) {
                 this.setState({
@@ -80,28 +97,20 @@ class ScreenMessageList extends Component {
                     isUpdate: false
                 })
             }
-            console.log('asd', this.state.from)
+            // console.log('asd', this.state.from)
         }
     }
-
     componentDidMount() {
-        // email.map((x,k)=>{
-        //     console.log(x.id)
         this.socket.emit('notif', {
             email_: this.props.redAuth.data.profile.user_email,
-        })
-        // })
-
-
+        });
         this.socket.on('connect', (socket) => {
-            console.log("====>", this.socket)
             this.setState({
                 isConnecting: false
             })
-        })
-        console.log(this.props.redMessage)
+        });
         if (this.props.redMessage.status_get) {
-            data = this.props.redMessage.data;
+            data_ = this.props.redMessage.data;
             this.setState({
                 data_message: this.props.redMessage.data,
                 resp_message: this.props.redMessage.message,
@@ -110,20 +119,26 @@ class ScreenMessageList extends Component {
         }
     }
 
-    onPressConversation = (email, name, id, conversation_id) => {
+    onPressConversation = (email, name, id, conversation_id,idx) => {
         return () => {
 
             this.props.navigation.navigate('Conversation', {
                 email: email,
                 id: id,
                 name: name,
-                conversation_id: conversation_id
+                conversation_id: conversation_id,
+                idx:idx
             })
         }
-    }
+    };
 
     render() {
-        console.log(data)
+        data_.sort(function(a,b){
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.reply.create_date) - new Date(a.reply.create_date);
+        });
+        console.log("=================>",data_)
         return (
             <Container style={{backgroundColor: '#FFF'}}>
                 <StatusBar backgroundColor="#013976"/>
@@ -143,10 +158,10 @@ class ScreenMessageList extends Component {
                     <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
                         {
                             this.state.isConnecting
-                            ?
-                            <Text>Connecting...</Text>
+                                ?
+                                <Text>Connecting...</Text>
                                 :
-                            <Text>Messages</Text>
+                                <Text>Messages</Text>
                         }
                     </View>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -156,14 +171,14 @@ class ScreenMessageList extends Component {
                 {
                     this.state.resp_kode === "00"
                         ?
-                        data.map((item, k) => {
+                        data_.map((item, k) => {
                             return (
                                 <View key={k}>{
                                     item.user.user_email !== this.props.redAuth.data.profile.user_email
                                         ?
                                         <List>
                                             <ListItem avatar
-                                                      onPress={this.onPressConversation(item.user.user_email, item.user.user_name, item.user.user_id, item.conversation_id)}>
+                                                      onPress={this.onPressConversation(item.user.user_email, item.user.user_name, item.user.user_id, item.conversation_id,k)}>
                                                 <Left>
                                                     <Thumbnail
                                                         source={{uri: item.user.user_photo}}/>
@@ -199,7 +214,7 @@ class ScreenMessageList extends Component {
                                         :
                                         <List>
                                             <ListItem avatar
-                                                      onPress={this.onPressConversation(item.from.user_email, item.from.user_name, item.from.user_id, item.conversation_id)}>
+                                                      onPress={this.onPressConversation(item.from.user_email, item.from.user_name, item.from.user_id, item.conversation_id,k)}>
                                                 <Left>
                                                     <Thumbnail
                                                         source={{uri: item.from.user_photo}}/>

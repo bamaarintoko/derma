@@ -160,7 +160,8 @@ class ScreenConversation extends Component {
             this.socket.emit('send', {
                 email: this.props.navigation.getParam('email'),
                 message : messages,
-                from : this.props.redAuth.data.profile.user_email
+                from : this.props.redAuth.data.profile.user_email,
+                idx:this.props.navigation.getParam('conversation_id')
                 // email_receiver: this.props.navigation.getParam('email'),
                 // email_sender: this.props.redAuth.data.profile.user_email,
             });
