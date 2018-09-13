@@ -30,9 +30,11 @@ const email = [
         name: 'John Wick'
     }
 ];
+
 function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }
+
 function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
@@ -64,9 +66,9 @@ class ScreenMessageList extends Component {
                 from: data.from,
                 isUpdate: true
             });
-            for(let key in data_) {
+            for (let key in data_) {
                 // console.log(data_[key]);
-                if(data_[key].conversation_id === data.idx) {
+                if (data_[key].conversation_id === data.idx) {
                     console.log(key);
                     data_[key].reply.create_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
@@ -83,7 +85,7 @@ class ScreenMessageList extends Component {
     // }
     componentDidUpdate(prevProps, prevState) {
         console.log("cdup")
-        data_.sort(function(a,b){
+        data_.sort(function (a, b) {
             // Turn your strings into dates, and then subtract them
             // to get a value that is either negative, positive, or zero.
             return new Date(b.reply.create_date) - new Date(a.reply.create_date);
@@ -100,6 +102,7 @@ class ScreenMessageList extends Component {
             // console.log('asd', this.state.from)
         }
     }
+
     componentDidMount() {
         this.socket.emit('notif', {
             email_: this.props.redAuth.data.profile.user_email,
@@ -119,7 +122,7 @@ class ScreenMessageList extends Component {
         }
     }
 
-    onPressConversation = (email, name, id, conversation_id,idx) => {
+    onPressConversation = (email, name, id, conversation_id, idx) => {
         return () => {
 
             this.props.navigation.navigate('Conversation', {
@@ -127,18 +130,18 @@ class ScreenMessageList extends Component {
                 id: id,
                 name: name,
                 conversation_id: conversation_id,
-                idx:idx
+                idx: idx
             })
         }
     };
 
     render() {
-        data_.sort(function(a,b){
+        data_.sort(function (a, b) {
             // Turn your strings into dates, and then subtract them
             // to get a value that is either negative, positive, or zero.
             return new Date(b.reply.create_date) - new Date(a.reply.create_date);
         });
-        console.log("=================>",data_)
+        console.log("=================>", data_)
         return (
             <Container style={{backgroundColor: '#FFF'}}>
                 <StatusBar backgroundColor="#013976"/>
@@ -178,7 +181,7 @@ class ScreenMessageList extends Component {
                                         ?
                                         <List>
                                             <ListItem avatar
-                                                      onPress={this.onPressConversation(item.user.user_email, item.user.user_name, item.user.user_id, item.conversation_id,k)}>
+                                                      onPress={this.onPressConversation(item.user.user_email, item.user.user_name, item.user.user_id, item.conversation_id, k)}>
                                                 <Left>
                                                     <Thumbnail
                                                         source={{uri: item.user.user_photo}}/>
@@ -214,7 +217,7 @@ class ScreenMessageList extends Component {
                                         :
                                         <List>
                                             <ListItem avatar
-                                                      onPress={this.onPressConversation(item.from.user_email, item.from.user_name, item.from.user_id, item.conversation_id,k)}>
+                                                      onPress={this.onPressConversation(item.from.user_email, item.from.user_name, item.from.user_id, item.conversation_id, k)}>
                                                 <Left>
                                                     <Thumbnail
                                                         source={{uri: item.from.user_photo}}/>
@@ -228,13 +231,20 @@ class ScreenMessageList extends Component {
                                                         :
                                                         item.reply.reply
                                                 }</Text>
-                                                <Badge primary>
-                                                    <Text>2</Text>
-                                                </Badge>
+
                                                 </Body>
                                                 <Right>
                                                     <TimeAgo style={{fontSize: 12}}
                                                              time={sqlToJsISO(item.reply.create_date)}/>
+                                                    <View>
+                                                        {
+                                                            parseInt(item.read_count) > 0
+                                                            &&
+                                                            <Badge info style={{width: 23, height: 23}}>
+                                                                <Text style={{fontSize: 13}}>{item.read_count}</Text>
+                                                            </Badge>
+                                                        }
+                                                    </View>
                                                 </Right>
                                             </ListItem>
                                         </List>
