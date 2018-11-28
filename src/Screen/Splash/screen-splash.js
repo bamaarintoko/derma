@@ -91,7 +91,7 @@ class SplashScreen extends Component {
         // console.log("====>",this.state.isMaintenance)
         return (
             <Container>
-                <StatusBar backgroundColor="#EA556F"/>
+                <StatusBar backgroundColor="#013976"/>
                 <View style={{
                     flexDirection: 'column',
                     justifyContent: 'center',

@@ -1,0 +1,5 @@
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorStatusBar">#013976</color>
+    <color name="colorBackground">#FFF</color>
+</resources>
