@@ -99,12 +99,12 @@ def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.mlskoding.derma_buku"
         vectorDrawables.useSupportLibrary = true
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 4
         versionName "4.0"
@@ -162,7 +162,7 @@ compile project(':react-native-fcm')
     compile project(':react-native-snackbar')
     compile project(':react-native-social-share')
     compile project(':react-native-spinkit')
-    compile "com.android.support:appcompat-v7:23.0.1"
+    implementation 'com.android.support:appcompat-v7:27.0.2'
     compile project(':react-native-facebook-login')
     compile (project(':react-native-image-resizer'))
     compile project(':react-native-image-picker')
