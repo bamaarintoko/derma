@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {
-    View, StatusBar, Dimensions, Image, FlatList, TouchableOpacity
+    View, StatusBar, Alert, Dimensions, Image, FlatList, TouchableOpacity, Platform
 } from 'react-native';
 import {Button, Container, Content, Text} from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Donate} from '../../Components/Donate'
 import {actGetListReserve} from "./action";
 import {sqlToJsISO} from "../../Utils/func";
+import FCM, {FCMEvent} from 'react-native-fcm'
 
 const {width} = Dimensions.get('window')
 import {Ph} from "../../Components/Content";
@@ -97,8 +98,52 @@ class ScreenHome extends Component {
 
     componentDidMount() {
         this.props.dispatch(actGetListReserve());
+        FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
+        // FCM.getFCMToken().then(token => {
+        //     console.log("--->", token)
+        //     // store fcm token in your server
+        // });
+        FCM.getInitialNotification()
+            .then((notif) => {
+                    console.log('INITIAL NOTIFICATION', notif)
+                }
+            )
+
+        this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
+            // optional, do some component related stuff
+            //console.log("---->",notif)
+            if (notif && notif.local_notification) {
+                return
+            }
+            if (Platform.OS === 'android') {
+                this.displayNotificationAndroid(notif)
+            }
+        });
+
 
     }
+
+    displayNotificationAndroid(notif) {
+        console.log('isi notif', notif)
+        if (notif.opened_from_tray) {
+            this.props.navigation.navigate("Message");
+        }
+        FCM.presentLocalNotification({
+            title: notif.fcm.title,
+            body: notif.fcm.body,
+            priority: 'high',
+            click_action: notif.fcm.click_action,
+            large_icon: "ic_launcher",
+            icon: "ic_launcher",
+            show_in_foreground: true,
+            local: true
+        })
+    }
+
+    componentWillUnmount() {
+        this.notificationListener.remove();
+    }
+
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.initialRedUpdateReserve === this.props.redUpdateReserve.status) {
@@ -177,10 +222,14 @@ class ScreenHome extends Component {
                         />
                     </View>
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <Button full transparent light onPress={this.onPressMessage()}>
-                            <Icon color={'#000000'} size={20}
-                                  name="comments"/>
-                        </Button>
+                        {
+                            this.props.redAuth.status_get
+                            &&
+                            <Button full transparent light onPress={this.onPressMessage()}>
+                                <Icon color={'#000000'} size={20}
+                                      name="comments"/>
+                            </Button>
+                        }
                     </View>
                 </View>
 

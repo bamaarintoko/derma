@@ -8,7 +8,8 @@ import Spinner from 'react-native-spinkit';
 import Modal from 'react-native-modalbox';
 import md5 from 'crypto-js/md5';
 const errors = {};
-
+import FCM, {FCMEvent} from 'react-native-fcm'
+let token = ""
 class ScreenRegister extends Component {
     constructor(props) {
         super(props);
@@ -83,7 +84,13 @@ class ScreenRegister extends Component {
         }
     }
     onRegister = () => {
+
+        FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
+        FCM.getFCMToken().then(token_ => {
+            token = token_;
+        })
         return () => {
+
             let count_errors = [];
             if (this.state.value_name.length < 1) {
                 errors['value_name'] = {error: true, error_message: 'required'}
@@ -109,6 +116,7 @@ class ScreenRegister extends Component {
                 let params = {
                     par_user_name: this.state.value_name,
                     par_user_email: this.state.value_email,
+                    par_token : token,
                     par_user_password: md5(this.state.confirm_password).toString()
                 }
                 this.props.dispatch(actRegister(params))

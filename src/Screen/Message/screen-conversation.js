@@ -17,8 +17,8 @@ function mapStateToProps(state) {
     };
 }
 
-let url = 'http://192.168.43.72:3010/';
-// let url = 'http://192.168.100.77:3010/';
+// let url = 'http://192.168.43.72:3010/';
+let url = 'http://192.168.100.77:3010/';
 // let url = 'https://rocky-woodland-93586.herokuapp.com/';
 const socket = io('http://localhost:3010/');
 
@@ -161,7 +161,9 @@ class ScreenConversation extends Component {
                 email: this.props.navigation.getParam('email'),
                 message : messages,
                 from : this.props.redAuth.data.profile.user_email,
-                idx:this.props.navigation.getParam('conversation_id')
+                from_name : this.props.navigation.getParam('name'),
+                idx:this.props.navigation.getParam('conversation_id'),
+                token : this.props.navigation.getParam('token')
                 // email_receiver: this.props.navigation.getParam('email'),
                 // email_sender: this.props.redAuth.data.profile.user_email,
             });

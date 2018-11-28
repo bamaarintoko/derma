@@ -9,7 +9,8 @@ import Spinner from 'react-native-spinkit';
 import Modal from 'react-native-modalbox';
 import {actLogin, actLoginFacebook} from "./action";
 import md5 from 'crypto-js/md5';
-
+import FCM from "react-native-fcm";
+let token = "";
 class ScreenAuth extends Component {
     constructor(props) {
         super(props);
@@ -33,7 +34,12 @@ class ScreenAuth extends Component {
     }
 
     onLoginFacebookClick = () => {
+        FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
+        FCM.getFCMToken().then(token_ => {
+            token = token_;
+        })
         return () => {
+
             FBLoginManager.loginWithPermissions(["email"], (error, data) => {
                 if (!error) {
                     let profil = JSON.parse(data.profile)
@@ -42,6 +48,7 @@ class ScreenAuth extends Component {
                         par_user_email: profil.email,
                         par_user_name: profil.name,
                         par_user_id: profil.id,
+                        par_token:token,
                         par_user_photo: profil.picture.data.url
                     }
                     this.props.dispatch(actLoginFacebook(params, data_));
@@ -78,11 +85,16 @@ class ScreenAuth extends Component {
         }
     }
     onLogin = () => {
+        // FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
+        FCM.getFCMToken().then(token_ => {
+            token = token_
+        })
         return () => {
             if (this.state.user_password !=="" && this.state.user_email!==""){
                 let params = {
                     par_user_password: md5(this.state.user_password).toString(),
-                    par_user_email: this.state.user_email
+                    par_user_email: this.state.user_email,
+                    par_token: token
                 }
                 this.setState({
                     isAuthLoading:true

@@ -62,6 +62,9 @@
 		E942D5F7DF7F4087B92AA872 /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DCA177CC0804CFC98E08BAE /* libRNSpinkit.a */; };
 		1BF2DF388E6E425CA9893C0A /* ReactNativeSocialShare.app in Resources */ = {isa = PBXBuildFile; fileRef = 6A238770A5FA4B948DDE93EE /* ReactNativeSocialShare.app */; };
 		A0B8637951A74F87B22032B6 /* ReactNativeSocialShareTests.xctest in Resources */ = {isa = PBXBuildFile; fileRef = 0C6128A1A56545F9AD96253E /* ReactNativeSocialShareTests.xctest */; };
+		369F7EA7BC4A4F739A754052 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA5CE79267F94B4C9AB34821 /* libRCTOneSignal.a */; };
+		22B3CFD37F4444EF9F38CD50 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DABDD1941140FC993C77D3 /* libRNFirebase.a */; };
+		272CA2EF5F694FEC9346D81F /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D45EECE74E9F45D8ACBA51DF /* libRNFIRMessaging.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -401,6 +404,12 @@
 		A945071753B34ABAA74036E5 /* ReactNativeSocialShare.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeSocialShare.xcodeproj"; path = "../node_modules/react-native-social-share/ReactNativeSocialShare.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6A238770A5FA4B948DDE93EE /* ReactNativeSocialShare.app */ = {isa = PBXFileReference; name = "ReactNativeSocialShare.app"; path = "ReactNativeSocialShare.app"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.application; explicitFileType = undefined; includeInIndex = 0; };
 		0C6128A1A56545F9AD96253E /* ReactNativeSocialShareTests.xctest */ = {isa = PBXFileReference; name = "ReactNativeSocialShareTests.xctest"; path = "ReactNativeSocialShareTests.xctest"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.cfbundle; explicitFileType = undefined; includeInIndex = 0; };
+		41C053AE7CF2432FBE0953D9 /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; name = "RCTOneSignal.xcodeproj"; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		CA5CE79267F94B4C9AB34821 /* libRCTOneSignal.a */ = {isa = PBXFileReference; name = "libRCTOneSignal.a"; path = "libRCTOneSignal.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		FBA3E23DC3D443269E10F2D5 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; name = "RNFirebase.xcodeproj"; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		05DABDD1941140FC993C77D3 /* libRNFirebase.a */ = {isa = PBXFileReference; name = "libRNFirebase.a"; path = "libRNFirebase.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		471683D09E0F40918B852A66 /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; name = "RNFIRMessaging.xcodeproj"; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D45EECE74E9F45D8ACBA51DF /* libRNFIRMessaging.a */ = {isa = PBXFileReference; name = "libRNFIRMessaging.a"; path = "libRNFIRMessaging.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -439,6 +448,9 @@
 				E942D5F7DF7F4087B92AA872 /* libRNSpinkit.a in Frameworks */,
 				1BF2DF388E6E425CA9893C0A /* ReactNativeSocialShare.app in Resources */,
 				A0B8637951A74F87B22032B6 /* ReactNativeSocialShareTests.xctest in Resources */,
+				369F7EA7BC4A4F739A754052 /* libRCTOneSignal.a in Frameworks */,
+				22B3CFD37F4444EF9F38CD50 /* libRNFirebase.a in Frameworks */,
+				272CA2EF5F694FEC9346D81F /* libRNFIRMessaging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,6 +647,9 @@
 				74947A31F9744679A89A668C /* RNSnackbar.xcodeproj */,
 				08C2E9F5AEA74BCC81F75574 /* RNSpinkit.xcodeproj */,
 				A945071753B34ABAA74036E5 /* ReactNativeSocialShare.xcodeproj */,
+				41C053AE7CF2432FBE0953D9 /* RCTOneSignal.xcodeproj */,
+				FBA3E23DC3D443269E10F2D5 /* RNFirebase.xcodeproj */,
+				471683D09E0F40918B852A66 /* RNFIRMessaging.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1309,6 +1324,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1321,6 +1339,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Debug;
@@ -1352,6 +1373,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1364,6 +1388,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Release;
@@ -1394,6 +1421,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Debug;
@@ -1423,6 +1453,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Release;
@@ -1463,6 +1496,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1475,6 +1511,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Debug;
@@ -1515,6 +1554,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1527,6 +1569,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Release;
@@ -1566,6 +1611,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1578,6 +1626,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Debug;
@@ -1617,6 +1668,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1629,6 +1683,9 @@
 					"$(SRCROOT)\..\node_modules\react-native-snackbar\ios",
 					"$(SRCROOT)\..\node_modules\react-native-spinkit\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-social-share\iOS",
+					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Release;

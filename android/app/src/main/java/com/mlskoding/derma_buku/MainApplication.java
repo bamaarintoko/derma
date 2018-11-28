@@ -3,6 +3,7 @@ package com.mlskoding.derma_buku;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.barefootcoders.android.react.KDSocialShare.KDSocialShare;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FIRMessagingPackage(),
             new KDSocialShare(),
             new RNSpinkitPackage(),
             new ImageResizerPackage(),

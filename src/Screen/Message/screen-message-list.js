@@ -10,26 +10,10 @@ import TimeAgo from 'react-native-timeago';
 import {RESET_MESSAGE} from "../../Utils/Constant";
 import Spinner from "react-native-spinkit";
 // let url = 'https://rocky-woodland-93586.herokuapp.com/';
-let url = 'http://192.168.43.72:3010/';
+// let url = 'http://192.168.43.72:3010/';
+let url = 'http://192.168.100.77:3010/';
 let data_ = [];
-// let array = [{id: 1, date:"2018-08-27 14:55:27"}, {id: 2, date:"2018-08-28 14:54:27"},{id: 3, date:"2018-08-27 14:54:27"}];
-const email = [
-    {
-        id: 6,
-        email: 'sinatriohappy.triaji@gmail.com',
-        name: 'Happy'
-    },
-    {
-        id: 2,
-        email: 'yosafatbama.arintoko@gmail.com',
-        name: 'Bama'
-    },
-    {
-        id: 3,
-        email: 'jonis8729@gmail.com',
-        name: 'John Wick'
-    }
-];
+
 
 function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
@@ -60,7 +44,7 @@ class ScreenMessageList extends Component {
             reconnect: true
         });
         this.socket.on('send', (data) => {
-            // console.log("===============>", data.message[0].text)
+            console.log("===============>", data.message.length)
             this.setState({
                 message: data.message[0].text,
                 from: data.from,
@@ -69,22 +53,20 @@ class ScreenMessageList extends Component {
             for (let key in data_) {
                 // console.log(data_[key]);
                 if (data_[key].conversation_id === data.idx) {
-                    console.log(key);
+                    console.log("data_", parseInt(data_[key].read_count));
+                    console.log("length", data.message.length + parseInt(data_[key].read_count));
                     data_[key].reply.create_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                    data_[key].read_count = parseInt(data_[key].read_count);
+                    data_[key].read_count += 1;
 
                 }
             }
             this.setState(this.state)
         });
-
-
     }
 
-    // shouldComponentUpdate(nextProps, nextState){
-    //     // return true;
-    // }
     componentDidUpdate(prevProps, prevState) {
-        console.log("cdup")
+        console.log("cdup",this.props.redMessage)
         data_.sort(function (a, b) {
             // Turn your strings into dates, and then subtract them
             // to get a value that is either negative, positive, or zero.
@@ -122,15 +104,16 @@ class ScreenMessageList extends Component {
         }
     }
 
-    onPressConversation = (email, name, id, conversation_id, idx) => {
+    onPressConversation = (email, name, id, conversation_id, idx, reg_id) => {
         return () => {
 
             this.props.navigation.navigate('Conversation', {
                 email: email,
                 id: id,
-                name: name,
+                name: this.props.redAuth.data.data.name,
                 conversation_id: conversation_id,
-                idx: idx
+                idx: idx,
+                token:reg_id
             })
         }
     };
@@ -181,7 +164,7 @@ class ScreenMessageList extends Component {
                                         ?
                                         <List>
                                             <ListItem avatar
-                                                      onPress={this.onPressConversation(item.user.user_email, item.user.user_name, item.user.user_id, item.conversation_id, k)}>
+                                                      onPress={this.onPressConversation(item.user.user_email, item.user.user_name, item.user.user_id, item.conversation_id, k,item.user.user_reg_id)}>
                                                 <Left>
                                                     <Thumbnail
                                                         source={{uri: item.user.user_photo}}/>

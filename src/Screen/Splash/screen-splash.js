@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import {Image, StatusBar} from 'react-native'
 import {Container, Content, Text, View} from "native-base";
 import {actGetMessage, actGetSetting} from "./action";
-
+import FCM, {FCMEvent} from 'react-native-fcm'
+import Api from "../../Utils/Api";
 class SplashScreen extends Component {
     constructor(props) {
         super(props);
@@ -16,8 +17,26 @@ class SplashScreen extends Component {
 
 
     componentDidUpdate(prevProps, prevState) {
-        // console.log("===>",this.props.redMessage)
+
+        console.log("===>",this.props.redAuth)
         if (this.props.redSetting.status === prevState.initialRedSetting) {
+            if (this.props.redAuth.status_get){
+
+                FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
+                FCM.getFCMToken().then(token => {
+                    let params = {
+                        par_user_id : this.props.redAuth.data.profile.user_id,
+                        par_token:token
+                    }
+                    Api._POST('auth/update_token',params)
+                        .then((response) => {
+                            // console.log(response)
+                        }).catch((err) => {
+                        // console.log(err)
+                    })
+                    // store fcm token in your server
+                });
+            }
             if (this.props.redSetting.data[0].maintenance !== "0") {
                 setTimeout(() => {
                     this.props.redAuth.status_get
@@ -47,7 +66,8 @@ class SplashScreen extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.redAuth)
+        // console.log(this.props.redAuth)
+
         if (this.props.redAuth.status_get){
             let params = {
                 par_user_id: this.props.redAuth.data.profile.user_id
@@ -58,10 +78,10 @@ class SplashScreen extends Component {
     }
 
     render() {
-        console.log("====>",this.state.isMaintenance)
+        // console.log("====>",this.state.isMaintenance)
         return (
             <Container>
-                <StatusBar backgroundColor="#013976"/>
+                <StatusBar backgroundColor="#EA556F"/>
                 <View style={{
                     flexDirection: 'column',
                     justifyContent: 'center',
