@@ -10,7 +10,10 @@ import Modal from 'react-native-modalbox';
 import {actLogin, actLoginFacebook} from "./action";
 import md5 from 'crypto-js/md5';
 import FCM from "react-native-fcm";
+import {GoogleSignin} from 'react-native-google-signin';
+
 let token = "";
+
 class ScreenAuth extends Component {
     constructor(props) {
         super(props);
@@ -18,8 +21,48 @@ class ScreenAuth extends Component {
             user_email: "",
             user_password: "",
             initialRedAuth: true,
-            isAuthLoading:false
+            isAuthLoading: false
         }
+    }
+
+    signIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+            const user = await GoogleSignin.signIn();
+            console.log(user)
+        } catch (error) {
+            if (error.code === 'CANCELED') {
+            } else {
+            }
+            console.log("===>", error)
+        }
+    };
+
+    async _getCurrentUser() {
+        try {
+            const user = await GoogleSignin.currentUserAsync();
+            this.setState({user, error: null});
+        } catch (error) {
+            this.setState({
+                error,
+            });
+        }
+    }
+
+    async _configureGoogleSignIn() {
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+
+        GoogleSignin.configure({
+            scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+            iosClientId: '', // only for iOS
+            webClientId: 'AIzaSyBziBj2umJ0GQqVnZlk0kaKm2OsbwbuYGY', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+            hostedDomain: '', // specifies a hosted domain restriction
+            forceConsentPrompt: true, // [Android] if you want to show the authorization prompt at each login
+            accountName: '', // [Android] specifies an account name on the device that should be used
+        }).then((re) => {
+            console.log(re)
+        });
     }
 
     onRegisterClick = () => {
@@ -27,8 +70,9 @@ class ScreenAuth extends Component {
             this.props.navigation.navigate('Register')
         }
     }
-    onForgotClick =()=>{
-        return ()=>{
+
+    onForgotClick = () => {
+        return () => {
             this.props.navigation.navigate('ForgetPassword')
         }
     }
@@ -43,12 +87,15 @@ class ScreenAuth extends Component {
             FBLoginManager.loginWithPermissions(["email"], (error, data) => {
                 if (!error) {
                     let profil = JSON.parse(data.profile)
-                    let data_ = {name: profil.name, photo: "https://graph.facebook.com/"+profil.id+"/picture?type=large"}
+                    let data_ = {
+                        name: profil.name,
+                        photo: "https://graph.facebook.com/" + profil.id + "/picture?type=large"
+                    }
                     let params = {
                         par_user_email: profil.email,
                         par_user_name: profil.name,
                         par_user_id: profil.id,
-                        par_token:token,
+                        par_token: token,
                         par_user_photo: profil.picture.data.url
                     }
                     this.props.dispatch(actLoginFacebook(params, data_));
@@ -58,6 +105,11 @@ class ScreenAuth extends Component {
                 }
             })
         }
+    }
+
+    async componentDidMount() {
+        await this._configureGoogleSignIn();
+        await this._getCurrentUser();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -70,7 +122,7 @@ class ScreenAuth extends Component {
                     duration: Snackbar.LENGTH_LONG,
                 });
                 this.setState({
-                    isAuthLoading:false
+                    isAuthLoading: false
                 })
                 this.props.dispatch({type: 'LOGIN_RESET'})
             }
@@ -84,20 +136,21 @@ class ScreenAuth extends Component {
             this.setState(state);
         }
     }
+
     onLogin = () => {
         // FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
         FCM.getFCMToken().then(token_ => {
             token = token_
         })
         return () => {
-            if (this.state.user_password !=="" && this.state.user_email!==""){
+            if (this.state.user_password !== "" && this.state.user_email !== "") {
                 let params = {
                     par_user_password: md5(this.state.user_password).toString(),
                     par_user_email: this.state.user_email,
                     par_token: token
                 }
                 this.setState({
-                    isAuthLoading:true
+                    isAuthLoading: true
                 })
                 this.props.dispatch(actLogin(params))
             }
@@ -168,9 +221,15 @@ class ScreenAuth extends Component {
                             <View style={styles.separatorLine}/>
                         </View>
                         <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center', width: '100%'}}>
-                            <Button full info style={{width: '100%', backgroundColor: '#3B5998'}}
+                            <Button full info style={{width: '50%', backgroundColor: '#3B5998'}}
                                     onPress={this.onLoginFacebookClick()}>
-                                <Icon name="facebook" size={20} color={'#FFF'}/>
+                                <Icon name="facebook" size={20} color={'#000'}/>
+                            </Button>
+                            <Button full info
+                                    style={{width: '50%', backgroundColor: '#c71610'}}
+                                    onPress={this.signIn}
+                            >
+                                <Icon name="google-plus" size={20} color={'#FFF'}/>
                             </Button>
                         </View>
                         <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
