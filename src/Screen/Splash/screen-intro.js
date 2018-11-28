@@ -3,6 +3,7 @@ import {Image, StatusBar, StyleSheet, View} from 'react-native'
 import {connect} from 'react-redux';
 import {Container, Content, Text} from "native-base";
 import AppIntro from 'react-native-app-intro';
+import {NavigationActions, StackActions} from "react-navigation";
 const styles = StyleSheet.create({
     slide: {
         flex: 1,
@@ -17,7 +18,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
+const resetHome = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'Menu'})],
+});
 class ScreenIntro extends Component {
     render() {
         return (
@@ -28,8 +32,8 @@ class ScreenIntro extends Component {
                     activeDotColor={'#03A9F4'}
                     rightTextColor={'#013976'}
                     leftTextColor={'#013976'}
-                    onSkipBtnClick={() => this.props.navigation.dispatch({type: 'HOME'})}
-                    onDoneBtnClick={() => this.props.navigation.dispatch({type: 'HOME'})}
+                    onSkipBtnClick={() => this.props.navigation.dispatch(resetHome)}
+                    onDoneBtnClick={() => this.props.navigation.dispatch(resetHome)}
                     doneBtnLabel={<Text style={{color: '#013976', fontSize: 25, paddingLeft: 20}}>{'   '}Done</Text>}
                 >
                     <View style={[styles.slide, {backgroundColor: '#FFF'}]}>

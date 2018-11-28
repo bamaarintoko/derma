@@ -5,6 +5,16 @@ import {Container, Content, Text, View} from "native-base";
 import {actGetMessage, actGetSetting} from "./action";
 import FCM, {FCMEvent} from 'react-native-fcm'
 import Api from "../../Utils/Api";
+import {StackActions,NavigationActions} from 'react-navigation'
+
+const resetHome = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'Menu'})],
+});
+const resetIntro = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({routeName: 'Intro'})],
+});
 class SplashScreen extends Component {
     constructor(props) {
         super(props);
@@ -41,9 +51,9 @@ class SplashScreen extends Component {
                 setTimeout(() => {
                     this.props.redAuth.status_get
                         ?
-                        this.props.navigation.dispatch({type: 'HOME'})
+                        this.props.navigation.dispatch(resetHome)
                         :
-                        this.props.navigation.dispatch({type: 'INTRO'})
+                        this.props.navigation.dispatch(resetIntro)
 
                 }, 3000)
                 // this.setState({
@@ -55,9 +65,9 @@ class SplashScreen extends Component {
                 setTimeout(() => {
                     this.props.redAuth.status_get
                         ?
-                        this.props.navigation.dispatch({type: 'HOME'})
+                        this.props.navigation.dispatch(resetHome)
                         :
-                        this.props.navigation.dispatch({type: 'INTRO'})
+                        this.props.navigation.dispatch(resetIntro)
 
                 }, 3000)
             }

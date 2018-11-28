@@ -2,9 +2,14 @@ import React, {Component} from 'react';
 import {
     BackHandler, View, StatusBar
 } from 'react-native';
-import {createStackNavigator, createBottomTabNavigator, createDrawerNavigator} from "react-navigation";
-import {initializeListeners} from 'react-navigation-redux-helpers'
-import {navigationPropConstructor} from '../Utils/Redux'
+import {createStackNavigator, createBottomTabNavigator, NavigationActions} from "react-navigation";
+import {
+    createNavigationReducer,
+    createReactNavigationReduxMiddleware,
+    reduxifyNavigator
+} from "react-navigation-redux-helpers";
+import { AsyncStorage} from 'react-native'
+import {persistReducer, persistStore} from "redux-persist";
 import ScreenHome from '../Screen/Home/screen-home'
 import ScreenSetting from '../Screen/Setting/screen-setting'
 import ScreenDetail from '../Screen/Home/screen-detail'
@@ -23,8 +28,19 @@ import ScreenCreateReserve from '../Screen/CreateReserve/screen-create-reserve'
 import ScreenConversation from '../Screen/Message/screen-conversation'
 import ScreenMessageList from '../Screen/Message/screen-message-list'
 import {connect} from "react-redux";
-import {addListener} from '../Utils/Redux';
+import {applyMiddleware, combineReducers, createStore} from "redux";
+import {redGetColor} from "../Reducers/colorReducers";
+import {redAuth, redRegister} from "../Reducers/authReducers";
+import {redAddReserve, redGetListReserve, redGetListReserveUser, redUpdateReserve} from "../Reducers/reserveReducers";
+import {redSetting} from "../Reducers/settingReducers";
+import {redMessage} from "../Reducers/messageReducers";
+import thunk from "redux-thunk";
 
+const persistConfig = {
+    key: 'root',
+    storage:AsyncStorage,
+    whitelist: ['redAuth','redSetting']
+}
 export const Home = createBottomTabNavigator({
     Home: {screen: ScreenHome},
     News: {screen: ScreenNews},
@@ -50,33 +66,49 @@ export const AppNavigator = createStackNavigator({
 
 }, {
     headerMode: 'none',
-
-    navigationOptions: {
-        gesturesEnabled: true
-    }
+    initialRouteName:'Splash'
 });
-
-class AppWithNavigationState extends Component {
-    constructor(props) {
-        super(props);
-    }
-
+export const navReducer = createNavigationReducer(AppNavigator);
+const appReducer = combineReducers({
+    redGetColor: redGetColor,
+    redAuth: redAuth,
+    redRegister: redRegister,
+    redAddReserve: redAddReserve,
+    redGetListReserve: redGetListReserve,
+    redGetListReserveUser: redGetListReserveUser,
+    redSetting: redSetting,
+    redUpdateReserve: redUpdateReserve,
+    redMessage: redMessage,
+    nav: navReducer
+})
+export const middleware = createReactNavigationReduxMiddleware(
+    "root",
+    state => state.nav,
+);
+const mapStateToProps = (state) => ({
+    state: state.nav,
+});
+const App = reduxifyNavigator(AppNavigator, "root");
+const AppWithNavigationState = connect(mapStateToProps)(App)
+const persistedReducer = persistReducer(persistConfig, appReducer)
+export const store = createStore(
+    persistedReducer,
+    applyMiddleware(thunk, middleware),
+);
+export const persistor = persistStore(store)
+class Root extends Component {
     componentDidMount() {
-        initializeListeners('root', this.props.nav);
         BackHandler.addEventListener('hardwareBackPress', function () {
-            const {dispatch, navigation, nav} = this.props;
+            const {state} = this.props;
+            console.log(this.props)
+            if (state.index === 0) {
 
-            if (nav.routes.length === 1) {
                 BackHandler.exitApp()
                 return false;
             }
-            dispatch({type: 'Navigation/BACK'});
+            this.props.dispatch(NavigationActions.back());
             return true;
         }.bind(this));
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        // console.log("aaa");
     }
 
     componentWillUnmount() {
@@ -84,20 +116,17 @@ class AppWithNavigationState extends Component {
     }
 
     render() {
-        const {dispatch, nav} = this.props;
-        const navigation = navigationPropConstructor(dispatch, nav);
         return (
-            <AppNavigator navigation={navigation}/>
-
+            <AppWithNavigationState/>
         )
     }
 };
 
-function mapStateToProps(state) {
-    return {
-        nav: state.nav,
-    };
-}
+// function mapStateToProps(state) {
+//     return {
+//         nav: state.nav,
+//     };
+// }
 
 
-export default connect(mapStateToProps)(AppWithNavigationState);
+export default connect(mapStateToProps)(Root)
