@@ -10,6 +10,7 @@ import Modal from 'react-native-modalbox';
 import {actLogin, actLoginFacebook} from "./action";
 import md5 from 'crypto-js/md5';
 import FCM from "react-native-fcm";
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {GoogleSignin} from 'react-native-google-signin';
 
 let token = "";
@@ -27,7 +28,7 @@ class ScreenAuth extends Component {
 
     signIn = async () => {
         try {
-            await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+            await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
             const user = await GoogleSignin.signIn();
             console.log(user)
         } catch (error) {
@@ -47,10 +48,10 @@ class ScreenAuth extends Component {
                 error,
             });
         }
-    }
+    };
 
     async _configureGoogleSignIn() {
-        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
 
         GoogleSignin.configure({
             scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
@@ -63,19 +64,19 @@ class ScreenAuth extends Component {
         }).then((re) => {
             console.log(re)
         });
-    }
+    };
 
     onRegisterClick = () => {
         return () => {
             this.props.navigation.navigate('Register')
         }
-    }
+    };
 
     onForgotClick = () => {
         return () => {
             this.props.navigation.navigate('ForgetPassword')
         }
-    }
+    };
 
     onLoginFacebookClick = () => {
         FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
@@ -105,7 +106,7 @@ class ScreenAuth extends Component {
                 }
             })
         }
-    }
+    };
 
     async componentDidMount() {
         await this._configureGoogleSignIn();
@@ -127,7 +128,7 @@ class ScreenAuth extends Component {
                 this.props.dispatch({type: 'LOGIN_RESET'})
             }
         }
-    }
+    };
 
     onChangeText = (key) => {
         return (e) => {
@@ -135,7 +136,7 @@ class ScreenAuth extends Component {
             state[key] = e
             this.setState(state);
         }
-    }
+    };
 
     onLogin = () => {
         // FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
@@ -155,7 +156,7 @@ class ScreenAuth extends Component {
                 this.props.dispatch(actLogin(params))
             }
         }
-    }
+    };
 
     render() {
         return (
@@ -177,39 +178,29 @@ class ScreenAuth extends Component {
                 </Modal>
                 <Content style={{padding: 20}}>
                     <View>
-                        <Text style={{fontWeight: 'bold', fontSize: 30, color: '#013976'}}>Log In</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: hp('4%'), color: '#013976'}}>Log In</Text>
                     </View>
                     <View style={{marginTop: 120}}>
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <View style={{width: '80%'}}>
-                                <Item style={{
-                                    backgroundColor: '#FFF',
-                                    borderColor: '#013976',
-                                    borderWidth: 2,
-                                    height: 40
-                                }}>
-                                    <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                        <Icon active name='envelope' size={20}/>
+                        <View style={styles.veInputFrame}>
+                            <View style={styles.vwInput}>
+                                <Item style={styles.itmEmail}>
+                                    <View style={styles.vwIcon}>
+                                        <Icon active name='envelope' size={hp('3%')}/>
                                     </View>
                                     <Input onChangeText={this.onChangeText('user_email')}
-                                           style={{fontSize: 12, color: '#013976'}} autoCapitalize={"none"}
+                                           style={styles.txtInput} autoCapitalize={"none"}
                                            keyboardType={'email-address'} placeholder='email'/>
                                 </Item>
-                                <Item style={{
-                                    backgroundColor: '#FFF',
-                                    borderColor: '#FFF',
-                                    borderWidth: 2,
-                                    height: 40
-                                }}>
-                                    <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                        <Icon active name='lock' size={20}/>
+                                <Item style={styles.itmPass}>
+                                    <View style={styles.vwIcon}>
+                                        <Icon active name='lock' size={hp('3%')}/>
                                     </View>
                                     <Input onChangeText={this.onChangeText('user_password')}
-                                           style={{fontSize: 12, color: '#013976'}} autoCapitalize={"none"}
+                                           style={styles.txtInput} autoCapitalize={"none"}
                                            secureTextEntry={true} placeholder='password'/>
                                 </Item>
                             </View>
-                            <View style={{width: '20%'}}>
+                            <View style={styles.vwBtn}>
                                 <Button transparent full onPress={this.onLogin()}>
                                     <Icon active name='sign-in' size={40} color={'#013976'}/>
                                 </Button>
@@ -220,34 +211,29 @@ class ScreenAuth extends Component {
                             <Text style={styles.separatorOr}>Or Login With</Text>
                             <View style={styles.separatorLine}/>
                         </View>
-                        <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center', width: '100%'}}>
-                            <Button full info style={{width: '50%', backgroundColor: '#3B5998'}}
+                        <View style={styles.vwBtnLogin}>
+                            <Button full info style={styles.btnFacebook}
                                     onPress={this.onLoginFacebookClick()}>
-                                <Icon name="facebook" size={20} color={'#000'}/>
+                                <Icon name="facebook" size={hp('3%')} color={'#FFF'}/>
                             </Button>
                             <Button full info
-                                    style={{width: '50%', backgroundColor: '#c71610'}}
+                                    style={styles.btnGmail}
                                     onPress={this.signIn}
                             >
-                                <Icon name="google-plus" size={20} color={'#FFF'}/>
+                                <Icon name="google-plus" size={hp('3%')} color={'#FFF'}/>
                             </Button>
                         </View>
-                        <View style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+                        <View style={styles.vwRegister}>
                             <View
-                                style={{flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{color: '#013976', fontSize: 12}}>First time here?</Text>
+                                style={styles.vwOnRegister}>
+                                <Text style={styles.txtFirstTime}>First time here?</Text>
                                 <TouchableWithoutFeedback onPress={this.onRegisterClick()}>
-                                    <Text style={{color: '#013976', fontWeight: 'bold', fontSize: 14}}> Sign up</Text>
+                                    <Text style={styles.txtSignUp}> Sign up</Text>
                                 </TouchableWithoutFeedback>
                             </View>
-                            <View style={{flex: 1}}>
+                            <View style={styles.vwOnForget}>
                                 <TouchableWithoutFeedback onPress={this.onForgotClick()}>
-                                    <Text style={{
-                                        color: '#013976',
-                                        fontWeight: 'bold',
-                                        fontSize: 14,
-                                        alignSelf: 'flex-end'
-                                    }}> Forgot password</Text>
+                                    <Text style={styles.txtForgetPass}> Forgot password</Text>
                                 </TouchableWithoutFeedback>
                             </View>
                         </View>
@@ -272,10 +258,65 @@ let styles = {
         borderColor: '#FFFFFF'
     },
     separatorOr: {
-        color: '#FFFFFF',
+        color: '#BDBDBD',
         marginHorizontal: 8,
-        fontSize: 12
+        fontSize: hp('1.9%')
     },
+    vwRegister: {
+        flexDirection: 'row', marginTop: 10, alignItems: 'center'
+    },
+    vwOnRegister: {
+        flexDirection: 'row', flex: 1, alignItems: 'center',
+    },
+    vwOnForget: {
+        flex: 1
+    },
+    txtFirstTime: {
+        color: '#013976', fontSize: hp('1.9%')
+    },
+    txtSignUp: {color: '#013976', fontWeight: 'bold', fontSize: hp('2%')},
+    txtForgetPass: {
+        color: '#013976',
+        fontWeight: 'bold',
+        fontSize: hp('2%'),
+        alignSelf: 'flex-end'
+    },
+    vwBtnLogin:{
+        flexDirection: 'row', marginTop: 10, alignItems: 'center', width: '100%'
+    },
+    btnFacebook:{
+        width: '50%', backgroundColor: '#3B5998'
+    },
+    btnGmail:{
+        width: '50%', backgroundColor: '#c71610'
+    },
+    veInputFrame:{
+        flexDirection: 'row', alignItems: 'center'
+    },
+    vwInput:{
+        width: '80%'
+    },
+    vwBtn:{
+        width: '20%'
+    },
+    itmEmail:{
+        backgroundColor: '#FFF',
+        borderColor: '#013976',
+        borderWidth: 2,
+        height: hp('7%')
+    },
+    itmPass:{
+        backgroundColor: '#FFF',
+        borderColor: '#FFF',
+        borderWidth: 2,
+        height: hp('7%')
+    },
+    vwIcon:{
+        width: 30, justifyContent: 'center', alignItems: 'center'
+    },
+    txtInput:{
+        fontSize: hp('2.2%'), color: '#013976'
+    }
 };
 
 function mapStateToProps(state) {

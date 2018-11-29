@@ -10,9 +10,7 @@ import { createStore } from 'redux';
 import { PersistGate } from 'redux-persist/integration/react'
 import AppWithNavigationState, {persistor, store} from './src/Navigator/AppNavigator';
 import { YellowBox } from 'react-native'
-YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader','Setting a timer','Remote debugger']);
-
-// type Props = {};
+YellowBox.ignoreWarnings(['Remote debugger','Possible Unhandled Promise Rejection']);
 export default class App extends Component {
 	render() {
 		return (

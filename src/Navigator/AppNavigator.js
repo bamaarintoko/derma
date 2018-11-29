@@ -66,7 +66,7 @@ export const AppNavigator = createStackNavigator({
 
 }, {
     headerMode: 'none',
-    initialRouteName:'Splash'
+    initialRouteName:'Auth'
 });
 export const navReducer = createNavigationReducer(AppNavigator);
 const appReducer = combineReducers({
