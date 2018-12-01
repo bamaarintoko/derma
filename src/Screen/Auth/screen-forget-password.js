@@ -7,6 +7,8 @@ import Snackbar from 'react-native-snackbar';
 import Spinner from 'react-native-spinkit';
 import Modal from 'react-native-modalbox';
 import Api from "../../Utils/Api";
+import {heightPercentageToDP as hp} from "react-native-responsive-screen";
+import {styles} from './style'
 
 class ScreenForgetPassword extends Component {
     constructor(props) {
@@ -38,7 +40,7 @@ class ScreenForgetPassword extends Component {
                     .then((response) => {
                         this.setState({
                             isAuthLoading: false,
-                            user_email:''
+                            user_email: ''
                         })
                         Snackbar.show({
                             title: response.data.message,
@@ -60,9 +62,9 @@ class ScreenForgetPassword extends Component {
     render() {
         return (
             <Container style={{backgroundColor: '#FFF'}}>
-                <View style={{height: 50, paddingLeft: 20, justifyContent: 'center'}}>
+                <View style={styles.header}>
                     <Button transparent light style={{width: 50}} onPress={() => this.props.navigation.goBack()}>
-                        <Icon name="arrow-left" size={20} color={'#013976'}/>
+                        <Icon name="arrow-left" size={hp('3%')} color={'#013976'}/>
                     </Button>
                 </View>
                 <Modal position={"center"}
@@ -77,33 +79,29 @@ class ScreenForgetPassword extends Component {
                 </Modal>
                 <Content style={{padding: 20}}>
                     <View>
-                        <Text style={{fontWeight: 'bold', fontSize: 30, color: '#013976'}}>Recovery Password</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: hp('4%'), color: '#013976'}}>Recovery
+                            Password</Text>
                     </View>
-                    <View style={{marginTop: 120}}>
+                    <View style={{marginTop: hp('20%')}}>
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <View style={{width: '100%'}}>
                                 <Item style={{
                                     backgroundColor: '#FFF',
                                     borderColor: '#013976',
                                     borderWidth: 2,
-                                    height: 40
+                                    height: hp('7%')
                                 }}>
                                     <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                        <Icon active name='envelope' size={20}/>
+                                        <Icon active name='envelope' size={hp('3%')}/>
                                     </View>
                                     <Input value={this.state.user_email} onChangeText={this.onChangeText('user_email')}
-                                           style={{fontSize: 12, color: '#013976'}} autoCapitalize={"none"}
+                                           style={styles.txtInput} autoCapitalize={"none"}
                                            keyboardType={'email-address'} placeholder='email'/>
                                 </Item>
                             </View>
                         </View>
-                        <Button onPress={this.onSendPress()} full bordered style={{
-                            marginTop: 30,
-                            backgroundColor: '#013976',
-                            borderColor: '#FFF',
-                            borderWidth: 2
-                        }}>
-                            <Text style={{color: '#FFF'}}>Send Email</Text>
+                        <Button onPress={this.onSendPress()} full bordered style={styles.btn}>
+                            <Text style={{color: '#FFF',fontSize: hp('2%')}}>Send Email</Text>
                         </Button>
                     </View>
                 </Content>

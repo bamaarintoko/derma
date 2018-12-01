@@ -9,7 +9,9 @@ import Modal from 'react-native-modalbox';
 import md5 from 'crypto-js/md5';
 const errors = {};
 import FCM, {FCMEvent} from 'react-native-fcm'
+import {heightPercentageToDP as hp} from "react-native-responsive-screen";
 let token = ""
+import {styles} from './style'
 class ScreenRegister extends Component {
     constructor(props) {
         super(props);
@@ -140,9 +142,9 @@ class ScreenRegister extends Component {
         let cek_c = typeof this.state.input_error.confirm_password === 'undefined' ? false : this.state.input_error.confirm_password.error;
         return (
             <Container style={{backgroundColor: '#FFF'}}>
-                <View style={{height: 50, paddingLeft: 20, justifyContent: 'center'}}>
+                <View style={{height: hp('8%'), paddingLeft: 20, justifyContent: 'center'}}>
                     <Button transparent light style={{width: 50}} onPress={() => this.props.navigation.goBack()}>
-                        <Icon name="arrow-left" size={20} color={'#013976'}/>
+                        <Icon name="arrow-left" size={hp('3%')} color={'#013976'}/>
                     </Button>
                 </View>
                 <Modal position={"center"}
@@ -157,15 +159,15 @@ class ScreenRegister extends Component {
                 </Modal>
                 <Content style={{padding: 20}}>
                     <View>
-                        <Text style={{fontWeight: 'bold', fontSize: 30, color: '#013976'}}>Create Account</Text>
+                        <Text style={styles.txtHeader}>Create Account</Text>
                     </View>
-                    <View style={{marginTop: 80, alignItems: 'center'}}>
-                        <Item error={true} style={{backgroundColor: '#FFF', borderColor: '#013976', borderWidth: 2}}>
-                            <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon active name='user' size={20} color={'#013976'}/>
+                    <View style={{marginTop: hp('20%'), alignItems: 'center'}}>
+                        <Item error={true} style={styles.itmRegister}>
+                            <View style={styles.vwIcn}>
+                                <Icon active name='user' size={hp('3%')} color={'#013976'}/>
                             </View>
                             <Input
-                                style={{fontSize: 14, color: '#013976'}}
+                                style={styles.txtInput}
                                 value={this.state.value_name}
                                 onBlur={this.onValidate('value_name')}
                                 onChangeText={this.onChangeText('value_name')}
@@ -173,17 +175,17 @@ class ScreenRegister extends Component {
                             {
                                 cek_n
                                 &&
-                                <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Icon active name='exclamation-circle' size={20} color={'#FF3D00'}/>
+                                <View style={styles.vwIcn}>
+                                    <Icon active name='exclamation-circle' size={hp('3%')} color={'#FF3D00'}/>
                                 </View>
                             }
                         </Item>
-                        <Item style={{backgroundColor: '#FFF', borderColor: '#013976', borderWidth: 2}}>
-                            <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon active name='envelope' size={20} color={'#013976'}/>
+                        <Item style={styles.itmRegister}>
+                            <View style={styles.vwIcn}>
+                                <Icon active name='envelope' size={hp('3%')} color={'#013976'}/>
                             </View>
                             <Input autoCapitalize={"none"} keyboardType={'email-address'}
-                                   style={{fontSize: 14, color: '#013976'}}
+                                   style={styles.txtInput}
                                    value={this.state.value_email}
                                    onBlur={this.onValidate('value_email')}
                                    onChangeText={this.onChangeText('value_email')}
@@ -191,18 +193,18 @@ class ScreenRegister extends Component {
                             {
                                 cek_e
                                 &&
-                                <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Icon active name='exclamation-circle' size={20} color={'#FF3D00'}/>
+                                <View style={styles.vwIcn}>
+                                    <Icon active name='exclamation-circle' size={hp('3%')} color={'#FF3D00'}/>
                                 </View>
                             }
                         </Item>
-                        <Item style={{backgroundColor: '#FFF', borderColor: '#013976', borderWidth: 2}}>
-                            <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon active name='lock' size={20} color={'#013976'}/>
+                        <Item style={styles.itmRegister}>
+                            <View style={styles.vwIcn}>
+                                <Icon active name='lock' size={hp('3%')} color={'#013976'}/>
                             </View>
                             <Input
                                 autoCapitalize={"none"} secureTextEntry={true}
-                                style={{fontSize: 14, color: '#013976'}}
+                                style={styles.txtInput}
                                 value={this.state.value_password}
                                 onBlur={this.onValidate('value_password')}
                                 onChangeText={this.onChangeText('value_password')}
@@ -211,18 +213,18 @@ class ScreenRegister extends Component {
                             {
                                 cek_p
                                 &&
-                                <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Icon active name='exclamation-circle' size={20} color={'#FF3D00'}/>
+                                <View style={styles.vwIcn}>
+                                    <Icon active name='exclamation-circle' size={hp('3%')} color={'#FF3D00'}/>
                                 </View>
                             }
                         </Item>
-                        <Item style={{backgroundColor: '#FFF', borderColor: '#013976', borderWidth: 2}}>
-                            <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon active name='lock' size={20} color={'#013976'}/>
+                        <Item style={styles.itmRegister}>
+                            <View style={styles.vwIcn}>
+                                <Icon active name='lock' size={hp('3%')} color={'#013976'}/>
                             </View>
                             <Input
                                 autoCapitalize={"none"} secureTextEntry={true}
-                                style={{fontSize: 14, color: '#013976'}}
+                                style={styles.txtInput}
                                 value={this.state.confirm_password}
                                 onBlur={this.onValidate('confirm_password')}
                                 onChangeText={this.onChangeText('confirm_password')}
@@ -230,17 +232,12 @@ class ScreenRegister extends Component {
                             {
                                 cek_c
                                 &&
-                                <View style={{width: 30, justifyContent: 'center', alignItems: 'center'}}>
-                                    <Icon active name='exclamation-circle' size={20} color={'#FF3D00'}/>
+                                <View style={styles.vwIcon}>
+                                    <Icon active name='exclamation-circle' size={hp('3%')} color={'#FF3D00'}/>
                                 </View>
                             }
                         </Item>
-                        <Button onPress={this.onRegister()} full bordered style={{
-                            marginTop: 30,
-                            backgroundColor: '#013976',
-                            borderColor: '#FFF',
-                            borderWidth: 2
-                        }}>
+                        <Button onPress={this.onRegister()} full bordered style={styles.btn}>
                             <Text style={{color: '#FFF'}}>Register</Text>
                         </Button>
                     </View>

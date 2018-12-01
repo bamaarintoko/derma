@@ -12,8 +12,17 @@ import md5 from 'crypto-js/md5';
 import FCM from "react-native-fcm";
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {GoogleSignin} from 'react-native-google-signin';
+import {styles} from './style'
 
 let token = "";
+import {
+    signIn,
+    _getCurrentUser,
+    _configureGoogleSignIn,
+    onRegisterClick,
+    onForgotClick,
+    onLoginFacebookClick, onLogin
+} from './presenter'
 
 class ScreenAuth extends Component {
     constructor(props) {
@@ -26,91 +35,40 @@ class ScreenAuth extends Component {
         }
     }
 
-    signIn = async () => {
-        try {
-            await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-            const user = await GoogleSignin.signIn();
-            console.log(user)
-        } catch (error) {
-            if (error.code === 'CANCELED') {
-            } else {
-            }
-            console.log("===>", error)
-        }
-    };
 
-    async _getCurrentUser() {
-        try {
-            const user = await GoogleSignin.currentUserAsync();
-            this.setState({user, error: null});
-        } catch (error) {
-            this.setState({
-                error,
-            });
-        }
-    };
-
-    async _configureGoogleSignIn() {
-        await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-
-        GoogleSignin.configure({
-            scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
-            iosClientId: '', // only for iOS
-            webClientId: 'AIzaSyBziBj2umJ0GQqVnZlk0kaKm2OsbwbuYGY', // client ID of type WEB for your server (needed to verify user ID and offline access)
-            offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-            hostedDomain: '', // specifies a hosted domain restriction
-            forceConsentPrompt: true, // [Android] if you want to show the authorization prompt at each login
-            accountName: '', // [Android] specifies an account name on the device that should be used
-        }).then((re) => {
-            console.log(re)
-        });
-    };
-
-    onRegisterClick = () => {
-        return () => {
-            this.props.navigation.navigate('Register')
-        }
-    };
-
-    onForgotClick = () => {
-        return () => {
-            this.props.navigation.navigate('ForgetPassword')
-        }
-    };
-
-    onLoginFacebookClick = () => {
-        FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
-        FCM.getFCMToken().then(token_ => {
-            token = token_;
-        })
-        return () => {
-
-            FBLoginManager.loginWithPermissions(["email"], (error, data) => {
-                if (!error) {
-                    let profil = JSON.parse(data.profile)
-                    let data_ = {
-                        name: profil.name,
-                        photo: "https://graph.facebook.com/" + profil.id + "/picture?type=large"
-                    }
-                    let params = {
-                        par_user_email: profil.email,
-                        par_user_name: profil.name,
-                        par_user_id: profil.id,
-                        par_token: token,
-                        par_user_photo: profil.picture.data.url
-                    }
-                    this.props.dispatch(actLoginFacebook(params, data_));
-
-                } else {
-                    console.log("Error: ", data);
-                }
-            })
-        }
-    };
+    // onLoginFacebookClick = () => {
+    //     FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
+    //     FCM.getFCMToken().then(token_ => {
+    //         token = token_;
+    //     })
+    //     return () => {
+    //
+    //         FBLoginManager.loginWithPermissions(["email"], (error, data) => {
+    //             if (!error) {
+    //                 let profil = JSON.parse(data.profile)
+    //                 let data_ = {
+    //                     name: profil.name,
+    //                     photo: "https://graph.facebook.com/" + profil.id + "/picture?type=large"
+    //                 }
+    //                 let params = {
+    //                     par_user_email: profil.email,
+    //                     par_user_name: profil.name,
+    //                     par_user_id: profil.id,
+    //                     par_token: token,
+    //                     par_user_photo: profil.picture.data.url
+    //                 }
+    //                 this.props.dispatch(actLoginFacebook(params, data_));
+    //
+    //             } else {
+    //                 console.log("Error: ", data);
+    //             }
+    //         })
+    //     }
+    // };
 
     async componentDidMount() {
-        await this._configureGoogleSignIn();
-        await this._getCurrentUser();
+        await _configureGoogleSignIn();
+        await _getCurrentUser();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -161,9 +119,9 @@ class ScreenAuth extends Component {
     render() {
         return (
             <Container style={{backgroundColor: '#FFF'}}>
-                <View style={{height: 50, paddingLeft: 20, justifyContent: 'center'}}>
+                <View style={{height: hp('8%'), paddingLeft: 20, justifyContent: 'center'}}>
                     <Button transparent light style={{width: 50}} onPress={() => this.props.navigation.goBack()}>
-                        <Icon name="arrow-left" size={20} color={'#013976'}/>
+                        <Icon name="arrow-left" size={hp('3%')} color={'#013976'}/>
                     </Button>
                 </View>
                 <Modal position={"center"}
@@ -180,7 +138,7 @@ class ScreenAuth extends Component {
                     <View>
                         <Text style={{fontWeight: 'bold', fontSize: hp('4%'), color: '#013976'}}>Log In</Text>
                     </View>
-                    <View style={{marginTop: 120}}>
+                    <View style={{marginTop: hp('20%')}}>
                         <View style={styles.veInputFrame}>
                             <View style={styles.vwInput}>
                                 <Item style={styles.itmEmail}>
@@ -213,12 +171,12 @@ class ScreenAuth extends Component {
                         </View>
                         <View style={styles.vwBtnLogin}>
                             <Button full info style={styles.btnFacebook}
-                                    onPress={this.onLoginFacebookClick()}>
+                                    onPress={onLoginFacebookClick(this.props)}>
                                 <Icon name="facebook" size={hp('3%')} color={'#FFF'}/>
                             </Button>
                             <Button full info
                                     style={styles.btnGmail}
-                                    onPress={this.signIn}
+                                    onPress={signIn}
                             >
                                 <Icon name="google-plus" size={hp('3%')} color={'#FFF'}/>
                             </Button>
@@ -227,12 +185,12 @@ class ScreenAuth extends Component {
                             <View
                                 style={styles.vwOnRegister}>
                                 <Text style={styles.txtFirstTime}>First time here?</Text>
-                                <TouchableWithoutFeedback onPress={this.onRegisterClick()}>
+                                <TouchableWithoutFeedback onPress={onRegisterClick(this.props)}>
                                     <Text style={styles.txtSignUp}> Sign up</Text>
                                 </TouchableWithoutFeedback>
                             </View>
                             <View style={styles.vwOnForget}>
-                                <TouchableWithoutFeedback onPress={this.onForgotClick()}>
+                                <TouchableWithoutFeedback onPress={onForgotClick(this.props)}>
                                     <Text style={styles.txtForgetPass}> Forgot password</Text>
                                 </TouchableWithoutFeedback>
                             </View>
@@ -243,81 +201,6 @@ class ScreenAuth extends Component {
         );
     }
 }
-
-let styles = {
-    wrapper: {},
-    separatorContainer: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        marginVertical: 8
-    },
-    separatorLine: {
-        flex: 1,
-        borderWidth: StyleSheet.hairlineWidth,
-        height: StyleSheet.hairlineWidth,
-        borderColor: '#FFFFFF'
-    },
-    separatorOr: {
-        color: '#BDBDBD',
-        marginHorizontal: 8,
-        fontSize: hp('1.9%')
-    },
-    vwRegister: {
-        flexDirection: 'row', marginTop: 10, alignItems: 'center'
-    },
-    vwOnRegister: {
-        flexDirection: 'row', flex: 1, alignItems: 'center',
-    },
-    vwOnForget: {
-        flex: 1
-    },
-    txtFirstTime: {
-        color: '#013976', fontSize: hp('1.9%')
-    },
-    txtSignUp: {color: '#013976', fontWeight: 'bold', fontSize: hp('2%')},
-    txtForgetPass: {
-        color: '#013976',
-        fontWeight: 'bold',
-        fontSize: hp('2%'),
-        alignSelf: 'flex-end'
-    },
-    vwBtnLogin:{
-        flexDirection: 'row', marginTop: 10, alignItems: 'center', width: '100%'
-    },
-    btnFacebook:{
-        width: '50%', backgroundColor: '#3B5998'
-    },
-    btnGmail:{
-        width: '50%', backgroundColor: '#c71610'
-    },
-    veInputFrame:{
-        flexDirection: 'row', alignItems: 'center'
-    },
-    vwInput:{
-        width: '80%'
-    },
-    vwBtn:{
-        width: '20%'
-    },
-    itmEmail:{
-        backgroundColor: '#FFF',
-        borderColor: '#013976',
-        borderWidth: 2,
-        height: hp('7%')
-    },
-    itmPass:{
-        backgroundColor: '#FFF',
-        borderColor: '#FFF',
-        borderWidth: 2,
-        height: hp('7%')
-    },
-    vwIcon:{
-        width: 30, justifyContent: 'center', alignItems: 'center'
-    },
-    txtInput:{
-        fontSize: hp('2.2%'), color: '#013976'
-    }
-};
 
 function mapStateToProps(state) {
     return {

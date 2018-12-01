@@ -1,6 +1,7 @@
 import Api from "../../Utils/Api";
 
 export function actLogin(params) {
+    console.log(params)
     return dispatch => {
         Api._POST('auth/login', params)
             .then((response) => {
