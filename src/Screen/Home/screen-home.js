@@ -9,10 +9,12 @@ import {Donate} from '../../Components/Donate'
 import {actGetListReserve} from "./action";
 import {sqlToJsISO} from "../../Utils/func";
 import FCM, {FCMEvent} from 'react-native-fcm'
-
+import {heightPercentageToDP as hp} from "react-native-responsive-screen";
 const {width} = Dimensions.get('window')
 import {Ph} from "../../Components/Content";
-
+import {Header} from "../../Components/my-components";
+import Masonry from 'react-native-masonry';
+import FastImage from "react-native-fast-image";
 function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
@@ -21,48 +23,43 @@ function mapStateToProps(state) {
         redUpdateReserve: state.redUpdateReserve,
     };
 }
+let data = [
+    {
+        data:{
+            caption:'Ulala',
+            user:{
+                name: 'Bama'
+            }
+        },
+        uri: 'https://picsum.photos/200/300/?random' ,
+        renderHeader:(data)=>{
+            return(
+                <View key='brick-header' style={{backgroundColor: 'white', padding: 5, paddingRight: 9, paddingLeft: 9}}>
 
-const styles = {
-    wrapper: {},
+                    <Text style={{lineHeight: 20, fontSize: 14}}>{data.user.name}</Text>
 
-    slide: {
-        flex: 1,
-        justifyContent: 'center',
-        backgroundColor: 'transparent'
-    },
-    image: {
-        width,
-        flex: 1,
-        backgroundColor: 'transparent'
-    },
+                </View>
+            )
+        },
+        renderFooter: (data) => {
 
-    loadingView: {
-        position: 'absolute',
-        justifyContent: 'center',
-        alignItems: 'center',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0,0,0,.5)'
-    },
+            return (
 
-    loadingImage: {
-        width: 60,
-        height: 60
-    }
-}
+                <View key='brick-header' style={{backgroundColor: 'white', padding: 5, paddingRight: 9, paddingLeft: 9}}>
 
-const Slide = props => {
-    return (<View style={styles.slide}>
-        <Image onLoad={props.loadHandle.bind(null, props.i)} style={styles.image} source={{uri: props.uri}}/>
-        {
-            !props.loaded && <View style={styles.loadingView}>
-            </View>
+                    <Text style={{lineHeight: 20, fontSize: 14}}>{data.caption}</Text>
+
+                </View>
+
+            )
+
         }
-    </View>)
-}
-
+    },
+    { uri: 'https://picsum.photos/200/300/?image=0' },
+    { uri: 'https://picsum.photos/200/200/?image=1' },
+    { uri: 'https://picsum.photos/200/200/?image=2' },
+    { uri: 'https://picsum.photos/200/200/?image=3' }
+]
 class ScreenHome extends Component {
     static navigationOptions = {
         header: null,
@@ -91,7 +88,10 @@ class ScreenHome extends Component {
             ],
             loadQueue: [0, 0, 0, 0],
             data: [],
-            isRefresh: false
+            isRefresh: false,
+            columns:0,
+            padding:0,
+            data_:[]
         }
         // this.loadHandle = this.loadHandle.bind(this)
     }
@@ -120,7 +120,9 @@ class ScreenHome extends Component {
             }
         });
 
-
+        setTimeout(() => {
+            this.setState({ columns: 2, padding: 5, data_:data });
+        }, 500);
     }
 
     displayNotificationAndroid(notif) {
@@ -203,93 +205,72 @@ class ScreenHome extends Component {
         return (
             <Container style={{backgroundColor: '#FFF'}}>
                 <StatusBar backgroundColor="#013976"/>
-                <View style={{
-                    flexDirection: 'row',
-                    height: 50,
-                    backgroundColor: '#FFF',
-                    borderBottomColor: '#BDBDBD',
-                    borderBottomWidth: 1
-                }}>
-                    <View style={{flex: 1,}}>
-
-                    </View>
-                    <View style={{flex: 4, justifyContent: 'center', alignItems: 'center'}}>
-                        <Image
-                            style={{flex: 1}}
-                            width={100}
-                            source={require('../../Assets/head.png')}
-                            resizeMode={"contain"}
-                        />
-                    </View>
-                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        {
-                            this.props.redAuth.status_get
-                            &&
-                            <Button full transparent light onPress={this.onPressMessage()}>
-                                <Icon color={'#000000'} size={20}
-                                      name="comments"/>
-                            </Button>
-                        }
-                    </View>
+                <Header statusGet={this.props.redAuth.status_get} message={this.onPressMessage()}/>
+                <View style={{flex: 1, flexGrow: 10, padding: 5}}>
+                <Masonry
+                    bricks={this.state.data_}
+                    columns={this.state.columns}
+                    customImageComponent={FastImage}
+                    renderHeader
+                />
                 </View>
+                {/*{*/}
+                    {/*this.state.isLoading*/}
+                        {/*?*/}
+                        {/*<Content>*/}
+                            {/*<Ph/>*/}
+                            {/*<Ph/>*/}
+                            {/*<Ph/>*/}
+                            {/*<Ph/>*/}
+                            {/*<Ph/>*/}
+                            {/*<Ph/>*/}
+                            {/*<Ph/>*/}
+                        {/*</Content>*/}
+                        {/*:*/}
+                        {/*this.state.data.length > 0*/}
+                            {/*?*/}
+                            {/*<FlatList*/}
+                                {/*onRefresh={this.onRefresh()}*/}
+                                {/*refreshing={this.state.isRefresh}*/}
+                                {/*showsHorizontalScrollIndicator={false}*/}
+                                {/*data={this.state.data}*/}
+                                {/*keyExtractor={(item, index) => '' + index}*/}
+                                {/*renderItem={({item}) =>*/}
+                                    {/*<TouchableOpacity*/}
+                                        {/*onPress={this.onPress(item.reserve_id, item.user_photo, item.user_name, item.reserve_create_date)}>*/}
+                                        {/*<Donate uri={item.user_photo}*/}
+                                                {/*name={item.user_name}*/}
+                                                {/*reserve_title={item.reserve_title}*/}
+                                                {/*reserve_description={item.reserve_description}*/}
+                                                {/*reserve_end_date={item.reserve_end_date}*/}
+                                                {/*create_date={sqlToJsISO(item.reserve_create_date)}/>*/}
+                                    {/*</TouchableOpacity>*/}
+                                {/*}*/}
+                            {/*/>*/}
+                            {/*:*/}
+                            {/*<View style={{*/}
+                                {/*flex: 1,*/}
+                                {/*justifyContent: 'center',*/}
+                                {/*alignItems: 'center',*/}
+                                {/*backgroundColor: '#FFF',*/}
+                                {/*flexDirection: 'column'*/}
+                            {/*}}>*/}
+                                {/*<View style={{flex: 2}}>*/}
+                                    {/*<Image*/}
+                                        {/*style={{flex: 1}}*/}
+                                        {/*width={150}*/}
+                                        {/*source={require('../../Assets/login.png')}*/}
+                                        {/*resizeMode={"contain"}*/}
+                                    {/*/>*/}
+                                {/*</View>*/}
+                                {/*<View style={{flex: 1}}>*/}
+                                    {/*<Text style={{fontSize: 12}}>*/}
+                                        {/*Sorry, no data donation for now.*/}
+                                    {/*</Text>*/}
+                                {/*</View>*/}
+                            {/*</View>*/}
 
-                {
-                    this.state.isLoading
-                        ?
-                        <Content>
-                            <Ph/>
-                            <Ph/>
-                            <Ph/>
-                            <Ph/>
-                            <Ph/>
-                            <Ph/>
-                            <Ph/>
-                        </Content>
-                        :
-                        this.state.data.length > 0
-                            ?
-                            <FlatList
-                                onRefresh={this.onRefresh()}
-                                refreshing={this.state.isRefresh}
-                                showsHorizontalScrollIndicator={false}
-                                data={this.state.data}
-                                keyExtractor={(item, index) => '' + index}
-                                renderItem={({item}) =>
-                                    <TouchableOpacity
-                                        onPress={this.onPress(item.reserve_id, item.user_photo, item.user_name, item.reserve_create_date)}>
-                                        <Donate uri={item.user_photo}
-                                                name={item.user_name}
-                                                reserve_title={item.reserve_title}
-                                                reserve_description={item.reserve_description}
-                                                reserve_end_date={item.reserve_end_date}
-                                                create_date={sqlToJsISO(item.reserve_create_date)}/>
-                                    </TouchableOpacity>
-                                }
-                            />
-                            :
-                            <View style={{
-                                flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                backgroundColor: '#FFF',
-                                flexDirection: 'column'
-                            }}>
-                                <View style={{flex: 2}}>
-                                    <Image
-                                        style={{flex: 1}}
-                                        width={150}
-                                        source={require('../../Assets/login.png')}
-                                        resizeMode={"contain"}
-                                    />
-                                </View>
-                                <View style={{flex: 1}}>
-                                    <Text style={{fontSize: 12}}>
-                                        Sorry, no data donation for now.
-                                    </Text>
-                                </View>
-                            </View>
-
-                }
+                {/*}*/}
 
             </Container>
         );
