@@ -27,11 +27,21 @@ export default class Api {
         return axios.post(url,qs.stringify(params))
     }
 
-    static GET(end_point){
+    static GET(end_point,params={}){
+        let config = {
+            headers: {
+                Authorization: 'Bearer '
+            },
+            params
+        };
         const url = `${host}${end_point}`;
-        return axios.get(url)
-            .then(response=>{return response})
-            .catch(error=>{console.log(error)})
+        return axios.get(url, config)
+            .then(response => {
+                return response
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
     static _POST(end_point,params){
         const url = `${host}${end_point}`;

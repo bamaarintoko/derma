@@ -10,7 +10,7 @@ import { createStore } from 'redux';
 import { PersistGate } from 'redux-persist/integration/react'
 import AppWithNavigationState, {persistor, store} from './src/Navigator/AppNavigator';
 import { YellowBox } from 'react-native'
-YellowBox.ignoreWarnings(['Remote debugger','Possible Unhandled Promise Rejection']);
+YellowBox.ignoreWarnings(['Remote debugger','Possible Unhandled Promise Rejection','Warning: Failed prop type: Invalid prop']);
 export default class App extends Component {
 	render() {
 		return (

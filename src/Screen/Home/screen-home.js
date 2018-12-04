@@ -6,15 +6,18 @@ import {
 import {Button, Container, Content, Text} from "native-base"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Donate} from '../../Components/Donate'
-import {actGetListReserve} from "./action";
+import {actGetBooks, actGetListReserve} from "./action";
 import {sqlToJsISO} from "../../Utils/func";
 import FCM, {FCMEvent} from 'react-native-fcm'
 import {heightPercentageToDP as hp} from "react-native-responsive-screen";
+
 const {width} = Dimensions.get('window')
 import {Ph} from "../../Components/Content";
 import {Header} from "../../Components/my-components";
 import Masonry from 'react-native-masonry';
 import FastImage from "react-native-fast-image";
+import Api from "../../Utils/Api";
+
 function mapStateToProps(state) {
     return {
         redAuth: state.redAuth,
@@ -23,18 +26,21 @@ function mapStateToProps(state) {
         redUpdateReserve: state.redUpdateReserve,
     };
 }
+
+let book = [];
 let data = [
     {
-        data:{
-            caption:'Ulala',
-            user:{
+        data: {
+            caption: 'Ulala',
+            user: {
                 name: 'Bama'
             }
         },
-        uri: 'https://picsum.photos/200/300/?random' ,
-        renderHeader:(data)=>{
-            return(
-                <View key='brick-header' style={{backgroundColor: 'white', padding: 5, paddingRight: 9, paddingLeft: 9}}>
+        uri: 'https://picsum.photos/200/300/?random',
+        renderHeader: (data) => {
+            return (
+                <View key='brick-header'
+                      style={{backgroundColor: 'white', padding: 5, paddingRight: 9, paddingLeft: 9}}>
 
                     <Text style={{lineHeight: 20, fontSize: 14}}>{data.user.name}</Text>
 
@@ -45,7 +51,8 @@ let data = [
 
             return (
 
-                <View key='brick-header' style={{backgroundColor: 'white', padding: 5, paddingRight: 9, paddingLeft: 9}}>
+                <View key='brick-header'
+                      style={{backgroundColor: 'white', padding: 5, paddingRight: 9, paddingLeft: 9}}>
 
                     <Text style={{lineHeight: 20, fontSize: 14}}>{data.caption}</Text>
 
@@ -55,11 +62,12 @@ let data = [
 
         }
     },
-    { uri: 'https://picsum.photos/200/300/?image=0' },
-    { uri: 'https://picsum.photos/200/200/?image=1' },
-    { uri: 'https://picsum.photos/200/200/?image=2' },
-    { uri: 'https://picsum.photos/200/200/?image=3' }
+    {uri: 'https://picsum.photos/200/300/?image=0'},
+    {uri: 'https://picsum.photos/200/200/?image=1'},
+    {uri: 'https://picsum.photos/200/200/?image=2'},
+    {uri: 'https://picsum.photos/200/200/?image=3'}
 ]
+
 class ScreenHome extends Component {
     static navigationOptions = {
         header: null,
@@ -89,15 +97,16 @@ class ScreenHome extends Component {
             loadQueue: [0, 0, 0, 0],
             data: [],
             isRefresh: false,
-            columns:0,
-            padding:0,
-            data_:[]
+            columns: 0,
+            padding: 0,
+            data_: []
         }
         // this.loadHandle = this.loadHandle.bind(this)
     }
 
     componentDidMount() {
-        this.props.dispatch(actGetListReserve());
+        // this.props.dispatch(actGetListReserve());
+        this.props.dispatch(actGetBooks())
         FCM.requestPermissions().then(() => console.log('granted')).catch(() => console.log('notification permission rejected'));
         // FCM.getFCMToken().then(token => {
         //     console.log("--->", token)
@@ -120,9 +129,10 @@ class ScreenHome extends Component {
             }
         });
 
-        setTimeout(() => {
-            this.setState({ columns: 2, padding: 5, data_:data });
-        }, 500);
+        // setTimeout(() => {
+        //     this.setState({columns: 2, padding: 5, data_: data});
+        // }, 500);
+
     }
 
     displayNotificationAndroid(notif) {
@@ -154,14 +164,44 @@ class ScreenHome extends Component {
         if (prevState.initialRedAddReserve === this.props.redAddReserve.status) {
             this.props.dispatch(actGetListReserve());
         }
+
         if (prevState.initialRedGetListReserve === this.props.redGetListReserve.status) {
-            this.setState({
-                isLoading: false,
-                data: this.props.redGetListReserve.data,
-                isRefresh: false
-            })
-            this.props.dispatch({type: "RESET_RESERVE"})
+            setTimeout(() => {
+                this.props.redGetListReserve.data.map((x, y) => {
+                    book.push({
+                        data: {
+                            caption: 'Ulala',
+                            user: {
+                                name: 'Bama'
+                            }
+                        }, 'uri': x.uri,
+                        renderFooter: (data) => {
+                            return (
+                                <View key={y}
+                                      style={{
+                                          backgroundColor: 'white',
+                                          padding: 5,
+                                          paddingRight: 9,
+                                          paddingLeft: 9,
+                                          marginBottom: 10
+                                      }}>
+                                    <Text style={{lineHeight: 20, fontSize: 14}}>{data.caption}</Text>
+                                </View>
+                            )
+                        }
+                    })
+                })
+                this.setState({columns: 2, data_: book});
+                // this.setState({
+                //     isLoading: false,
+                //     data: this.props.redGetListReserve.data,
+                //     isRefresh: false
+                // })
+                console.log("===>", this.props.redGetListReserve)
+                this.props.dispatch({type: "RESET_RESERVE"})
+            }, 500);
         }
+
     }
 
     loadHandle = (i) => {
@@ -202,73 +242,76 @@ class ScreenHome extends Component {
     }
 
     render() {
+        console.log("--->", book)
         return (
             <Container style={{backgroundColor: '#FFF'}}>
                 <StatusBar backgroundColor="#013976"/>
                 <Header statusGet={this.props.redAuth.status_get} message={this.onPressMessage()}/>
-                <View style={{flex: 1, flexGrow: 10, padding: 5}}>
-                <Masonry
-                    bricks={this.state.data_}
-                    columns={this.state.columns}
-                    customImageComponent={FastImage}
-                    renderHeader
-                />
+                <View style={{flex: 1, flexGrow: 10, padding: 20}}>
+                    <Masonry
+                        spacing={5}
+                        imageContainerStyle={{borderRadius:10}}
+                        bricks={this.state.data_}
+                        columns={this.state.columns}
+                        customImageComponent={FastImage}
+                        renderHeader
+                    />
                 </View>
                 {/*{*/}
-                    {/*this.state.isLoading*/}
-                        {/*?*/}
-                        {/*<Content>*/}
-                            {/*<Ph/>*/}
-                            {/*<Ph/>*/}
-                            {/*<Ph/>*/}
-                            {/*<Ph/>*/}
-                            {/*<Ph/>*/}
-                            {/*<Ph/>*/}
-                            {/*<Ph/>*/}
-                        {/*</Content>*/}
-                        {/*:*/}
-                        {/*this.state.data.length > 0*/}
-                            {/*?*/}
-                            {/*<FlatList*/}
-                                {/*onRefresh={this.onRefresh()}*/}
-                                {/*refreshing={this.state.isRefresh}*/}
-                                {/*showsHorizontalScrollIndicator={false}*/}
-                                {/*data={this.state.data}*/}
-                                {/*keyExtractor={(item, index) => '' + index}*/}
-                                {/*renderItem={({item}) =>*/}
-                                    {/*<TouchableOpacity*/}
-                                        {/*onPress={this.onPress(item.reserve_id, item.user_photo, item.user_name, item.reserve_create_date)}>*/}
-                                        {/*<Donate uri={item.user_photo}*/}
-                                                {/*name={item.user_name}*/}
-                                                {/*reserve_title={item.reserve_title}*/}
-                                                {/*reserve_description={item.reserve_description}*/}
-                                                {/*reserve_end_date={item.reserve_end_date}*/}
-                                                {/*create_date={sqlToJsISO(item.reserve_create_date)}/>*/}
-                                    {/*</TouchableOpacity>*/}
-                                {/*}*/}
-                            {/*/>*/}
-                            {/*:*/}
-                            {/*<View style={{*/}
-                                {/*flex: 1,*/}
-                                {/*justifyContent: 'center',*/}
-                                {/*alignItems: 'center',*/}
-                                {/*backgroundColor: '#FFF',*/}
-                                {/*flexDirection: 'column'*/}
-                            {/*}}>*/}
-                                {/*<View style={{flex: 2}}>*/}
-                                    {/*<Image*/}
-                                        {/*style={{flex: 1}}*/}
-                                        {/*width={150}*/}
-                                        {/*source={require('../../Assets/login.png')}*/}
-                                        {/*resizeMode={"contain"}*/}
-                                    {/*/>*/}
-                                {/*</View>*/}
-                                {/*<View style={{flex: 1}}>*/}
-                                    {/*<Text style={{fontSize: 12}}>*/}
-                                        {/*Sorry, no data donation for now.*/}
-                                    {/*</Text>*/}
-                                {/*</View>*/}
-                            {/*</View>*/}
+                {/*this.state.isLoading*/}
+                {/*?*/}
+                {/*<Content>*/}
+                {/*<Ph/>*/}
+                {/*<Ph/>*/}
+                {/*<Ph/>*/}
+                {/*<Ph/>*/}
+                {/*<Ph/>*/}
+                {/*<Ph/>*/}
+                {/*<Ph/>*/}
+                {/*</Content>*/}
+                {/*:*/}
+                {/*this.state.data.length > 0*/}
+                {/*?*/}
+                {/*<FlatList*/}
+                {/*onRefresh={this.onRefresh()}*/}
+                {/*refreshing={this.state.isRefresh}*/}
+                {/*showsHorizontalScrollIndicator={false}*/}
+                {/*data={this.state.data}*/}
+                {/*keyExtractor={(item, index) => '' + index}*/}
+                {/*renderItem={({item}) =>*/}
+                {/*<TouchableOpacity*/}
+                {/*onPress={this.onPress(item.reserve_id, item.user_photo, item.user_name, item.reserve_create_date)}>*/}
+                {/*<Donate uri={item.user_photo}*/}
+                {/*name={item.user_name}*/}
+                {/*reserve_title={item.reserve_title}*/}
+                {/*reserve_description={item.reserve_description}*/}
+                {/*reserve_end_date={item.reserve_end_date}*/}
+                {/*create_date={sqlToJsISO(item.reserve_create_date)}/>*/}
+                {/*</TouchableOpacity>*/}
+                {/*}*/}
+                {/*/>*/}
+                {/*:*/}
+                {/*<View style={{*/}
+                {/*flex: 1,*/}
+                {/*justifyContent: 'center',*/}
+                {/*alignItems: 'center',*/}
+                {/*backgroundColor: '#FFF',*/}
+                {/*flexDirection: 'column'*/}
+                {/*}}>*/}
+                {/*<View style={{flex: 2}}>*/}
+                {/*<Image*/}
+                {/*style={{flex: 1}}*/}
+                {/*width={150}*/}
+                {/*source={require('../../Assets/login.png')}*/}
+                {/*resizeMode={"contain"}*/}
+                {/*/>*/}
+                {/*</View>*/}
+                {/*<View style={{flex: 1}}>*/}
+                {/*<Text style={{fontSize: 12}}>*/}
+                {/*Sorry, no data donation for now.*/}
+                {/*</Text>*/}
+                {/*</View>*/}
+                {/*</View>*/}
 
                 {/*}*/}
 

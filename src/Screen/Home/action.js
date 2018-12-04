@@ -21,6 +21,23 @@ export function actGetListReserve() {
     }
 }
 
-export function actGetDetailReserve() {
-
+export function actGetBooks() {
+    return dispatch => {
+        Api.GET('list/books')
+            .then((response) => {
+                dispatch({
+                    type: 'RESERVE',
+                    status_get: response.data.status,
+                    data: response.data.result,
+                    message: response.data.message
+                })
+            }).catch((err) => {
+            dispatch({
+                type: 'RESERVE',
+                status_get: false,
+                data: [],
+                message: err.message
+            })
+        })
+    }
 }
